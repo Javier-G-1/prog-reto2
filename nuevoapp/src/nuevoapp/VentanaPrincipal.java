@@ -2,29 +2,49 @@ package nuevoapp;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.DefaultTableModel; // Importación necesaria para el modelo no editable
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-public class VentanaPrincipal extends JFrame {
+public class VentanaPrincipal extends JFrame implements ActionListener {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private JPanel panelLateral;
+    private static final long serialVersionUID = 1L;
+    private JPanel panelLateral;
     private JPanel panelPrincipal;
     private CardLayout cardLayout;
     
-    private JButton btnInicio, btnEquipos, btnJornadas, btnClasificacion;
+    // Atributos de clase
+    private JButton btnTemporadas, btnEquipos, btnPartidos, btnResultados, btnCerrarSesion, btnInicio;
+    
     private static final String CARD_INICIO = "inicio";
+    private static final String CARD_TEMPORADAS = "temporadas";
     private static final String CARD_EQUIPOS = "equipos";
-    private static final String CARD_JORNADAS = "jornadas";
-    private static final String CARD_CLASIFICACION = "clasificacion";
+    private static final String CARD_PARTIDOS = "partidos";
+    private static final String CARD_RESULTADOS = "resultado";
+    private JTable tableClasificacion;
+    
+    // Colores usados en la aplicación
+    private static final Color COLOR_FONDO_LATERAL = new Color(24, 24, 27);
+    private static final Color COLOR_AZUL_SELECCION = new Color(37, 99, 235);
+    private static final Color COLOR_HOVER = new Color(39, 39, 42);
+    private static final Color COLOR_TEXTO = Color.WHITE;
+    private static final Color COLOR_BORDE = new Color(63, 63, 70);
 
     public VentanaPrincipal() {
-    	
-    	//esto hace poder cambiar el icono de la aplicacion 
-    	ImageIcon icono = new ImageIcon(getClass().getResource("/assets/icono.png"));
-    	setIconImage(icono.getImage());
+        try {
+            // Asumiendo que /assets/icono.png existe
+            ImageIcon icono = new ImageIcon(getClass().getResource("/assets/icono.png"));
+            setIconImage(icono.getImage());
+        } catch (Exception e) {
+            System.err.println("Error al cargar el ícono: " + e.getMessage());
+        }
+        
         initUI();
     }
 
@@ -34,10 +54,15 @@ public class VentanaPrincipal extends JFrame {
         setSize(1400, 900);
         setLocationRelativeTo(null);
         getContentPane().setLayout(new BorderLayout());
-        getContentPane().setBackground(new Color(24, 24, 27));
+        getContentPane().setBackground(COLOR_FONDO_LATERAL);
 
         crearPanelLateral();
         crearPanelPrincipal();
+        mostrarPanel(CARD_INICIO);
+        // Inicializar la selección al inicio
+        if (btnInicio != null) {
+            actualizarSeleccion(btnInicio);
+        }
 
         setVisible(true);
     }
@@ -45,9 +70,14 @@ public class VentanaPrincipal extends JFrame {
     private void crearPanelLateral() {
         panelLateral = new JPanel();
         panelLateral.setPreferredSize(new Dimension(280, 0));
-        panelLateral.setBackground(new Color(24, 24, 27));
-        panelLateral.setLayout(new BoxLayout(panelLateral, BoxLayout.Y_AXIS));
+        panelLateral.setBackground(COLOR_FONDO_LATERAL);
+        panelLateral.setLayout(new BorderLayout());
         panelLateral.setBorder(new EmptyBorder(30, 20, 30, 20));
+
+        // Panel superior con logo y botones del menú
+        JPanel panelSuperior = new JPanel();
+        panelSuperior.setLayout(new BoxLayout(panelSuperior, BoxLayout.Y_AXIS));
+        panelSuperior.setOpaque(false);
 
         // Logo y título
         JPanel panelLogo = new JPanel();
@@ -57,192 +87,245 @@ public class VentanaPrincipal extends JFrame {
         
         JLabel lblIcono = new JLabel();
         lblIcono.setFont(new Font("Segoe UI", Font.PLAIN, 32));
-        lblIcono.setForeground(Color.WHITE);
+        lblIcono.setForeground(COLOR_TEXTO);
         
-        JLabel lblTitulo = new JLabel("<html>Federación<br>de Balonmano</html>");
-        lblTitulo.setForeground(Color.WHITE);
+        JLabel lblTitulo = new JLabel("Federación de Balonmano");
+        lblTitulo.setForeground(COLOR_TEXTO);
         lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
         
         panelLogo.add(lblIcono);
         panelLogo.add(lblTitulo);
-        panelLateral.add(panelLogo);
-        panelLateral.add(Box.createRigidArea(new Dimension(0, 40)));
+        panelSuperior.add(panelLogo);
+        panelSuperior.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        // Botones del menú
-        btnInicio = crearBotonMenu("", "Inicio", false);
-
-        btnEquipos = crearBotonMenu("", "Equipos", false);
-        btnJornadas = crearBotonMenu("", "Jornadas", false);
-        btnClasificacion = crearBotonMenu("", "Clasificación", false);
-
-        panelLateral.add(btnInicio);
-        panelLateral.add(Box.createRigidArea(new Dimension(0, 8)));
-;
-        panelLateral.add(Box.createRigidArea(new Dimension(0, 8)));
-        panelLateral.add(btnEquipos);
-        panelLateral.add(Box.createRigidArea(new Dimension(0, 8)));
-       
-        panelLateral.add(btnJornadas);
-        panelLateral.add(Box.createRigidArea(new Dimension(0, 8)));
+        // BOTONES DE MENÚ
         
-        panelLateral.add(btnClasificacion);
+        btnInicio = new JButton(" Inicio"); 
+        configurarBotonMenu(btnInicio, " Inicio");
+        btnInicio.addActionListener(this); 
 
-        panelLateral.add(Box.createVerticalGlue());
+        btnTemporadas = new JButton(" Temporadas");
+        configurarBotonMenu(btnTemporadas, " Temporadas");
+        
+        btnEquipos = new JButton(" Equipos");
+        configurarBotonMenu(btnEquipos, " Equipos");
 
-        // Acciones de botones
-        btnInicio.addActionListener(e -> {
-            mostrarPanel(CARD_INICIO);
-            actualizarSeleccion(btnInicio);
-        });
-      
-        btnEquipos.addActionListener(e -> {
-            mostrarPanel(CARD_EQUIPOS);
-            actualizarSeleccion(btnEquipos);
-        });
-      
-        btnJornadas.addActionListener(e -> {
-            mostrarPanel(CARD_JORNADAS);
-            actualizarSeleccion(btnJornadas);
-        });
-     
-        btnClasificacion.addActionListener(e -> {
-            mostrarPanel(CARD_CLASIFICACION);
-            actualizarSeleccion(btnClasificacion);
-        });
+        btnPartidos = new JButton(" Partidos");
+        configurarBotonMenu(btnPartidos, " Partidos");
+
+        btnResultados = new JButton(" Resultados");
+        configurarBotonMenu(btnResultados, " Resultados");
+        
+        // Agregar los Listeners de la clase a los botones
+        btnTemporadas.addActionListener(this);
+        btnEquipos.addActionListener(this);
+        btnPartidos.addActionListener(this);
+        btnResultados.addActionListener(this);
+        
+        Component rigidArea_3 = Box.createRigidArea(new Dimension(0, 20));
+        panelSuperior.add(rigidArea_3);
+        
+        // Agregar botones al panel superior
+        panelSuperior.add(btnInicio);
+        
+        Component rigidArea = Box.createRigidArea(new Dimension(0, 20));
+        panelSuperior.add(rigidArea);
+        panelSuperior.add(btnTemporadas);
+        
+        Component rigidArea_1 = Box.createRigidArea(new Dimension(0, 20));
+        panelSuperior.add(rigidArea_1);
+        panelSuperior.add(btnEquipos);
+        
+        Component rigidArea_2 = Box.createRigidArea(new Dimension(0, 20));
+        panelSuperior.add(rigidArea_2);
+        panelSuperior.add(btnPartidos);
+        
+        Component rigidArea_2_1 = Box.createRigidArea(new Dimension(0, 20));
+        panelSuperior.add(rigidArea_2_1);
+        panelSuperior.add(btnResultados);
+
+        // Panel inferior con botón cerrar sesión
+        JPanel panelInferior = new JPanel();
+        panelInferior.setLayout(new BoxLayout(panelInferior, BoxLayout.Y_AXIS));
+        panelInferior.setOpaque(false);
+
+        btnCerrarSesion = new JButton("Cerrar sesión");
+        btnCerrarSesion.setAlignmentX(Component.LEFT_ALIGNMENT);
+        btnCerrarSesion.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+        btnCerrarSesion.setBackground(new Color(0, 0, 0));
+        btnCerrarSesion.setForeground(COLOR_TEXTO);
+        btnCerrarSesion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        btnCerrarSesion.setFocusPainted(false);
+        btnCerrarSesion.setBorderPainted(false);
+        btnCerrarSesion.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnCerrarSesion.addActionListener(this);
+
+        panelInferior.add(btnCerrarSesion);
+
+        // Añadir paneles al panel lateral
+        panelLateral.add(panelSuperior, BorderLayout.NORTH);
+        panelLateral.add(panelInferior, BorderLayout.SOUTH);
 
         getContentPane().add(panelLateral, BorderLayout.WEST);
-        
-        JButton btnCerrarSesion = new JButton("Cerrar sesión");
-        btnCerrarSesion.setBackground(new Color(0, 0, 64));
-        panelLateral.add(btnCerrarSesion);
     }
-
-    private JButton crearBotonMenu(String icono, String texto, boolean seleccionado) {
-        JButton btn = new JButton(" " + icono + "   " + texto);
+    
+    /**
+     * Configura el estilo y el MouseListener de un botón de menú.
+     */
+    private void configurarBotonMenu(JButton btn, String texto) {
         btn.setAlignmentX(Component.LEFT_ALIGNMENT);
         btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
-        btn.setPreferredSize(new Dimension(240, 50));
         btn.setHorizontalAlignment(SwingConstants.LEFT);
-        btn.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        btn.setText(texto);
+        btn.setForeground(COLOR_TEXTO);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btn.setFocusPainted(false);
         btn.setBorderPainted(false);
-        btn.setContentAreaFilled(seleccionado);
-        btn.setForeground(Color.WHITE);
-        
-        if (seleccionado) {
-            btn.setBackground(new Color(37, 99, 235));
-        } else {
-            btn.setBackground(new Color(24, 24, 27));
-        }
-        
-        btn.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
-        
-        btn.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                if (!btn.isContentAreaFilled() || !btn.getBackground().equals(new Color(37, 99, 235))) {
-                    btn.setBackground(new Color(39, 39, 42));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.setOpaque(true); 
+        btn.setContentAreaFilled(false); 
+
+        // Añadir efecto hover
+        btn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // Solo cambiar si no es el botón activo (COLOR_AZUL_SELECCION)
+                if (!btn.getBackground().equals(COLOR_AZUL_SELECCION)) {
+                    btn.setBackground(COLOR_HOVER);
                     btn.setContentAreaFilled(true);
                 }
             }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                if (!btn.getBackground().equals(new Color(37, 99, 235))) {
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                // Solo volver al fondo lateral si no es el botón activo
+                if (!btn.getBackground().equals(COLOR_AZUL_SELECCION)) {
+                    btn.setBackground(COLOR_FONDO_LATERAL);
                     btn.setContentAreaFilled(false);
                 }
             }
         });
-        
-        return btn;
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnInicio) {
+            mostrarPanel(CARD_INICIO);
+            actualizarSeleccion(btnInicio);
+        } else if (e.getSource() == btnTemporadas) {
+            mostrarPanel(CARD_TEMPORADAS);
+            actualizarSeleccion(btnTemporadas);
+        } else if (e.getSource() == btnEquipos) {
+            mostrarPanel(CARD_EQUIPOS);
+            actualizarSeleccion(btnEquipos);
+        } else if (e.getSource() == btnPartidos) {
+            mostrarPanel(CARD_PARTIDOS);
+            actualizarSeleccion(btnPartidos);
+        } else if (e.getSource() == btnResultados) {
+            mostrarPanel(CARD_RESULTADOS);
+            actualizarSeleccion(btnResultados);
+        } else if (e.getSource() == btnCerrarSesion) {
+            // Lógica para cerrar sesión
+            JOptionPane.showMessageDialog(this, "Sesión cerrada", "Adiós", JOptionPane.INFORMATION_MESSAGE);
+            dispose(); // Cierra la ventana principal
+        }
+    }
+
+    /**
+     * Actualiza el estado visual de los botones de menú.
+     */
     private void actualizarSeleccion(JButton botonSeleccionado) {
-        JButton[] botones = {btnInicio, btnEquipos, btnJornadas, btnClasificacion};
+        JButton[] botones = {btnInicio, btnTemporadas, btnEquipos, btnPartidos, btnResultados};
         
         for (JButton btn : botones) {
             if (btn == botonSeleccionado) {
-                btn.setBackground(new Color(37, 99, 235));
+                btn.setBackground(COLOR_AZUL_SELECCION);
                 btn.setContentAreaFilled(true);
             } else {
-                btn.setBackground(new Color(24, 24, 27));
+                btn.setBackground(COLOR_FONDO_LATERAL);
                 btn.setContentAreaFilled(false);
             }
         }
     }
+    
+    // --- MÉTODOS DE PANELES PRINCIPALES ---
 
     private void crearPanelPrincipal() {
         panelPrincipal = new JPanel();
         cardLayout = new CardLayout();
         panelPrincipal.setLayout(cardLayout);
-        panelPrincipal.setBackground(new Color(24, 24, 27));
+        panelPrincipal.setBackground(COLOR_FONDO_LATERAL);
 
         panelPrincipal.add(crearPanelInicio(), CARD_INICIO);
+        panelPrincipal.add(crearPanelTemporadas(), CARD_TEMPORADAS);
         panelPrincipal.add(crearPanelEquipo(), CARD_EQUIPOS);
-        panelPrincipal.add(crearPanelJornada(), CARD_JORNADAS);
-        panelPrincipal.add(crearPanelClasificacion(), CARD_CLASIFICACION);
+        panelPrincipal.add(crearPanelPartidos(), CARD_PARTIDOS);
+        panelPrincipal.add(crearPanelResultados(), CARD_RESULTADOS);
 
         getContentPane().add(panelPrincipal, BorderLayout.CENTER);
-        
-   
     }
 
     private JPanel crearPanelInicio() {
-        JPanel panelInicio = new JPanel(new BorderLayout());
-        panelInicio.setBackground(new Color(24, 24, 27));
-        panelInicio.setBorder(new EmptyBorder(40, 40, 40, 40));
+        JPanel panelTituloInicio = new JPanel(new BorderLayout());
+        panelTituloInicio.setBackground(COLOR_FONDO_LATERAL);
+        panelTituloInicio.setBorder(new EmptyBorder(40, 40, 40, 40));
 
         JLabel lblTituloInicio = new JLabel("Inicio");
         lblTituloInicio.setFont(new Font("Segoe UI", Font.BOLD, 28));
-        lblTituloInicio.setForeground(Color.WHITE);
-        panelInicio.add(lblTituloInicio, BorderLayout.NORTH);
+        lblTituloInicio.setForeground(COLOR_TEXTO);
+        panelTituloInicio.add(lblTituloInicio, BorderLayout.NORTH);
 
-        return panelInicio;
+        return panelTituloInicio;
+    }
+
+    private JPanel crearPanelTemporadas() {
+        JPanel panelTemporada = new JPanel(new BorderLayout());
+        panelTemporada.setBackground(COLOR_FONDO_LATERAL);
+        panelTemporada.setBorder(new EmptyBorder(40, 40, 40, 40));
+
+        JLabel lblTitulo = new JLabel("Temporadas");
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        lblTitulo.setForeground(COLOR_TEXTO);
+        panelTemporada.add(lblTitulo, BorderLayout.NORTH);
+        
+        JPanel panelBodyTemporada = new JPanel();
+        panelTemporada.add(panelBodyTemporada, BorderLayout.SOUTH);
+        
+        JButton btnCrearTemporada = new JButton("New button");
+        panelBodyTemporada.add(btnCrearTemporada);
+
+        return panelTemporada;
     }
 
     private JPanel crearPanelEquipo() {
         JPanel panelBodyTemporada = new JPanel(new BorderLayout());
-        panelBodyTemporada.setBackground(new Color(24, 24, 27));
+        panelBodyTemporada.setBackground(COLOR_FONDO_LATERAL);
         panelBodyTemporada.setBorder(new EmptyBorder(40, 40, 40, 40));
 
+        // ... (código del panel de equipos sin cambios relevantes para la tabla) ...
+        
         // Header
-        JPanel panelHeaderTemporada = new JPanel(new BorderLayout());
-        panelHeaderTemporada.setOpaque(false);
-        panelHeaderTemporada.setBorder(new EmptyBorder(0, 0, 30, 0));
+        JPanel panelHeaderEquipos = new JPanel(new BorderLayout());
+        panelHeaderEquipos.setOpaque(false);
+        panelHeaderEquipos.setBorder(new EmptyBorder(0, 0, 30, 0));
         
         JLabel lblTituloFederacion = new JLabel("Federación de Balonmano");
         lblTituloFederacion.setFont(new Font("Segoe UI", Font.BOLD, 32));
-        lblTituloFederacion.setForeground(Color.WHITE);
+        lblTituloFederacion.setForeground(COLOR_TEXTO);
         
         JPanel headerContentInicio = new JPanel();
         headerContentInicio.setLayout(new BoxLayout(headerContentInicio, BoxLayout.Y_AXIS));
         headerContentInicio.setOpaque(false);
         headerContentInicio.add(lblTituloFederacion);
-        
-        JComboBox<String> comboBoxTemporada = new JComboBox<>();
-        comboBoxTemporada.addItem("Temporada 2023/2024");
-        comboBoxTemporada.addItem("Temporada 2024/2025");
 
-        /* 🔴 CLAVE: tamaño */
-        comboBoxTemporada.setPreferredSize(new Dimension(250, 35));
-        comboBoxTemporada.setMaximumSize(new Dimension(250, 35));
-
-        /* Estilo general del JComboBox (la caja) */
-        comboBoxTemporada.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        comboBoxTemporada.setForeground(Color.WHITE);
-        comboBoxTemporada.setBackground(new Color(39, 39, 42));
-        comboBoxTemporada.setBorder(BorderFactory.createLineBorder(new Color(63, 63, 70)));
-        comboBoxTemporada.setFocusable(false);
-        comboBoxTemporada.setOpaque(true);
-
-        // Añado el ComboBox al panel del Header, alineado a la derecha (EAST)
-        panelHeaderTemporada.add(headerContentInicio, BorderLayout.WEST); // Título a la izquierda
-        panelHeaderTemporada.add(comboBoxTemporada, BorderLayout.WEST);   // ComboBox a la derecha
-        
-        panelHeaderTemporada.add(headerContentInicio, BorderLayout.NORTH);
-        panelBodyTemporada.add(panelHeaderTemporada, BorderLayout.NORTH);
+        panelHeaderEquipos.add(headerContentInicio, BorderLayout.WEST);
+        panelHeaderEquipos.add(headerContentInicio, BorderLayout.NORTH);
+        panelBodyTemporada.add(panelHeaderEquipos, BorderLayout.NORTH);
 
         // Título sección
         JLabel lbltituloEquipos = new JLabel("Equipos");
         lbltituloEquipos.setFont(new Font("Segoe UI", Font.BOLD, 28));
-        lbltituloEquipos.setForeground(Color.WHITE);
+        lbltituloEquipos.setForeground(COLOR_TEXTO);
         lbltituloEquipos.setBorder(new EmptyBorder(20, 0, 20, 0));
         
         JPanel panelTituloEquipo = new JPanel(new BorderLayout());
@@ -256,30 +339,28 @@ public class VentanaPrincipal extends JFrame {
         contenedor.setOpaque(false);
         contenedor.add(panelTituloEquipo);
 
-        // Lista de equipos (solo nombres)
-        String[] equipos = {"Barcelona", "Atlético de Madrid", "Granada", "Sevilla", "Zaragoza", "Valencia", "ATHLETIC CLUB", "Vigo"};
+        String[] equipos = {"Barcelona", "Athletic Club", "Granada", "Sevilla", "Zaragoza", "Valencia"};
 
         for (String nombre : equipos) {
             JPanel tarjeta = new JPanel(new BorderLayout());
             tarjeta.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
             tarjeta.setPreferredSize(new Dimension(800, 80));
-            tarjeta.setBackground(new Color(39, 39, 42));
+            tarjeta.setBackground(COLOR_HOVER);
             tarjeta.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(63, 63, 70), 1, true),
+                BorderFactory.createLineBorder(COLOR_BORDE, 1, true),
                 new EmptyBorder(15, 20, 15, 20)
             ));
 
             JLabel lblNombre = new JLabel(nombre);
             lblNombre.setFont(new Font("Segoe UI", Font.BOLD, 20));
-            lblNombre.setForeground(Color.WHITE);
+            lblNombre.setForeground(COLOR_TEXTO);
 
             tarjeta.add(lblNombre, BorderLayout.WEST);
 
-            // Botón Gestionar
             JButton btnGestionar = new JButton("Gestionar");
             btnGestionar.setFont(new Font("Segoe UI", Font.PLAIN, 14));
             btnGestionar.setForeground(new Color(161, 161, 170));
-            btnGestionar.setBackground(new Color(39, 39, 42));
+            btnGestionar.setBackground(COLOR_HOVER);
             btnGestionar.setBorder(BorderFactory.createEmptyBorder(8, 20, 8, 20));
             btnGestionar.setFocusPainted(false);
             btnGestionar.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -290,47 +371,146 @@ public class VentanaPrincipal extends JFrame {
             contenedor.add(Box.createRigidArea(new Dimension(0, 15)));
         }
 
-        JScrollPane scroll = new JScrollPane(contenedor);
-        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);//hace que el scroll no se vea
-        scroll.setViewportBorder(null);
-        scroll.setEnabled(false);
-        scroll.setOpaque(false);
-        scroll.getViewport().setOpaque(false);
-        scroll.getVerticalScrollBar().setUnitIncrement(10);
-        
-        scroll.setBorder(null);
-        panelBodyTemporada.add(scroll, BorderLayout.CENTER);
+        JScrollPane scrollEquipos = new JScrollPane(contenedor);
+        scrollEquipos.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        scrollEquipos.setViewportBorder(null);
+        scrollEquipos.setEnabled(false);
+        scrollEquipos.setOpaque(false);
+        scrollEquipos.getViewport().setOpaque(false);
+        scrollEquipos.getVerticalScrollBar().setUnitIncrement(10);
+        scrollEquipos.setBorder(null);
+        panelBodyTemporada.add(scrollEquipos, BorderLayout.CENTER);
 
         return panelBodyTemporada;
     }
 
+    private JPanel crearPanelPartidos() {
+        JPanel panelJornadas = new JPanel(new BorderLayout());
+        panelJornadas.setBackground(COLOR_FONDO_LATERAL);
+        panelJornadas.setBorder(new EmptyBorder(40, 40, 40, 40));
 
-    private JPanel crearPanelJornada() {
-        JPanel panelTituloJornadas = new JPanel(new BorderLayout());
-        panelTituloJornadas.setBackground(new Color(24, 24, 27));
-        panelTituloJornadas.setBorder(new EmptyBorder(40, 40, 40, 40));
-
-        JLabel lblTituloJornada = new JLabel("Jornadas");
+        JLabel lblTituloJornada = new JLabel("Partidos");
         lblTituloJornada.setFont(new Font("Segoe UI", Font.BOLD, 28));
-        lblTituloJornada.setForeground(Color.WHITE);
-        panelTituloJornadas.add(lblTituloJornada, BorderLayout.NORTH);
+        lblTituloJornada.setForeground(COLOR_TEXTO);
+        panelJornadas.add(lblTituloJornada, BorderLayout.NORTH);
+        
+        JPanel panelBodyJornada = new JPanel();
+        panelJornadas.add(panelBodyJornada, BorderLayout.SOUTH);
 
-        return panelTituloJornadas;
+        return panelJornadas;
     }
+    
+    /**
+     * Crea el panel de Resultados/Clasificación, haciendo la tabla no editable.
+     */
+    private JPanel crearPanelResultados() {
+        JPanel panelClasificacion = new JPanel(new BorderLayout());
+        panelClasificacion.setBackground(COLOR_FONDO_LATERAL);
+        panelClasificacion.setBorder(new EmptyBorder(40, 40, 40, 40));
 
+        final Color COLOR_FONDO_OSCURO_ELEM = COLOR_HOVER; 
 
-
-    private JPanel crearPanelClasificacion() {
-        JPanel panelTituloClasificacion = new JPanel(new BorderLayout());
-        panelTituloClasificacion.setBackground(new Color(24, 24, 27));
-        panelTituloClasificacion.setBorder(new EmptyBorder(40, 40, 40, 40));
+        // 1. Cabecera (Título y ComboBox)
+        JPanel panelHeaderClasificacion = new JPanel();
+        panelHeaderClasificacion.setLayout(new BoxLayout(panelHeaderClasificacion, BoxLayout.Y_AXIS));
+        panelHeaderClasificacion.setOpaque(false);
+        panelHeaderClasificacion.setBorder(new EmptyBorder(0, 0, 30, 0));
 
         JLabel lblTituloClasificacion = new JLabel("Clasificación");
         lblTituloClasificacion.setFont(new Font("Segoe UI", Font.BOLD, 28));
-        lblTituloClasificacion.setForeground(Color.WHITE);
-        panelTituloClasificacion.add(lblTituloClasificacion, BorderLayout.NORTH);
+        lblTituloClasificacion.setForeground(COLOR_TEXTO);
+        lblTituloClasificacion.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        return panelTituloClasificacion;
+        JComboBox<String> comboBoxTemporada = new JComboBox<>();
+        // (Configuración del ComboBox simplificada, se mantiene el estilo)
+        comboBoxTemporada.addItem("Temporada 2024/2025");
+        comboBoxTemporada.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        comboBoxTemporada.setForeground(COLOR_TEXTO);
+        comboBoxTemporada.setBackground(COLOR_FONDO_OSCURO_ELEM);
+        comboBoxTemporada.setRenderer(new DefaultListCellRenderer() {
+            // Código de renderizado del ComboBox...
+            private static final long serialVersionUID = 1L;
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                label.setBackground(isSelected ? COLOR_AZUL_SELECCION : COLOR_FONDO_OSCURO_ELEM);
+                label.setForeground(COLOR_TEXTO);
+                return label;
+            }
+        });
+
+        panelHeaderClasificacion.add(lblTituloClasificacion);
+        panelHeaderClasificacion.add(Box.createRigidArea(new Dimension(0, 15)));
+        panelHeaderClasificacion.add(comboBoxTemporada);
+
+        panelClasificacion.add(panelHeaderClasificacion, BorderLayout.NORTH);
+
+        // 2. Datos y Modelo de Tabla (¡Aquí está la magia!)
+        String[] columnNames = {"Pos", "Equipo", "PJ", "PG", "PE", "PP", "Puntos", "GF", "GC", "DF"};
+        Object[][] data = {
+            {"1", "Athletic Club", "14", "12", "1", "1", "37", "420", "300", "120"},
+            {"2", "Barcelona", "14", "10", "1", "3", "31", "380", "310", "70"},
+            {"3", "Granada", "14", "8", "2", "4", "26", "360", "350", "10"},
+            {"4", "Sevilla", "14", "7", "2", "5", "23", "340", "345", "-5"},
+            {"5", "Zaragoza", "14", "7", "1", "6", "22", "335", "360", "-25"},
+            {"6", "Valencia", "14", "6", "3", "5", "21", "350", "340", "10"},
+        };
+        // CÓDIGO SIMPLE PARA HACER LA TABLA NO EDITABLE:
+        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // **Esto hace que la tabla sea de solo lectura.**
+            }
+        };
+
+        tableClasificacion = new JTable(model);
+
+        // 3. Estilo de la Tabla
+        // (Se ha mantenido el código de estilo original, que es correcto)
+        tableClasificacion.setBackground(COLOR_FONDO_OSCURO_ELEM);
+        tableClasificacion.setForeground(COLOR_TEXTO);
+        tableClasificacion.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        tableClasificacion.setGridColor(COLOR_BORDE);
+        tableClasificacion.setRowHeight(30);
+        tableClasificacion.setSelectionBackground(COLOR_AZUL_SELECCION.darker());
+        tableClasificacion.setSelectionForeground(COLOR_TEXTO);
+        tableClasificacion.setIntercellSpacing(new Dimension(0, 0));
+
+        // Estilo de la Cabecera (Header)
+        JTableHeader header = tableClasificacion.getTableHeader();
+        header.setBackground(COLOR_FONDO_LATERAL);
+        header.setForeground(new Color(161, 161, 170));
+        header.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        header.setBorder(BorderFactory.createLineBorder(COLOR_BORDE));
+
+        // Renderizadores (Centrado y Alineación a la izquierda)
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        centerRenderer.setBackground(COLOR_FONDO_OSCURO_ELEM);
+        centerRenderer.setForeground(COLOR_TEXTO);
+        
+        DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
+        leftRenderer.setHorizontalAlignment(JLabel.LEFT);
+        leftRenderer.setBackground(COLOR_FONDO_OSCURO_ELEM);
+        leftRenderer.setForeground(COLOR_TEXTO);
+
+        // Aplicar renderizadores
+        for (int i = 0; i < tableClasificacion.getColumnCount(); i++) {
+            tableClasificacion.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+        tableClasificacion.getColumnModel().getColumn(1).setCellRenderer(leftRenderer); // Columna "Equipo" a la izquierda
+
+        // 4. Panel de Scroll
+        JScrollPane scrollPane = new JScrollPane(tableClasificacion);
+        scrollPane.setBorder(BorderFactory.createLineBorder(COLOR_BORDE)); 
+        scrollPane.getViewport().setBackground(COLOR_FONDO_OSCURO_ELEM); 
+        scrollPane.setOpaque(false);
+
+        panelClasificacion.add(scrollPane, BorderLayout.CENTER);
+
+        return panelClasificacion;
     }
 
     private void mostrarPanel(String nombre) {
