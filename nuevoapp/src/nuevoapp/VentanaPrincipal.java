@@ -2,6 +2,7 @@ package nuevoapp;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.DefaultTableModel; 
@@ -11,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 
 public class VentanaPrincipal extends JFrame implements ActionListener {
 
@@ -42,7 +44,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
             ImageIcon icono = new ImageIcon(getClass().getResource("/assets/icono.png"));
             setIconImage(icono.getImage());
         } catch (Exception e) {
-            System.err.println("Error al cargar el ícono: " + e.getMessage());
+            System.err.println("Error al cargar el ícono de la ventana: " + e.getMessage());
         }
         
         initUI();
@@ -85,24 +87,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         panelLogo.setOpaque(false);
         panelLogo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
         
-        // --- INICIO DE LA MODIFICACIÓN DEL LOGO ---
         JLabel lblIcono = new JLabel();
+        lblIcono.setFont(new Font("Segoe UI", Font.PLAIN, 32));
         lblIcono.setForeground(COLOR_TEXTO);
-        
-        try {
-            // Cargar el icono desde los recursos
-            ImageIcon iconoOriginal = new ImageIcon(getClass().getResource("/assets/icono.png"));
-            
-            // Redimensionar a un tamaño apropiado (ej. 40x40 píxeles)
-            Image imagenRedimensionada = iconoOriginal.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-            lblIcono.setIcon(new ImageIcon(imagenRedimensionada));
-            
-        } catch (Exception e) {
-            System.err.println("Error al cargar el logo: /assets/logo.png. Usando texto de respaldo.");
-            lblIcono.setText(""); // Texto o emoji de respaldo si falla la carga
-            lblIcono.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        }
-        // --- FIN DE LA MODIFICACIÓN DEL LOGO ---
         
         JLabel lblTitulo = new JLabel("Federación de Balonmano");
         lblTitulo.setForeground(COLOR_TEXTO);
@@ -281,62 +268,16 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     }
 
     private JPanel crearPanelInicio() {
-        // Usamos un JPanel centrado para contener todos los elementos
-        JPanel panelInicioContenedor = new JPanel(new GridBagLayout());
-        panelInicioContenedor.setBackground(COLOR_FONDO_LATERAL);
-        panelInicioContenedor.setBorder(new EmptyBorder(40, 40, 40, 40));
-        
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(20, 0, 20, 0); // Espaciado vertical entre elementos
-        gbc.gridwidth = GridBagConstraints.REMAINDER; // Cada componente ocupa una fila completa
-        gbc.fill = GridBagConstraints.HORIZONTAL; // Estirar horizontalmente
-        
-        // 1. TÍTULO GRANDE
-        JLabel lblTituloCompleto = new JLabel("REAL FEDERACIÓN ESPAÑOLA DE BALONMANO");
-        lblTituloCompleto.setFont(new Font("Segoe UI", Font.BOLD, 36)); // Fuente muy grande
-        lblTituloCompleto.setForeground(COLOR_AZUL_SELECCION);
-        lblTituloCompleto.setHorizontalAlignment(SwingConstants.CENTER);
-        
-        gbc.gridy = 0;
-        panelInicioContenedor.add(lblTituloCompleto, gbc);
+        JPanel panelTituloInicio = new JPanel(new BorderLayout());
+        panelTituloInicio.setBackground(COLOR_FONDO_LATERAL);
+        panelTituloInicio.setBorder(new EmptyBorder(40, 40, 40, 40));
 
-        // 2. IMAGEN DEL PARTIDO
-        JLabel lblImagenPartido = new JLabel();
-        lblImagenPartido.setHorizontalAlignment(SwingConstants.CENTER);
-        lblImagenPartido.setPreferredSize(new Dimension(800, 500)); // Tamaño deseado para la imagen
-        lblImagenPartido.setMinimumSize(new Dimension(600, 400));
-        lblImagenPartido.setOpaque(false);
-        
-        try {
-            // Cargar la imagen del partido
-            ImageIcon iconoOriginal = new ImageIcon(getClass().getResource("/assets/BALON.jpg"));
-            
-            // Redimensionar la imagen para que se ajuste al tamaño del JLabel
-            // Mantenemos la proporción (SCALE_SMOOTH)
-            Image imagenRedimensionada = iconoOriginal.getImage().getScaledInstance(
-                800, 500, // Fijar un tamaño grande
-                Image.SCALE_SMOOTH
-            );
-            lblImagenPartido.setIcon(new ImageIcon(imagenRedimensionada));
-            
-        } catch (Exception e) {
-            System.err.println("Error al cargar la imagen del partido: /assets/BALON.jpg. Usando texto de respaldo.");
-            lblImagenPartido.setText("<html><div style='text-align: center; color: white;'>[IMAGEN DE PARTIDO NO ENCONTRADA]<br>Asegurese que el archivo está en /assets/imagen_partido.jpg</div></html>");
-            lblImagenPartido.setFont(new Font("Segoe UI", Font.BOLD, 18));
-            lblImagenPartido.setBorder(BorderFactory.createLineBorder(Color.RED));
-        }
-        
-        gbc.gridy = 1;
-        gbc.weightx = 1.0; // Permitir que la imagen se estire con la ventana
-        gbc.weighty = 1.0; // Permitir que la imagen se estire con la ventana
-        gbc.fill = GridBagConstraints.BOTH; // Rellenar espacio horizontal y vertical
-        panelInicioContenedor.add(lblImagenPartido, gbc);
-        
-        // El resto del panel principal (que contiene este panel de inicio) debe ir al BorderLayout.CENTER
-        // (Esto ya está configurado en tu método crearPanelPrincipal)
-        
-        return panelInicioContenedor;
-    
+        JLabel lblTituloInicio = new JLabel("Inicio");
+        lblTituloInicio.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        lblTituloInicio.setForeground(COLOR_TEXTO);
+        panelTituloInicio.add(lblTituloInicio, BorderLayout.NORTH);
+
+        return panelTituloInicio;
     }
 
     private JPanel crearPanelTemporadas() {
@@ -357,6 +298,35 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
         return panelTemporada;
     }
+    
+    /**
+     * Helper: Carga un escudo de equipo desde los recursos.
+     */
+    private ImageIcon cargarEscudo(String nombreEquipo) {
+        // Asume la ruta de recursos para WindowBuilder: /assets/escudos/[nombre].png
+        String nombreArchivo = nombreEquipo.toLowerCase().replaceAll("\\s+", "");
+        String ruta = "/assets/escudos/" + nombreArchivo + ".png";
+        
+        try {
+            // Intentar cargar el recurso
+            java.net.URL imgURL = getClass().getResource(ruta);
+            if (imgURL == null) {
+                // Si no se encuentra, usar una imagen de placeholder (ej. un círculo)
+                System.err.println("Advertencia: No se pudo cargar el escudo en " + ruta + ". Usando placeholder.");
+                // Retornar un placeholder visual, o un ImageIcon temporal
+                return null; 
+            }
+            
+            Image img = new ImageIcon(imgURL).getImage();
+            // Escalar la imagen a un tamaño fijo (40x40) para la tarjeta
+            Image scaledImg = img.getScaledInstance(40, 40, Image.SCALE_SMOOTH); 
+            return new ImageIcon(scaledImg);
+        } catch (Exception e) {
+            System.err.println("Error al procesar el escudo para " + nombreEquipo + ": " + e.getMessage());
+            return null;
+        }
+    }
+
 
     private JPanel crearPanelEquipo() {
         JPanel panelBodyEquipos = new JPanel(new BorderLayout());
@@ -396,7 +366,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         String[] equipos = {"Barcelona", "Athletic Club", "Granada", "Sevilla", "Zaragoza", "Valencia"};
 
         for (String nombre : equipos) {
-            JPanel tarjeta = new JPanel(new BorderLayout());
+            JPanel tarjeta = new JPanel(new BorderLayout(15, 0)); // Espacio entre elementos
             tarjeta.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
             tarjeta.setPreferredSize(new Dimension(800, 80));
             tarjeta.setBackground(COLOR_HOVER);
@@ -404,22 +374,54 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
                 BorderFactory.createLineBorder(COLOR_BORDE, 1, true),
                 new EmptyBorder(15, 20, 15, 20)
             ));
+            
+            // 1. ESCUDO (WEST)
+            ImageIcon escudo = cargarEscudo(nombre);
+            JLabel lblEscudo = new JLabel(escudo);
+            lblEscudo.setPreferredSize(new Dimension(45, 45)); 
+            tarjeta.add(lblEscudo, BorderLayout.WEST);
 
+            // 2. NOMBRE (CENTER)
             JLabel lblNombre = new JLabel(nombre);
             lblNombre.setFont(new Font("Segoe UI", Font.BOLD, 20));
             lblNombre.setForeground(COLOR_TEXTO);
+            tarjeta.add(lblNombre, BorderLayout.CENTER);
 
-            tarjeta.add(lblNombre, BorderLayout.WEST);
+            // 3. BOTONES (EAST)
+            JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+            panelBotones.setOpaque(false);
 
+            // Botón Cambiar Escudo
+            JButton btnCambiarEscudo = new JButton("Cambiar Escudo");
+            btnCambiarEscudo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+            btnCambiarEscudo.setForeground(new Color(161, 161, 170));
+            btnCambiarEscudo.setBackground(COLOR_HOVER);
+            btnCambiarEscudo.setBorder(BorderFactory.createEmptyBorder(8, 20, 8, 20));
+            btnCambiarEscudo.setFocusPainted(false);
+            btnCambiarEscudo.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            
+            // Asignar Listener para abrir JFileChooser
+            btnCambiarEscudo.addActionListener(e -> {
+                manejarCambioEscudo(lblEscudo, nombre);
+            });
+            
+            // Botón Gestionar
             JButton btnGestionar = new JButton("Gestionar");
             btnGestionar.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-            btnGestionar.setForeground(new Color(161, 161, 170));
+            btnGestionar.setForeground(COLOR_AZUL_SELECCION); 
             btnGestionar.setBackground(COLOR_HOVER);
             btnGestionar.setBorder(BorderFactory.createEmptyBorder(8, 20, 8, 20));
             btnGestionar.setFocusPainted(false);
             btnGestionar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            btnGestionar.addActionListener(e -> {
+                 JOptionPane.showMessageDialog(this, "Funcionalidad 'Gestionar' para " + nombre + " no implementada.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            });
+            
+            panelBotones.add(btnCambiarEscudo);
+            panelBotones.add(btnGestionar);
+            
+            tarjeta.add(panelBotones, BorderLayout.EAST);
 
-            tarjeta.add(btnGestionar, BorderLayout.EAST);
 
             contenedor.add(tarjeta);
             contenedor.add(Box.createRigidArea(new Dimension(0, 15)));
@@ -437,9 +439,53 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
         return panelBodyEquipos;
     }
+    
+    /**
+     * Muestra un JFileChooser, permite al usuario seleccionar una imagen y actualiza el JLabel.
+     * @param lblEscudo El JLabel donde se mostrará el nuevo escudo.
+     * @param nombreEquipo El nombre del equipo (para mensajes).
+     */
+    private void manejarCambioEscudo(JLabel lblEscudo, String nombreEquipo) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Seleccionar Nuevo Escudo para " + nombreEquipo);
+        
+        // Filtro para mostrar solo archivos de imagen
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+            "Archivos de Imagen (JPG, PNG, GIF)", "jpg", "jpeg", "png", "gif");
+        fileChooser.setFileFilter(filter);
+
+        int resultado = fileChooser.showOpenDialog(this);
+
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            File archivoSeleccionado = fileChooser.getSelectedFile();
+            try {
+                // Cargar la imagen del archivo seleccionado
+                ImageIcon nuevaIcono = new ImageIcon(archivoSeleccionado.getAbsolutePath());
+                Image img = nuevaIcono.getImage();
+                
+                // Escalar la nueva imagen al mismo tamaño (40x40)
+                Image scaledImg = img.getScaledInstance(40, 40, Image.SCALE_SMOOTH); 
+                lblEscudo.setIcon(new ImageIcon(scaledImg));
+                
+                JOptionPane.showMessageDialog(this, 
+                    "Escudo de " + nombreEquipo + " actualizado con éxito desde:\n" + archivoSeleccionado.getName(), 
+                    "Actualización Exitosa", JOptionPane.INFORMATION_MESSAGE);
+                
+                // En un entorno real, aquí guardarías la ruta o el binario de la imagen en tu base de datos o modelo.
+                
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, 
+                    "Error al cargar la imagen seleccionada.", 
+                    "Error de Imagen", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
+        }
+    }
+    
+    // El resto de los métodos se mantienen igual (Partidos, Resultados, Helpers)
 
     /**
-     * Crea el panel de Partidos. Se vuelve a usar HTML para la simplicidad del código.
+     * Crea el panel de Partidos.
      */
     private JPanel crearPanelPartidos() {
         JPanel panelJornadas = new JPanel(new BorderLayout());
@@ -683,7 +729,29 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     }
     
     /**
-     * Helper: Crea el panel de resumen de la jornada (usa HTML para la concisión).
+     * Helper: Crea un panel que simula la etiqueta de estado sin usar HTML.
+     */
+    private JPanel crearIndicadorEstadoSinHtml(String label, int count, Color color) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        panel.setOpaque(false);
+
+        // 1. Etiqueta de texto fijo (en negrita)
+        JLabel lblLabel = new JLabel(label);
+        lblLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblLabel.setForeground(COLOR_TEXTO);
+        panel.add(lblLabel);
+
+        // 2. Etiqueta para el número (con color)
+        JLabel lblCount = new JLabel(String.valueOf(count));
+        lblCount.setFont(new Font("Segoe UI", Font.PLAIN, 14)); // El número no necesita negrita
+        lblCount.setForeground(color);
+        panel.add(lblCount);
+
+        return panel;
+    }
+    
+    /**
+     * Helper: Crea el panel de resumen de la jornada. 
      */
     private JPanel crearPanelResumenJornada(Color fondo, Color texto) {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 40, 0));
@@ -696,9 +764,6 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
         // Datos de simulación
         int totalPartidos = 5;
-        int terminados = 3;
-        int jugando = 1;
-        int porJugar = 1;
         
         // Etiqueta principal
         JLabel lblTotal = new JLabel("Partidos en Jornada 1: " + totalPartidos);
@@ -711,27 +776,16 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         lblSeparador.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         panel.add(lblSeparador);
 
-        // Indicadores de estado (usan HTML para colorear el número)
-        panel.add(crearIndicadorEstado("Terminados:", terminados, new Color(74, 222, 128))); // Verde
-        panel.add(crearIndicadorEstado("En Juego:", jugando, new Color(253, 224, 71))); // Amarillo
-        panel.add(crearIndicadorEstado("Por Jugar:", porJugar, new Color(129, 140, 248))); // Azul/Morado
+        // Indicadores de estado (SIN HTML)
+        panel.add(crearIndicadorEstadoSinHtml("Terminados:", 3, new Color(74, 222, 128))); // Verde
+        panel.add(crearIndicadorEstadoSinHtml("En Juego:", 1, new Color(253, 224, 71))); // Amarillo
+        panel.add(crearIndicadorEstadoSinHtml("Por Jugar:", 1, new Color(129, 140, 248))); // Azul/Morado
 
         return panel;
     }
 
     /**
-     * Helper: Crea una etiqueta simple para el resumen de estado usando HTML.
-     */
-    private JLabel crearIndicadorEstado(String label, int count, Color color) {
-        // Usa HTML para aplicar color solo al número y negrita al texto fijo.
-        JLabel lbl = new JLabel("<html><b>" + label + "</b> <span style='color:rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ");'>" + count + "</span></html>");
-        lbl.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lbl.setForeground(COLOR_TEXTO);
-        return lbl;
-    }
-
-    /**
-     * Helper: Crea una tarjeta de partido con su estado y resultado (usa HTML para la concisión).
+     * Helper: Crea una tarjeta de partido con su estado y resultado.
      */
     private JPanel crearTarjetaPartido(Color fondo, Color texto, String local, String visitante, String estado, String resultado) {
         JPanel tarjeta = new JPanel(new BorderLayout(20, 0));
@@ -741,12 +795,30 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
             new EmptyBorder(20, 30, 20, 30)
         ));
         tarjeta.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+
+        // 1. Equipos (Izquierda) - Contenedor para manejar múltiples JLabels
+        JPanel panelEquipos = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        panelEquipos.setOpaque(false);
         
-        // 1. Equipos (Izquierda) - Usa HTML para negrita y "vs"
-        JLabel lblEquipos = new JLabel("<html><center><b>" + local + "</b> vs <b>" + visitante + "</b></center></html>");
-        lblEquipos.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        lblEquipos.setForeground(texto);
-        tarjeta.add(lblEquipos, BorderLayout.WEST);
+        // Etiqueta Equipo Local (Negrita)
+        JLabel lblLocal = new JLabel(local);
+        lblLocal.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lblLocal.setForeground(texto);
+        panelEquipos.add(lblLocal);
+        
+        // Etiqueta "vs"
+        JLabel lblVS = new JLabel("vs");
+        lblVS.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        lblVS.setForeground(new Color(161, 161, 170)); // Color más sutil para "vs"
+        panelEquipos.add(lblVS);
+
+        // Etiqueta Equipo Visitante (Negrita)
+        JLabel lblVisitante = new JLabel(visitante);
+        lblVisitante.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lblVisitante.setForeground(texto);
+        panelEquipos.add(lblVisitante);
+
+        tarjeta.add(panelEquipos, BorderLayout.WEST);
 
         // 2. Resultado y Estado (Derecha)
         JPanel panelResultado = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
