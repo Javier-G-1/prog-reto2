@@ -4,7 +4,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.DefaultTableModel; // Importación necesaria para el modelo no editable
+import javax.swing.table.DefaultTableModel; 
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,7 +20,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     private CardLayout cardLayout;
     
     // Atributos de clase
-    private JButton btnTemporadas, btnEquipos, btnPartidos, btnResultados, btnCerrarSesion, btnInicio;
+    private JButton btnTemporada, btnEquipos, btnPartidos, btnResultados, btnCerrarSesion, btnInicio;
     
     private static final String CARD_INICIO = "inicio";
     private static final String CARD_TEMPORADAS = "temporadas";
@@ -104,8 +104,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         configurarBotonMenu(btnInicio, " Inicio");
         btnInicio.addActionListener(this); 
 
-        btnTemporadas = new JButton(" Temporadas");
-        configurarBotonMenu(btnTemporadas, " Temporadas");
+        btnTemporada = new JButton(" Temporada");
+        configurarBotonMenu(btnTemporada, " Temporadas");
         
         btnEquipos = new JButton(" Equipos");
         configurarBotonMenu(btnEquipos, " Equipos");
@@ -117,7 +117,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         configurarBotonMenu(btnResultados, " Resultados");
         
         // Agregar los Listeners de la clase a los botones
-        btnTemporadas.addActionListener(this);
+        btnTemporada.addActionListener(this);
         btnEquipos.addActionListener(this);
         btnPartidos.addActionListener(this);
         btnResultados.addActionListener(this);
@@ -130,7 +130,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         
         Component rigidArea = Box.createRigidArea(new Dimension(0, 20));
         panelSuperior.add(rigidArea);
-        panelSuperior.add(btnTemporadas);
+        panelSuperior.add(btnTemporada);
         
         Component rigidArea_1 = Box.createRigidArea(new Dimension(0, 20));
         panelSuperior.add(rigidArea_1);
@@ -212,9 +212,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         if (e.getSource() == btnInicio) {
             mostrarPanel(CARD_INICIO);
             actualizarSeleccion(btnInicio);
-        } else if (e.getSource() == btnTemporadas) {
+        } else if (e.getSource() == btnTemporada) {
             mostrarPanel(CARD_TEMPORADAS);
-            actualizarSeleccion(btnTemporadas);
+            actualizarSeleccion(btnTemporada);
         } else if (e.getSource() == btnEquipos) {
             mostrarPanel(CARD_EQUIPOS);
             actualizarSeleccion(btnEquipos);
@@ -235,7 +235,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
      * Actualiza el estado visual de los botones de menú.
      */
     private void actualizarSeleccion(JButton botonSeleccionado) {
-        JButton[] botones = {btnInicio, btnTemporadas, btnEquipos, btnPartidos, btnResultados};
+        JButton[] botones = {btnInicio, btnTemporada, btnEquipos, btnPartidos, btnResultados};
         
         for (JButton btn : botones) {
             if (btn == botonSeleccionado) {
@@ -298,29 +298,22 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     }
 
     private JPanel crearPanelEquipo() {
-        JPanel panelBodyTemporada = new JPanel(new BorderLayout());
-        panelBodyTemporada.setBackground(COLOR_FONDO_LATERAL);
-        panelBodyTemporada.setBorder(new EmptyBorder(40, 40, 40, 40));
+        JPanel panelBodyEquipos = new JPanel(new BorderLayout());
+        panelBodyEquipos.setBackground(COLOR_FONDO_LATERAL);
+        panelBodyEquipos.setBorder(new EmptyBorder(40, 40, 40, 40));
 
-        // ... (código del panel de equipos sin cambios relevantes para la tabla) ...
-        
         // Header
         JPanel panelHeaderEquipos = new JPanel(new BorderLayout());
         panelHeaderEquipos.setOpaque(false);
         panelHeaderEquipos.setBorder(new EmptyBorder(0, 0, 30, 0));
         
-        JLabel lblTituloFederacion = new JLabel("Federación de Balonmano");
-        lblTituloFederacion.setFont(new Font("Segoe UI", Font.BOLD, 32));
-        lblTituloFederacion.setForeground(COLOR_TEXTO);
-        
         JPanel headerContentInicio = new JPanel();
         headerContentInicio.setLayout(new BoxLayout(headerContentInicio, BoxLayout.Y_AXIS));
         headerContentInicio.setOpaque(false);
-        headerContentInicio.add(lblTituloFederacion);
 
         panelHeaderEquipos.add(headerContentInicio, BorderLayout.WEST);
         panelHeaderEquipos.add(headerContentInicio, BorderLayout.NORTH);
-        panelBodyTemporada.add(panelHeaderEquipos, BorderLayout.NORTH);
+        panelBodyEquipos.add(panelHeaderEquipos, BorderLayout.NORTH);
 
         // Título sección
         JLabel lbltituloEquipos = new JLabel("Equipos");
@@ -379,9 +372,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         scrollEquipos.getViewport().setOpaque(false);
         scrollEquipos.getVerticalScrollBar().setUnitIncrement(10);
         scrollEquipos.setBorder(null);
-        panelBodyTemporada.add(scrollEquipos, BorderLayout.CENTER);
+        panelBodyEquipos.add(scrollEquipos, BorderLayout.CENTER);
 
-        return panelBodyTemporada;
+        return panelBodyEquipos;
     }
 
     private JPanel crearPanelPartidos() {
@@ -402,6 +395,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     
     /**
      * Crea el panel de Resultados/Clasificación, haciendo la tabla no editable.
+     * Se ha corregido la alineación del título "Clasificación" a la izquierda.
      */
     private JPanel crearPanelResultados() {
         JPanel panelClasificacion = new JPanel(new BorderLayout());
@@ -416,36 +410,45 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         panelHeaderClasificacion.setOpaque(false);
         panelHeaderClasificacion.setBorder(new EmptyBorder(0, 0, 30, 0));
 
+        // Título "Clasificación"
         JLabel lblTituloClasificacion = new JLabel("Clasificación");
         lblTituloClasificacion.setFont(new Font("Segoe UI", Font.BOLD, 28));
         lblTituloClasificacion.setForeground(COLOR_TEXTO);
+        
+        // **CORRECCIÓN DE ALINEACIÓN:** Asegura la alineación horizontal izquierda
         lblTituloClasificacion.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+        // ComboBox de Temporada
         JComboBox<String> comboBoxTemporada = new JComboBox<>();
-        // (Configuración del ComboBox simplificada, se mantiene el estilo)
         comboBoxTemporada.addItem("Temporada 2024/2025");
+        comboBoxTemporada.addItem("Temporada 2023/2024");
         comboBoxTemporada.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         comboBoxTemporada.setForeground(COLOR_TEXTO);
         comboBoxTemporada.setBackground(COLOR_FONDO_OSCURO_ELEM);
+        
+        // **CORRECCIÓN DE ALINEACIÓN:** Asegura que el ComboBox también se alinee a la izquierda
+        comboBoxTemporada.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        // Renderer para el estilo del ComboBox
         comboBoxTemporada.setRenderer(new DefaultListCellRenderer() {
-            // Código de renderizado del ComboBox...
             private static final long serialVersionUID = 1L;
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                label.setBackground(isSelected ? COLOR_AZUL_SELECCION : COLOR_FONDO_OSCURO_ELEM);
+                label.setBackground(isSelected || cellHasFocus ? COLOR_AZUL_SELECCION : COLOR_FONDO_OSCURO_ELEM);
                 label.setForeground(COLOR_TEXTO);
                 return label;
             }
         });
 
+        // Añadir componentes al Header
         panelHeaderClasificacion.add(lblTituloClasificacion);
         panelHeaderClasificacion.add(Box.createRigidArea(new Dimension(0, 15)));
         panelHeaderClasificacion.add(comboBoxTemporada);
 
         panelClasificacion.add(panelHeaderClasificacion, BorderLayout.NORTH);
 
-        // 2. Datos y Modelo de Tabla (¡Aquí está la magia!)
+        // 2. Datos y Modelo de Tabla (No Editable)
         String[] columnNames = {"Pos", "Equipo", "PJ", "PG", "PE", "PP", "Puntos", "GF", "GC", "DF"};
         Object[][] data = {
             {"1", "Athletic Club", "14", "12", "1", "1", "37", "420", "300", "120"},
@@ -455,20 +458,19 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
             {"5", "Zaragoza", "14", "7", "1", "6", "22", "335", "360", "-25"},
             {"6", "Valencia", "14", "6", "3", "5", "21", "350", "340", "10"},
         };
-        // CÓDIGO SIMPLE PARA HACER LA TABLA NO EDITABLE:
+        
         DefaultTableModel model = new DefaultTableModel(data, columnNames) {
             private static final long serialVersionUID = 1L;
 
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // **Esto hace que la tabla sea de solo lectura.**
+                return false; 
             }
         };
 
         tableClasificacion = new JTable(model);
 
         // 3. Estilo de la Tabla
-        // (Se ha mantenido el código de estilo original, que es correcto)
         tableClasificacion.setBackground(COLOR_FONDO_OSCURO_ELEM);
         tableClasificacion.setForeground(COLOR_TEXTO);
         tableClasificacion.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -484,6 +486,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         header.setForeground(new Color(161, 161, 170));
         header.setFont(new Font("Segoe UI", Font.BOLD, 14));
         header.setBorder(BorderFactory.createLineBorder(COLOR_BORDE));
+        header.setPreferredSize(new Dimension(header.getWidth(), 35)); // Altura del header
 
         // Renderizadores (Centrado y Alineación a la izquierda)
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -517,7 +520,10 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         cardLayout.show(panelPrincipal, nombre);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new VentanaPrincipal());
-    }
+	/**
+	 * No hacemos nada con los niveles de privilegio por petición del usuario.
+	 */
+	public void despuesDelLogin(int nivel, String nombre) {
+		// Lógica de privilegios (VACIADA intencionalmente)
+	}
 }
