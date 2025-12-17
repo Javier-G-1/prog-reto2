@@ -29,10 +29,7 @@ public enum Rol implements Serializable {
     Rol(String nombreLegible) {
         this.nombreLegible = nombreLegible;
     }
-
-    /**
-     * @return El nombre del rol con formato para mostrar en la interfaz (UI).
-     */
+    
     public String getNombreLegible() {
         return nombreLegible;
     }
