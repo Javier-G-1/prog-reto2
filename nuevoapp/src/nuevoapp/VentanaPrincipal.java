@@ -13,6 +13,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.LineBorder;
 
 public class VentanaPrincipal extends JFrame implements ActionListener {
 
@@ -65,12 +67,12 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         crearPanelLateral();
         crearPanelPrincipal();
         mostrarPanel(CARD_INICIO);
-        // Inicializar la selección al inicio
+
         if (btnInicio != null) {
             actualizarSeleccion(btnInicio);
         }
 
-        // setVisible(true); // Se recomienda que el setVisible lo haga la clase Login
+
     }
 
     private void crearPanelLateral() {
@@ -80,12 +82,12 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         panelLateral.setLayout(new BorderLayout());
         panelLateral.setBorder(new EmptyBorder(30, 20, 30, 20));
 
-        // Panel superior con logo y botones del menú
+
         JPanel panelSuperior = new JPanel();
         panelSuperior.setLayout(new BoxLayout(panelSuperior, BoxLayout.Y_AXIS));
         panelSuperior.setOpaque(false);
 
-        // Logo y título
+
         JPanel panelLogo = new JPanel();
         panelLogo.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
         panelLogo.setOpaque(false);
@@ -104,8 +106,6 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         panelSuperior.add(panelLogo);
         panelSuperior.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        // BOTONES DE MENÚ
-        
         btnInicio = new JButton(" Inicio"); 
         configurarBotonMenu(btnInicio, " Inicio");
         btnInicio.addActionListener(this); 
@@ -174,10 +174,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
         getContentPane().add(panelLateral, BorderLayout.WEST);
     }
-    
-    /**
-     * Configura el estilo y el MouseListener de un botón de menú.
-     */
+
     private void configurarBotonMenu(JButton btn, String texto) {
         btn.setAlignmentX(Component.LEFT_ALIGNMENT);
         btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
@@ -233,14 +230,10 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         } else if (e.getSource() == btnCerrarSesion) {
             // Lógica para cerrar sesión
             JOptionPane.showMessageDialog(this, "Sesión cerrada", "Adiós", JOptionPane.INFORMATION_MESSAGE);
-            dispose(); // Cierra la ventana principal
-            // Idealmente, aquí se abriría de nuevo la ventana de Login
+            dispose();
         }
     }
 
-    /**
-     * Actualiza el estado visual de los botones de menú.
-     */
     private void actualizarSeleccion(JButton botonSeleccionado) {
         JButton[] botones = {btnInicio, btnTemporada, btnEquipos, btnPartidos, btnResultados};
         
@@ -320,10 +313,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
         return panelInicio;
     }
-    
-    // ***************************************************************
-    // ************ MÉTODO MODIFICADO PARA EL REQUERIMIENTO **********
-    // ***************************************************************
+
     private JPanel crearPanelTemporadas() {
         JPanel panelTemporada = new JPanel(new BorderLayout());
         panelTemporada.setBackground(COLOR_FONDO_LATERAL);
@@ -370,6 +360,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
             public boolean isCellEditable(int row, int column) {
                 return false; 
             }
+
             @Override
             public Class<?> getColumnClass(int columnIndex) {
                 // Esto es importante para el renderizador de JLabel
@@ -487,14 +478,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
         return panelTemporada;
     }
-    // ***************************************************************
-    // ***************************************************************
-    
-    /**
-     * Helper: Carga un escudo de equipo desde los recursos.
-     */
+   
     private ImageIcon cargarEscudo(String nombreEquipo) {
-        // Asume la ruta de recursos para WindowBuilder: /assets/escudos/[nombre].png
+       
         String nombreArchivo = nombreEquipo.toLowerCase().replaceAll("\\s+", "");
         String ruta = "/assets/escudos/" + nombreArchivo + ".png";
         
@@ -502,8 +488,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
             // Intentar cargar el recurso
             java.net.URL imgURL = getClass().getResource(ruta);
             if (imgURL == null) {
-                // Si no se encuentra, usar una imagen de placeholder (ej. un círculo)
-                // System.err.println("Advertencia: No se pudo cargar el escudo en " + ruta + ". Usando placeholder.");
+               
                 return null; 
             }
             
@@ -629,11 +614,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         return panelBodyEquipos;
     }
     
-    /**
-     * Muestra un JFileChooser, permite al usuario seleccionar una imagen y actualiza el JLabel.
-     * @param lblEscudo El JLabel donde se mostrará el nuevo escudo.
-     * @param nombreEquipo El nombre del equipo (para mensajes).
-     */
+
     private void manejarCambioEscudo(JLabel lblEscudo, String nombreEquipo) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Seleccionar Nuevo Escudo para " + nombreEquipo);
@@ -728,10 +709,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         JPanel tarjeta = new JPanel(new BorderLayout());
         tarjeta.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
         tarjeta.setBackground(colorFondo);
-        tarjeta.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(COLOR_BORDE, 1, true),
-            new EmptyBorder(15, 20, 15, 20)
-        ));
+        tarjeta.setBorder(new CompoundBorder(new LineBorder(new Color(63, 63, 70), 1, true), new EmptyBorder(15, 20, 15, 20)));
 
         // Panel Central para equipos y resultado
         JPanel panelPartido = new JPanel(new GridBagLayout());
