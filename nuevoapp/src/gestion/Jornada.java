@@ -1,4 +1,4 @@
-package modelo;
+package gestion;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class Jornada implements Serializable {
 
     /**
       CONSTRUCTOR DE JORNADA
-      nombre El nombre o número identificador de la jornada.
+      nombre: El nombre o número identificador de la jornada.
      */
     public Jornada(String nombre) {
         this.nombre = nombre;
@@ -39,7 +39,6 @@ public class Jornada implements Serializable {
     }
 
     //MÉTODOS DE GESTIÓN
-
     /**
        Añade un nuevo enfrentamiento a esta jornada.
        El objeto Partido ya configurado con equipo local y visitante.

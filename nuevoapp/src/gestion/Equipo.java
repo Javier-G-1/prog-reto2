@@ -1,4 +1,4 @@
-package modelo;
+package gestion;
 
 import java.io.Serializable;
 import java.util.ArrayList;
