@@ -9,8 +9,8 @@ import java.awt.event.*;
 import java.io.File;
 
 /**
- * Clase principal que gestiona la interfaz del sistema de la Federación de Balonmano.
- * Implementa ActionListener para capturar los clics en los botones.
+  Clase principal que gestiona la interfaz del sistema de la Federación de Balonmano.
+  Implementa ActionListener para capturar los clics en los botones.
  */
 public class VentanaPrincipal extends JFrame implements ActionListener {
 
@@ -39,9 +39,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     private static final Color COLOR_AMARILLO = new Color(255, 200, 50);
     private static final Color COLOR_NARANJA = new Color(255, 150, 50);
 
-    /**
-     * CONSTRUCTOR: Configura la ventana y lanza la construcción de la UI.
-     */
+    // CONSTRUCTOR: Configura la ventana y lanza la construcción de la UI.
+
     public VentanaPrincipal() {
         // Carga del icono de la aplicación
         ImageIcon icono = new ImageIcon(getClass().getResource("/assets/icono.png"));
@@ -65,9 +64,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         actualizarBotonSeleccionado(botonInicio);
     }
 
-    /**
-     * Crea la barra lateral de navegación con los botones del menú.
-     */
+    //Crea la barra lateral de navegación con los botones del menú.
+  
     private void crearMenuLateral() {
         JPanel panelLateral = new JPanel(new BorderLayout());
         panelLateral.setPreferredSize(new Dimension(250, 0));
@@ -118,9 +116,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         getContentPane().add(panelLateral, BorderLayout.WEST);
     }
 
-    /**
-     * Método helper para crear botones de menú con un estilo uniforme.
-     */
+    // Método helper para crear botones de menú con un estilo uniforme.
+
     private JButton crearBotonMenu(String texto) {
         JButton boton = new JButton(texto);
         boton.setPreferredSize(new Dimension(220, 45));
@@ -134,9 +131,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         return boton;
     }
 
-    /**
-     * Crea el contenedor central que utiliza CardLayout para intercambiar vistas.
-     */
+    // Crea el contenedor central que utiliza CardLayout para intercambiar vistas.
     private void crearPanelContenido() {
         layoutTarjetas = new CardLayout();
         panelContenido = new JPanel(layoutTarjetas);
@@ -152,16 +147,13 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         getContentPane().add(panelContenido, BorderLayout.CENTER);
     }
 
-    /**
-     * Función que cambia la vista actual en el panel central.
-     */
+    // Función que cambia la vista actual en el panel central.
     private void mostrarTarjeta(String tarjeta) {
         layoutTarjetas.show(panelContenido, tarjeta);
     }
 
-    /**
-     * Cambia el color del botón pulsado para resaltar la sección activa.
-     */
+    // Cambia el color del botón pulsado para resaltar la sección activa.
+
     private void actualizarBotonSeleccionado(JButton activo) {
         JButton[] botones = {botonInicio, botonTemporada, botonEquipos, botonPartidos, botonResultados};
         for (JButton btn : botones) {
@@ -170,9 +162,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         }
     }
 
-    /**
-     * CONTROLADOR DE EVENTOS: Define qué pasa al pulsar cada botón.
-     */
+    // CONTROLADOR DE EVENTOS: Define qué pasa al pulsar cada botón.
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
@@ -211,9 +202,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         }
     }
 
-    /**
-     * Vista de Inicio: Muestra el título y la imagen principal.
-     */
+    //Vista de Inicio: Muestra el título y la imagen principal.
+
     private JPanel crearPanelInicio() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(new Color(35, 31, 124)); // Color corporativo
@@ -239,9 +229,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         return panel;
     }
 
-    /**
-     * Vista de Temporadas: Muestra una tabla con el histórico de temporadas.
-     */
+    // Vista de Temporadas: Muestra una tabla con el histórico de temporadas.
+
     private JPanel crearPanelTemporadas() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.BLACK);
@@ -279,9 +268,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         return panel;
     }
 
-    /**
-     * Vista de Equipos: Crea una lista de tarjetas visuales para cada equipo.
-     */
+    // Vista de Equipos: Crea una lista de tarjetas visuales para cada equipo.
+  
     private JPanel crearPanelEquipos() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(COLOR_FONDO);
@@ -304,9 +292,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         return panel;
     }
 
-    /**
-     * Genera un panel individual (tarjeta) para representar a un equipo.
-     */
+    // Genera un panel individual (tarjeta) para representar a un equipo.
+ 
     private JPanel crearTarjetaEquipo(String nombre) {
         JPanel tarjeta = new JPanel(new BorderLayout(15, 0));
         tarjeta.setBackground(COLOR_BLANCO);
@@ -335,9 +322,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         return tarjeta;
     }
 
-    /**
-     * Vista de Partidos: Incluye filtros por temporada y jornada.
-     */
+    // Vista de Partidos: Incluye filtros por temporada y jornada.
+
     private JPanel crearPanelPartidos() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(new EmptyBorder(30, 30, 30, 30));
@@ -361,9 +347,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         return panel;
     }
 
-    /**
-     * Genera la fila visual de un partido con colores según su estado.
-     */
+    // Genera la fila visual de un partido con colores según su estado.
+ 
     private JPanel crearPartido(String local, String visitante, String estado, String resultado) {
         JPanel paneltarjeta = new JPanel(new BorderLayout());
         paneltarjeta.setBackground(COLOR_BLANCO);
@@ -386,9 +371,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         return paneltarjeta;
     }
 
-    /**
-     * Vista de Clasificación: Muestra la tabla de puntos.
-     */
+    // Vista de Clasificación: Muestra la tabla de puntos.
+    
     private JPanel crearPanelResultados() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(new EmptyBorder(30, 30, 30, 30));
@@ -406,9 +390,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         return panel;
     }
 
-    /**
-     * Busca y escala el icono del escudo de un equipo.
-     */
+    // Busca y escala el icono del escudo de un equipo.
+ 
     private ImageIcon cargarEscudo(String equipo) {
         String ruta = "/assets/escudos/" + equipo.toLowerCase().replaceAll("\\s+", "") + ".png";
         try {
@@ -419,9 +402,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         }
     }
 
-    /**
-     * Abre un selector de archivos para que el usuario suba una nueva imagen de escudo.
-     */
+// Abre un selector de archivos para que el usuario suba una nueva imagen de escudo.
+  
     private void cambiarEscudo(JLabel etiqueta, String equipo) {
         JFileChooser selector = new JFileChooser();
         selector.setFileFilter(new FileNameExtensionFilter("Imágenes", "jpg", "png"));
@@ -437,14 +419,14 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         }
     }
 
-    /**
-     * Punto de entrada principal para ejecutar la ventana.
-     */
+    // Punto de entrada principal para ejecutar la ventana.
+ 
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new VentanaPrincipal().setVisible(true));
     }
 
-	public void despuesDelLogin(int nivel, String nombre) {
+    		void despuesDelLogin(int nivel, String nombre) {
 		// TODO Auto-generated method stub
 		
 	}

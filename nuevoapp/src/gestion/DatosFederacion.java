@@ -21,7 +21,7 @@ public class DatosFederacion implements Serializable {
     // Identificador único para la serialización.
     private static final long serialVersionUID = 1L;
 
-    // LISTAS MAESTRAS-
+    // LISTAS MAESTRAS
 
     //Lista de todos los usuarios (Admin, Manager, Árbitro, Invitado). 
     private List<Usuario> listaUsuarios;

@@ -106,7 +106,7 @@ public class Login extends JFrame implements ActionListener, FocusListener {
 		panelUsuario = new JPanel(new FlowLayout(FlowLayout.CENTER)); // Alinea icono y caja de lado
 		panelUsuario.setOpaque(false); // Para que se vea el azul de fondo
 		lblUsuario = new JLabel("Usuario: ");
-		lblUsuario.setForeground(Color.WHITE);
+		lblUsuario.setForeground(Color.WHITE);												
 		txtUsuario = new JTextField(15);
 		txtUsuario.addFocusListener(this); // Detecta cuando entras con el ratón
 		panelUsuario.add(lblUsuario);
