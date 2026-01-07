@@ -2,71 +2,52 @@ package gestion;
 
 import java.io.Serializable;
 
-/**
-  CLASE: Partido
-
-  Representa un enfrentamiento individual entre dos equipos. 
-  Guarda el marcador y el estado del juego.
-
-     Árbitro y administrador: tiene permiso para cambiar los 'goles' y 
-     marcar el partido como 'finalizado'.
-  
-  	 Invitado/Manager: Solo pueden leer los datos para ver cómo va la tabla.
-
-   Al ser Serializable, los resultados se guardan permanentemente.
- */
 public class Partido implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    //ATRIBUTOS DEL PARTIDO 
-
-    // El equipo que juega en casa. 
     private Equipo equipoLocal;
-
-    // El equipo que juega fuera.
     private Equipo equipoVisitante;
-
-    // Goles marcados por el equipo de casa.
     private int golesLocal;
-
-    //Goles marcados por el equipo de fuera. 
     private int golesVisitante;
-
-    /**  Indica si el partido ya se jugó. 
-      Si es 'false', el partido aparece como "Pendiente". 
-      Si es 'true', el marcador es definitivo.
-     */
     private boolean finalizado;
+    private String fecha; // <-- atributo que faltaba
 
-    /**
-      CONSTRUCTOR DE PARTIDO
-     Se crea un partido inicialmente con 0 goles y como no finalizado.
-      local     Objeto Equipo que juega de local.
-      visitante Objeto Equipo que juega de visitante.
-     */
     public Partido(Equipo local, Equipo visitante) {
+        if (local == null || visitante == null)
+            throw new IllegalArgumentException("Los equipos no pueden ser nulos.");
+        if (local.equals(visitante))
+            throw new IllegalArgumentException("Un equipo no puede jugar contra sí mismo.");
+
         this.equipoLocal = local;
         this.equipoVisitante = visitante;
-        this.golesLocal = 0;
-        this.golesVisitante = 0;
+        this.golesLocal = -1;      // <- indica "sin jugar"
+        this.golesVisitante = -1;   // <- indica "sin jugar"
         this.finalizado = false;
+        this.fecha = null;
     }
 
-    // MÉTODOS DE LÓGICA
-
-    /**
-      Devuelve el nombre del ganador o "Empate".
-      Para generar la tabla de clasificación.
-     */
     public String obtenerGanador() {
         if (!finalizado) return "Pendiente";
         if (golesLocal > golesVisitante) return equipoLocal.getNombre();
         if (golesVisitante > golesLocal) return equipoVisitante.getNombre();
         return "Empate";
     }
+    
+    public int getPuntosLocal() {
+        if (!finalizado) return 0;
+        if (golesLocal > golesVisitante) return 2; // Victoria
+        if (golesLocal == golesVisitante) return 1; // Empate
+        return 0; // Derrota
+    }
 
-    // GETTERS Y SETTERS 
+    public int getPuntosVisitante() {
+        if (!finalizado) return 0;
+        if (golesVisitante > golesLocal) return 2;
+        if (golesVisitante == golesLocal) return 1;
+        return 0;
+    }
 
+    // GETTERS Y SETTERS
     public Equipo getEquipoLocal() { return equipoLocal; }
     public void setEquipoLocal(Equipo equipoLocal) { this.equipoLocal = equipoLocal; }
 
@@ -82,9 +63,11 @@ public class Partido implements Serializable {
     public boolean isFinalizado() { return finalizado; }
     public void setFinalizado(boolean finalizado) { this.finalizado = finalizado; }
 
-    // Muestra el resumen del partido (ej: "Barcelona 2 - 1 Sevilla").
+    public String getFecha() { return fecha; }      // <-- método que faltaba
+    public void setFecha(String fecha) { this.fecha = fecha; }
+
     @Override
     public String toString() {
-        return equipoLocal + " " + golesLocal + " - " + golesVisitante + " " + equipoVisitante;
+        return equipoLocal.getNombre() + " " + golesLocal + " - " + golesVisitante + " " + equipoVisitante.getNombre();
     }
 }

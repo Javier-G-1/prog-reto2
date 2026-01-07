@@ -4,69 +4,50 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
-  CLASE: Jornada
-
-  Representa una fecha específica de la competición (ej: "Jornada 1", "Final").
-  Sirve para organizar los partidos en grupos manejables.
-
-	 Árbitro: Es su principal herramienta de navegación.
-	 Administrador: Es quien genera estas jornadas al crear el calendario.
-
-   	 Al guardar la Jornada, se guardan todos los objetos 'Partido' que contiene.
- */
 public class Jornada implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    //ATRIBUTOS DE LA JORNADA
-
-    // Número o nombre de la jornada (ej: "1" o "Semifinal"). 
     private String nombre;
-
- 
-     // Contiene todos los enfrentamientos que ocurren en esta jornada específica.
-     
     private List<Partido> listaPartidos;
 
-    /**
-      CONSTRUCTOR DE JORNADA
-      nombre: El nombre o número identificador de la jornada.
-     */
     public Jornada(String nombre) {
+        if (nombre == null || nombre.isBlank())
+            throw new IllegalArgumentException("El nombre de la jornada no puede estar vacío.");
         this.nombre = nombre;
-        // Inicializamos la lista de partidos para poder empezar a añadir enfrentamientos.
         this.listaPartidos = new ArrayList<>();
     }
-
-    //MÉTODOS DE GESTIÓN
     /**
-       Añade un nuevo enfrentamiento a esta jornada.
-       El objeto Partido ya configurado con equipo local y visitante.
+     * Requisito Fase 2: Útil para saber si la jornada ha terminado 
+     * y poder mostrar avisos en la clasificación.
      */
+    public boolean estaCompleta() {
+        if (listaPartidos.isEmpty()) return false;
+        for (Partido p : listaPartidos) {
+            if (!p.isFinalizado()) return false;
+        }
+        return true;
+    }
     public void agregarPartido(Partido p) {
-        this.listaPartidos.add(p);
+        if (p == null) throw new IllegalArgumentException("El partido no puede ser nulo.");
+
+        // Evitar partidos repetidos
+        for (Partido existente : listaPartidos) {
+            boolean mismosEquipos = (existente.getEquipoLocal().equals(p.getEquipoLocal()) &&
+                                     existente.getEquipoVisitante().equals(p.getEquipoVisitante()));
+            if (mismosEquipos)
+                throw new IllegalArgumentException("Este enfrentamiento ya existe en la jornada.");
+        }
+
+        listaPartidos.add(p);
     }
 
-    //GETTERS Y SETTERS
+    // Getters y setters
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public List<Partido> getListaPartidos() { return listaPartidos; }
+    public void setListaPartidos(List<Partido> listaPartidos) { this.listaPartidos = listaPartidos; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public List<Partido> getListaPartidos() {
-        return listaPartidos;
-    }
-
-    public void setListaPartidos(List<Partido> listaPartidos) {
-        this.listaPartidos = listaPartidos;
-    }
-
-    //Facilita la visualización en JLists o JComboBoxes en la interfaz.
-   
     @Override
     public String toString() {
         return "Jornada " + nombre;

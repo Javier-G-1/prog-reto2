@@ -19,7 +19,13 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     // --- COMPONENTES DE LA INTERFAZ ---
     private JPanel panelContenido; // Panel central que cambia (contenedor)
     private CardLayout layoutTarjetas; // Administrador para intercambiar paneles
-    private JButton botonInicio, botonTemporada, botonEquipos, botonPartidos, botonResultados, botonCerrarSesion;
+    private JButton botonInicio;
+    private JButton botonTemporada;
+    private JButton botonEquipos;
+    private JButton botonPartidos;
+    private JButton botonResultados;
+    private JButton botonCerrarSesion;
+    
     
     // --- CONSTANTES PARA EL CardLayout ---
     // Estas etiquetas sirven para identificar qué pantalla queremos mostrar
@@ -205,14 +211,14 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     //Vista de Inicio: Muestra el título y la imagen principal.
 
     private JPanel crearPanelInicio() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(new Color(35, 31, 124)); // Color corporativo
-        panel.setBorder(new EmptyBorder(30, 30, 30, 30));
+        JPanel panelTituloInicio = new JPanel(new BorderLayout());
+        panelTituloInicio.setBackground(new Color(35, 31, 124)); // Color corporativo
+        panelTituloInicio.setBorder(new EmptyBorder(30, 30, 30, 30));
 
-        JLabel titulo = new JLabel("FEDERACIÓN ESPAÑOLA DE BALONMANO", SwingConstants.CENTER);
-        titulo.setFont(new Font("Arial", Font.BOLD, 32));
-        titulo.setForeground(COLOR_TEXTO);
-        titulo.setBorder(new EmptyBorder(20, 0, 30, 0));
+        JLabel lbltituloInicio = new JLabel("FEDERACIÓN ESPAÑOLA DE BALONMANO", SwingConstants.CENTER);
+        lbltituloInicio.setFont(new Font("Arial", Font.BOLD, 32));
+        lbltituloInicio.setForeground(COLOR_TEXTO);
+        lbltituloInicio.setBorder(new EmptyBorder(20, 0, 30, 0));
 
         JLabel lblImagen = new JLabel();
         lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
@@ -224,32 +230,32 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
             lblImagen.setText("Imagen no disponible");
         }
 
-        panel.add(titulo, BorderLayout.NORTH);
-        panel.add(lblImagen, BorderLayout.CENTER);
-        return panel;
+        panelTituloInicio.add(lbltituloInicio, BorderLayout.NORTH);
+        panelTituloInicio.add(lblImagen, BorderLayout.CENTER);
+        return panelTituloInicio;
     }
 
     // Vista de Temporadas: Muestra una tabla con el histórico de temporadas.
 
     private JPanel crearPanelTemporadas() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(Color.BLACK);
-        panel.setBorder(new EmptyBorder(30, 30, 30, 30));
+        JPanel panelTemporada = new JPanel(new BorderLayout());
+        panelTemporada.setBackground(Color.BLACK);
+        panelTemporada.setBorder(new EmptyBorder(30, 30, 30, 30));
 
         // Cabecera con título y botón de acción
-        JPanel cabecera = new JPanel(new BorderLayout());
-        cabecera.setBackground(new Color(240, 240, 240));
-        cabecera.setBorder(new EmptyBorder(0, 0, 20, 0));
+        JPanel panelCabeceraTemporada = new JPanel(new BorderLayout());
+        panelCabeceraTemporada.setBackground(new Color(240, 240, 240));
+        panelCabeceraTemporada.setBorder(new EmptyBorder(0, 0, 20, 0));
 
-        JLabel lblTitulo = new JLabel("Gestión de Temporadas");
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 24));
+        JLabel lblTituloTemporada = new JLabel("Gestión de Temporadas");
+        lblTituloTemporada.setFont(new Font("Arial", Font.BOLD, 24));
         
-        JButton btnCrear = new JButton("+ Nueva Temporada");
-        btnCrear.setBackground(COLOR_AZUL);
-        btnCrear.setForeground(COLOR_BLANCO);
+        JButton btnCrearTemporada = new JButton("+ Nueva Temporada");
+        btnCrearTemporada.setBackground(COLOR_AZUL);
+        btnCrearTemporada.setForeground(COLOR_BLANCO);
 
-        cabecera.add(lblTitulo, BorderLayout.WEST);
-        cabecera.add(btnCrear, BorderLayout.EAST);
+        panelCabeceraTemporada.add(lblTituloTemporada, BorderLayout.WEST);
+        panelCabeceraTemporada.add(btnCrearTemporada, BorderLayout.EAST);
 
         // Configuración de la tabla de datos
         String[] columnas = {"ID", "Temporada", "Inicio", "Fin", "Estado"};
@@ -258,25 +264,25 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
             {"2", "2024/2025", "01/09/2024", "30/06/2025", "En Curso"}
         };
 
-        JTable tabla = new JTable(new DefaultTableModel(datos, columnas) {
+        JTable tablaTemporada = new JTable(new DefaultTableModel(datos, columnas) {
             @Override
             public boolean isCellEditable(int r, int c) { return false; }
         });
         
-        panel.add(cabecera, BorderLayout.NORTH);
-        panel.add(new JScrollPane(tabla), BorderLayout.CENTER);
-        return panel;
+        panelTemporada.add(panelCabeceraTemporada, BorderLayout.NORTH);
+        panelTemporada.add(new JScrollPane(tablaTemporada), BorderLayout.CENTER);
+        return panelTemporada;
     }
 
     // Vista de Equipos: Crea una lista de tarjetas visuales para cada equipo.
   
     private JPanel crearPanelEquipos() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(COLOR_FONDO);
-        panel.setBorder(new EmptyBorder(30, 30, 30, 30));
+        JPanel panelTitulo = new JPanel(new BorderLayout());
+        panelTitulo.setBackground(COLOR_FONDO);
+        panelTitulo.setBorder(new EmptyBorder(30, 30, 30, 30));
 
-        JLabel lblTitulo = new JLabel("Equipos Registrados");
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 24));
+        JLabel lblTituloEquipos = new JLabel("Equipos Registrados");
+        lblTituloEquipos.setFont(new Font("Arial", Font.BOLD, 24));
 
         // Panel de scroll que contiene la lista de equipos
         JPanel contenedorEquipo = new JPanel(new GridLayout(0, 1, 0, 12));
@@ -287,9 +293,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
             contenedorEquipo.add(crearTarjetaEquipo(eq));
         }
 
-        panel.add(lblTitulo, BorderLayout.NORTH);
-        panel.add(new JScrollPane(contenedorEquipo), BorderLayout.CENTER);
-        return panel;
+        panelTitulo.add(lblTituloEquipos, BorderLayout.NORTH);
+        panelTitulo.add(new JScrollPane(contenedorEquipo), BorderLayout.CENTER);
+        return panelTitulo;
     }
 
     // Genera un panel individual (tarjeta) para representar a un equipo.
@@ -325,26 +331,26 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     // Vista de Partidos: Incluye filtros por temporada y jornada.
 
     private JPanel crearPanelPartidos() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(new EmptyBorder(30, 30, 30, 30));
+        JPanel panelJornada = new JPanel(new BorderLayout());
+        panelJornada.setBorder(new EmptyBorder(30, 30, 30, 30));
 
         // Filtros superiores
-        JPanel filtros = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
-        filtros.add(new JLabel("Temporada:"));
-        filtros.add(new JComboBox<>(new String[]{"2024/2025"}));
-        filtros.add(new JLabel("Jornada:"));
+        JPanel filtrosJornada = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
+        filtrosJornada.add(new JLabel("Temporada:"));
+        filtrosJornada.add(new JComboBox<>(new String[]{"2024/2025"}));
+        filtrosJornada.add(new JLabel("Jornada:"));
         JComboBox<String> jornadas = new JComboBox<>();
         for (int i = 1; i <= 30; i++) jornadas.addItem("Jornada " + i);
-        filtros.add(jornadas);
+        filtrosJornada.add(jornadas);
 
         // Lista de partidos estática (ejemplo)
         JPanel panelPartidos = new JPanel(new GridLayout(0, 1, 0, 12));
         panelPartidos.add(crearPartido("Barcelona", "Athletic Club", "TERMINADO", "30 - 25"));
         panelPartidos.add(crearPartido("Granada", "Sevilla", "EN JUEGO", "15 - 12"));
 
-        panel.add(filtros, BorderLayout.NORTH);
-        panel.add(new JScrollPane(panelPartidos), BorderLayout.CENTER);
-        return panel;
+        panelJornada.add(filtrosJornada, BorderLayout.NORTH);
+        panelJornada.add(new JScrollPane(panelPartidos), BorderLayout.CENTER);
+        return panelJornada;
     }
 
     // Genera la fila visual de un partido con colores según su estado.
@@ -374,20 +380,20 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     // Vista de Clasificación: Muestra la tabla de puntos.
     
     private JPanel crearPanelResultados() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(new EmptyBorder(30, 30, 30, 30));
+        JPanel panelClasificaciongeneral = new JPanel(new BorderLayout());
+        panelClasificaciongeneral.setBorder(new EmptyBorder(30, 30, 30, 30));
 
-        JLabel titulo = new JLabel("Clasificación General");
-        titulo.setFont(new Font("Arial", Font.BOLD, 24));
+        JLabel lblTituloClasificacion = new JLabel("Clasificación General");
+        lblTituloClasificacion.setFont(new Font("Arial", Font.BOLD, 24));
 
         String[] columnas = {"Pos", "Equipo", "PJ", "Pts"};
         Object[][] datos = { {"1", "Athletic Club", "14", "37"}, {"2", "Barcelona", "14", "31"} };
 
-        JTable tabla = new JTable(new DefaultTableModel(datos, columnas));
+        JTable tablaClasificacion = new JTable(new DefaultTableModel(datos, columnas));
         
-        panel.add(titulo, BorderLayout.NORTH);
-        panel.add(new JScrollPane(tabla), BorderLayout.CENTER);
-        return panel;
+        panelClasificaciongeneral.add(lblTituloClasificacion, BorderLayout.NORTH);
+        panelClasificaciongeneral.add(new JScrollPane(tablaClasificacion), BorderLayout.CENTER);
+        return panelClasificaciongeneral;
     }
 
     // Busca y escala el icono del escudo de un equipo.

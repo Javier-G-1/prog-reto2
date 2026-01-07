@@ -55,8 +55,6 @@ public class Login extends JFrame implements ActionListener, FocusListener {
 	public Login() {
 		// Configuración básica del marco (título, tamaño y cierre)
 		setResizable(false);
-		 ImageIcon icono = new ImageIcon(getClass().getResource("/assets/icono.png"));
-         setIconImage(icono.getImage());
 		setTitle("Real Federación Española de Balonmano");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(800, 150, 616, 450); 
@@ -106,7 +104,7 @@ public class Login extends JFrame implements ActionListener, FocusListener {
 		panelUsuario = new JPanel(new FlowLayout(FlowLayout.CENTER)); // Alinea icono y caja de lado
 		panelUsuario.setOpaque(false); // Para que se vea el azul de fondo
 		lblUsuario = new JLabel("Usuario: ");
-		lblUsuario.setForeground(Color.WHITE);												
+		lblUsuario.setForeground(Color.WHITE);
 		txtUsuario = new JTextField(15);
 		txtUsuario.addFocusListener(this); // Detecta cuando entras con el ratón
 		panelUsuario.add(lblUsuario);
@@ -208,3 +206,4 @@ public class Login extends JFrame implements ActionListener, FocusListener {
 
 	@Override public void focusLost(FocusEvent e) {}
 }
+

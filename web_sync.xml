@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FederacionWeb>
+  <Temporadas>
+    <Temporada nombre="Temporada 2024" estado="TERMINADA">
+    </Temporada>
+    <Temporada nombre="Temporada 2025" estado="TERMINADA">
+    </Temporada>
+    <Temporada nombre="Temporada 2026" estado="EN JUEGO">
+    </Temporada>
+  </Temporadas>
+</FederacionWeb>
