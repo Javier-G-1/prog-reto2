@@ -8,19 +8,32 @@ public class GestorTemporadas {
      * Finaliza la temporada actual y activa la siguiente.
      */
     public void finalizarTemporada(Temporada actual, Temporada siguiente, DatosFederacion datos) {
-        if (actual == null || siguiente == null || datos == null) return;
+        if (actual == null || siguiente == null || datos == null) {
+            GestorLog.error("Parámetros nulos en finalizarTemporada");
+            return;
+        }
 
-        System.out.println("--- INICIANDO CIERRE DE TEMPORADA ---");
+        GestorLog.info("--- INICIANDO CIERRE DE TEMPORADA: " + actual.getNombre() + " ---");
 
         // 1. Cambiar estados
+        String estadoAnteriorActual = actual.getEstado();
+        String estadoAnteriorSiguiente = siguiente.getEstado();
+        
         actual.setEstado(Temporada.TERMINADA);
         siguiente.setEstado(Temporada.EN_JUEGO);
+        
+        GestorLog.info("Estado actualizado - " + actual.getNombre() + ": " + 
+                      estadoAnteriorActual + " → " + Temporada.TERMINADA);
+        GestorLog.info("Estado actualizado - " + siguiente.getNombre() + ": " + 
+                      estadoAnteriorSiguiente + " → " + Temporada.EN_JUEGO);
 
         // 2. Reiniciar plantillas
+        int jugadoresLiberados = 0;
         for (Equipo e : datos.getListaEquipos()) {
+            jugadoresLiberados += e.getPlantilla().size();
             e.getPlantilla().clear();
         }
-        System.out.println("LOG: Equipos vaciados. Jugadores listos para nuevos fichajes.");
+        GestorLog.info("Plantillas vaciadas - Jugadores liberados: " + jugadoresLiberados);
 
         // 3. Sincronización web
         SincronizadorWeb.actualizarActivosServidor(datos, siguiente.getNombre());
@@ -28,68 +41,105 @@ public class GestorTemporadas {
         // 4. Exportación XML
         ExportadorWebXML.generarXMLParaWeb(datos, "sincronizacion_web.xml");
 
-        System.out.println("LOG: " + actual.getNombre() + " cerrada. " + siguiente.getNombre() + " activa.");
+        GestorLog.exito("Cierre de temporada completado - " + actual.getNombre() + 
+                       " finalizada, " + siguiente.getNombre() + " activa");
     }
 
     /**
      * Crea una nueva temporada futura.
      */
     public void crearTemporadaFutura(String nombre, DatosFederacion datos) {
-        if (nombre == null || nombre.isBlank() || datos == null) return;
+        if (nombre == null || nombre.isBlank() || datos == null) {
+            GestorLog.error("Parámetros inválidos para crear temporada");
+            return;
+        }
+        
         Temporada nueva = new Temporada(nombre, Temporada.FUTURA);
         datos.getListaTemporadas().add(nueva);
+        
+        GestorLog.exito("Temporada creada: " + nombre + " | Estado: FUTURA");
     }
- // Dentro de GestorTemporadas.java
+
+    /**
+     * Inscribe un equipo en una temporada específica
+     */
     public void inscribirEquipoEnTemporada(String nombreT, String nombreE, DatosFederacion datos) {
         Temporada t = datos.buscarTemporadaPorNombre(nombreT);
-        if (t != null) {if (t == null || !t.getEstado().equals(Temporada.FUTURA)) {
+        
+        if (t == null) {
+            GestorLog.error("Temporada no encontrada: " + nombreT);
+            return;
+        }
+        
+        // Verificar el estado de la temporada
+        if (!t.getEstado().equals(Temporada.FUTURA)) {
+            GestorLog.advertencia("Intento de inscribir equipo '" + nombreE + 
+                                "' en temporada " + t.getEstado() + ": " + nombreT);
             System.out.println("ERROR: No se pueden inscribir equipos en una temporada ya iniciada o terminada.");
-            return; 
+            return;
         }
-            // Buscamos si el equipo ya existe en el club (lista maestra)
-            Equipo equipoARegistrar = null;
-            for(Equipo e : datos.getListaEquipos()){
-                if(e.getNombre().equalsIgnoreCase(nombreE)) equipoARegistrar = e;
+        
+        // Buscar si el equipo ya existe en el club (lista maestra)
+        Equipo equipoARegistrar = null;
+        for(Equipo e : datos.getListaEquipos()) {
+            if(e.getNombre().equalsIgnoreCase(nombreE)) {
+                equipoARegistrar = e;
+                break;
             }
+        }
 
-            // Si es un club nuevo, lo creamos
-            if (equipoARegistrar == null) {
-                equipoARegistrar = new Equipo(nombreE, null);
-                datos.getListaEquipos().add(equipoARegistrar);
-            }
-            
-            // Lo inscribimos en la temporada específica
-            t.inscribirEquipo(equipoARegistrar);
+        // Si es un club nuevo, lo creamos
+        if (equipoARegistrar == null) {
+            equipoARegistrar = new Equipo(nombreE, null);
+            datos.getListaEquipos().add(equipoARegistrar);
+            GestorLog.info("Nuevo club registrado en la federación: " + nombreE);
         }
+
+        // Lo inscribimos en la temporada específica
+        t.inscribirEquipo(equipoARegistrar);
+        GestorLog.exito("Equipo inscrito: " + nombreE + " → Temporada: " + nombreT);
     }
+
     /**
-     * Crea el escenario inicial: una temporada cerrada con 6 equipos y calendario,
-     * y una temporada actual lista para jugar.
+     * Crea el escenario inicial con temporadas y equipos de prueba
      */
     public void prepararEscenarioInicial(DatosFederacion datos) {
-        if (datos == null) return;
+        if (datos == null) {
+            GestorLog.error("DatosFederacion es nulo en prepararEscenarioInicial");
+            return;
+        }
+
+        GestorLog.info("=== PREPARANDO ESCENARIO INICIAL ===");
 
         // 1. CREAR TEMPORADA PASADA
         String nombreT1 = "Temporada 2024/25";
-        crearTemporadaFutura(nombreT1, datos); 
+        crearTemporadaFutura(nombreT1, datos);
         Temporada t1 = datos.buscarTemporadaPorNombre(nombreT1);
-        
+
         if (t1 != null) {
-            t1.setEstado(Temporada.TERMINADA); 
+            t1.setEstado(Temporada.TERMINADA);
+            GestorLog.info("Temporada de prueba configurada como TERMINADA: " + nombreT1);
 
-            // 2. AQUÍ ESTABA EL ERROR: Definimos la variable 'nombres'
             String[] nombres = {"Barcelona", "Granada", "Sevilla", "Zaragoza", "Valencia", "Athletic Club"};
+            
+            int equiposInscritos = 0;
+            int jugadoresCreados = 0;
 
-            // Ahora el bucle ya sabe qué es 'nombres'
             for (String nombreE : nombres) {
                 inscribirEquipoEnTemporada(nombreT1, nombreE, datos);
-                
-                // Lógica para añadir jugadores de prueba
+                equiposInscritos++;
+
+                // Añadir jugadores de prueba
                 Equipo eq = t1.buscarEquipoPorNombre(nombreE);
                 if (eq != null) {
                     eq.ficharJugador(new Jugador("Capitán " + nombreE, "Cierre", 28, null));
                     eq.ficharJugador(new Jugador("Portero " + nombreE, "Portero", 24, null));
+                    jugadoresCreados += 2;
                 }
             }
+            
+            GestorLog.exito("Escenario inicial preparado - Temporada: " + nombreT1 + 
+                          " | Equipos: " + equiposInscritos + " | Jugadores: " + jugadoresCreados);
         }
-    }}
+    }
+}

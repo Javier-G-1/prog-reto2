@@ -1,0 +1,181 @@
+[2026-01-07 21:56:09] [INFO] ================================================================================
+[2026-01-07 21:56:09] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-07 21:56:09] [INFO] Sistema: Windows 11 10.0
+[2026-01-07 21:56:09] [INFO] Java: 21.0.8
+[2026-01-07 21:56:09] [INFO] ================================================================================
+[2026-01-07 21:56:22] [INFO] Navegación: Equipos
+[2026-01-07 21:56:35] [SUCCESS] Nuevo equipo creado: JOLS | Temporada: Temporada 2025/26
+[2026-01-07 21:58:56] [INFO] ================================================================================
+[2026-01-07 21:58:56] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-07 21:58:56] [INFO] Sistema: Windows 11 10.0
+[2026-01-07 21:58:56] [INFO] Java: 21.0.8
+[2026-01-07 21:58:56] [INFO] ================================================================================
+[2026-01-07 21:58:56] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-07 21:58:56] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA
+[2026-01-07 21:58:56] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-07 21:58:56] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 21:58:56] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 21:58:56] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 21:58:56] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 21:58:56] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 21:58:56] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 21:58:56] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-07 22:00:37] [INFO] ================================================================================
+[2026-01-07 22:00:37] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-07 22:00:37] [INFO] Sistema: Windows 11 10.0
+[2026-01-07 22:00:37] [INFO] Java: 21.0.8
+[2026-01-07 22:00:37] [INFO] ================================================================================
+[2026-01-07 22:00:37] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-07 22:00:37] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA
+[2026-01-07 22:00:37] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-07 22:00:37] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:00:37] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:00:37] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:00:37] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:00:37] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:00:37] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:00:37] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-07 22:00:39] [INFO] Navegación: Equipos
+[2026-01-07 22:00:43] [INFO] Navegación: Jugadores
+[2026-01-07 22:00:45] [INFO] Navegación: Equipos
+[2026-01-07 22:01:55] [INFO] ================================================================================
+[2026-01-07 22:01:55] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-07 22:01:55] [INFO] Sistema: Windows 11 10.0
+[2026-01-07 22:01:55] [INFO] Java: 21.0.8
+[2026-01-07 22:01:55] [INFO] ================================================================================
+[2026-01-07 22:01:55] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-07 22:01:55] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA
+[2026-01-07 22:01:55] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-07 22:01:55] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:01:55] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:01:55] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:01:55] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:01:55] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:01:55] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:01:55] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-07 22:01:58] [INFO] Navegación: Equipos
+[2026-01-07 22:02:16] [INFO] Navegación: Jugadores
+[2026-01-07 22:02:23] [INFO] Navegación: Equipos
+[2026-01-07 22:15:53] [INFO] ================================================================================
+[2026-01-07 22:15:53] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-07 22:15:53] [INFO] Sistema: Windows 11 10.0
+[2026-01-07 22:15:53] [INFO] Java: 21.0.8
+[2026-01-07 22:15:53] [INFO] ================================================================================
+[2026-01-07 22:15:53] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-07 22:15:53] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA
+[2026-01-07 22:15:53] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-07 22:15:53] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:15:53] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:15:53] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:15:53] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:15:53] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:15:53] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:15:53] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-07 22:15:56] [INFO] Navegación: Equipos
+[2026-01-07 22:16:00] [INFO] Navegación: Jugadores
+[2026-01-07 22:16:06] [INFO] Navegación: Equipos
+[2026-01-07 22:17:49] [INFO] ================================================================================
+[2026-01-07 22:17:49] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-07 22:17:49] [INFO] Sistema: Windows 11 10.0
+[2026-01-07 22:17:49] [INFO] Java: 21.0.8
+[2026-01-07 22:17:49] [INFO] ================================================================================
+[2026-01-07 22:17:49] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-07 22:17:49] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA
+[2026-01-07 22:17:49] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-07 22:17:49] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:17:49] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:17:49] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:17:49] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:17:49] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:17:49] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:17:49] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-07 22:17:51] [INFO] Navegación: Equipos
+[2026-01-07 22:17:59] [INFO] Navegación: Jugadores
+[2026-01-07 22:19:14] [INFO] ================================================================================
+[2026-01-07 22:19:14] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-07 22:19:14] [INFO] Sistema: Windows 11 10.0
+[2026-01-07 22:19:14] [INFO] Java: 21.0.8
+[2026-01-07 22:19:14] [INFO] ================================================================================
+[2026-01-07 22:19:14] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-07 22:19:14] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA
+[2026-01-07 22:19:14] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-07 22:19:14] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:19:14] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:19:14] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:19:14] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:19:14] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:19:14] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:19:14] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-07 22:19:16] [INFO] Navegación: Equipos
+[2026-01-07 22:19:21] [INFO] Navegación: Jugadores
+[2026-01-07 22:19:23] [INFO] Navegación: Equipos
+[2026-01-07 22:19:34] [INFO] Navegación: Jugadores
+[2026-01-07 22:20:13] [INFO] ================================================================================
+[2026-01-07 22:20:13] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-07 22:20:13] [INFO] Sistema: Windows 11 10.0
+[2026-01-07 22:20:13] [INFO] Java: 21.0.8
+[2026-01-07 22:20:13] [INFO] ================================================================================
+[2026-01-07 22:20:13] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-07 22:20:13] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA
+[2026-01-07 22:20:13] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-07 22:20:13] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:20:13] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:20:13] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:20:13] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:20:13] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:20:13] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:20:13] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-07 22:20:15] [INFO] Navegación: Equipos
+[2026-01-07 22:20:19] [INFO] Navegación: Clasificación
+[2026-01-07 22:20:21] [INFO] Navegación: Partidos
+[2026-01-07 22:20:34] [SUCCESS] Temporada creada: PEPITO | Estado: FUTURA
+[2026-01-07 22:20:34] [SUCCESS] Nueva temporada creada: PEPITO | Estado: FUTURA
+[2026-01-07 22:20:39] [INFO] Navegación: Equipos
+[2026-01-07 22:20:49] [SUCCESS] Nuevo equipo creado: HOLA | Temporada: PEPITO
+[2026-01-07 22:24:34] [INFO] ================================================================================
+[2026-01-07 22:24:34] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-07 22:24:34] [INFO] Sistema: Windows 11 10.0
+[2026-01-07 22:24:34] [INFO] Java: 21.0.8
+[2026-01-07 22:24:34] [INFO] ================================================================================
+[2026-01-07 22:24:34] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-07 22:24:34] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA
+[2026-01-07 22:24:34] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-07 22:24:34] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:24:34] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:24:34] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:24:34] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:24:34] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:24:35] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-07 22:24:35] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-07 22:24:37] [INFO] Navegación: Jugadores
+[2026-01-07 22:24:38] [INFO] Navegación: Equipos
+[2026-01-07 22:24:41] [INFO] Navegación: Partidos
+[2026-01-07 22:24:47] [SUCCESS] Temporada creada: PEPITO | Estado: FUTURA
+[2026-01-07 22:24:47] [SUCCESS] Nueva temporada creada: PEPITO | Estado: FUTURA
+[2026-01-07 22:24:57] [WARN] Intento de generar calendario con 0 equipos en PEPITO (mínimo: 6)
+[2026-01-07 22:24:57] [ERROR] Error al generar calendario para PEPITO: Reglamento RFBM: Se requiere un mínimo de 6 equipos para iniciar la liga.
+[2026-01-07 22:25:01] [INFO] Navegación: Jugadores
+[2026-01-07 22:25:09] [INFO] Navegación: Equipos
+[2026-01-07 22:25:15] [INFO] Iniciando proceso de inscripción de equipo
+[2026-01-07 22:25:34] [SUCCESS] Nuevo equipo creado: Barcelona | Temporada: PEPITO
+[2026-01-07 22:25:38] [INFO] Iniciando proceso de inscripción de equipo
+[2026-01-07 22:25:57] [WARN] Intento de agregar equipo duplicado: BARCELONA en PEPITO
+[2026-01-07 22:26:01] [SUCCESS] Nuevo equipo creado: HOLA | Temporada: PEPITO
+[2026-01-07 22:26:04] [SUCCESS] Nuevo equipo creado: FSDGV | Temporada: PEPITO
+[2026-01-07 22:26:07] [SUCCESS] Nuevo equipo creado: SRGVSDGV | Temporada: PEPITO
+[2026-01-07 22:26:10] [SUCCESS] Nuevo equipo creado: BDFBDZFB | Temporada: PEPITO
+[2026-01-07 22:26:14] [SUCCESS] Nuevo equipo creado: XV BXVC DF | Temporada: PEPITO
+[2026-01-07 22:26:19] [INFO] Navegación: Jugadores
+[2026-01-07 22:26:32] [SUCCESS] Nuevo fichaje: JHCVIO< | Equipo: FSDGV | Posición: EAGSVBF | Edad: 234 | Temporada: PEPITO
+[2026-01-07 22:26:42] [WARN] Intento de cambiar equipo sin jugador seleccionado
+[2026-01-07 22:26:51] [SUCCESS] Traspaso completado: JHCVIO< | De: FSDGV → A: XV BXVC DF | Temporada: PEPITO
+[2026-01-07 22:26:55] [INFO] Navegación: Clasificación
+[2026-01-07 22:26:57] [INFO] Navegación: Partidos
+[2026-01-07 22:27:00] [INFO] Iniciando generación de calendario: PEPITO | Equipos: 6
+[2026-01-07 22:27:00] [DEBUG] Fase de IDA completada - Jornadas: 5 | Partidos: 15
+[2026-01-07 22:27:00] [SUCCESS] Calendario generado completamente: PEPITO | Equipos: 6 | Jornadas totales: 10 | Partidos totales: 30 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-07 22:27:00] [SUCCESS] Temporada activada: PEPITO | Equipos: 6 | Jornadas creadas: 10 | Estado: FUTURA → EN JUEGO
+[2026-01-07 22:27:08] [INFO] Navegación: Equipos
+[2026-01-07 22:27:18] [INFO] Navegación: Partidos
+[2026-01-07 22:27:37] [INFO] PARTIDO FINALIZADO: Barcelona 44 - 43 SRGVSDGV
+[2026-01-07 22:27:37] [SUCCESS] Resultado registrado: Barcelona 44 - 43 SRGVSDGV | Temporada: PEPITO
