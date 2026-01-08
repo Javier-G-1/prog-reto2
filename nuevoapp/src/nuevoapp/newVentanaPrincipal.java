@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import gestion.*;
 import logica.*;
+import logica.CalculadoraClasificacion;
 import gestion.Equipo;
 import gestion.Jornada;
 import gestion.Temporada;
@@ -471,14 +472,15 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         });
         comboJornadasPartidos.addActionListener(e -> {
             actualizarVistaPartidos();
-        });
+        });///////////////////////////////////////////////////////////////////////////
         
-        panelClasificacion = new JPanel();
+        panelClasificacion = new JPanel(new BorderLayout());
         panelClasificacion.setBackground(new Color(20, 24, 31));
         panelCards.add(panelClasificacion, "clasificacion");
+        panelClasificacion.add(new PanelClasificacion(), BorderLayout.CENTER);////////////Metido por Maha
 
-        JLabel lblNewLabel = new JLabel("New label");
-        panelClasificacion.add(lblNewLabel);
+
+
 
         JLabel lblInicioTitulo = new JLabel("Bienvenido a la Federación de Balonmano");
         lblInicioTitulo.setFont(new Font("Segoe UI", Font.BOLD, 28));
