@@ -2,6 +2,7 @@ package logica;
 
 public class FilaClasificacion {
     private String equipo;
+    private int posicion;
     private int pj, pg, pe, pp, puntos, gf, gc;
 
     public FilaClasificacion(String equipo) {
@@ -29,8 +30,23 @@ public class FilaClasificacion {
         }
     }
 
-    // Getters
-    public String getEquipo() { return equipo; }
+    /**
+     * Devuelve la diferencia de goles como texto con signo.
+     * Ejemplo: +5, 0, -3
+     */
+    public String getDifFormateada() {
+        int dif = getDf();
+        if (dif > 0) return "+" + dif;
+        return String.valueOf(dif); // El signo menos ya lo incluye el int si es negativo
+    }
+
+    // --- Getters y Setters ---
+
+    public String getNombre() { return equipo; }
+    
+    public int getPosicion() { return posicion; }
+    public void setPosicion(int posicion) { this.posicion = posicion; }
+
     public int getPj() { return pj; }
     public int getPg() { return pg; }
     public int getPe() { return pe; }

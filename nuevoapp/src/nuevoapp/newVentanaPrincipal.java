@@ -22,7 +22,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
     private DatosFederacion datosFederacion;
     private JPanel contentPane;
     private JPanel panelAdminPartidos;
-    
+    private Rol rolUsuario; // Ahora usamos el Enum de tu paquete gestion
     private JPanel panelMenu;
     private JPanel panelCards;
     private CardLayout cardLayout;
@@ -37,7 +37,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
 
     private JComboBox<String> comboTemporadasJugadores;
     private JComboBox<String> comboEquiposJugadores;
-  
+    private JButton btnEditarJugador;
     private JPanel panelListaPartidos;
     private JTable tablaClasificacion;
     private DefaultTableModel modeloTabla;
@@ -68,14 +68,15 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
     private JLabel lblJornadaPartido;
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                newVentanaPrincipal frame = new newVentanaPrincipal();
-                frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+    	  EventQueue.invokeLater(() -> {
+              try {
+                  Login frame = new Login();
+                  frame.setVisible(true);    
+              } catch (Exception e) {
+                  e.printStackTrace();
+              }
+          });
+      
     }
 
     public newVentanaPrincipal() {
@@ -368,6 +369,10 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         panelBotonesJugadores.add(btnCambiarFoto);
         panelBotonesJugadores.add(btnCambiarEquipo);
         panelBotonesJugadores.add(btnAgregarJugador);
+     // En la sección de botones de jugadores (línea ~250)
+        JButton btnEditarJugador = new JButton("Editar jugador");
+        btnEditarJugador.addActionListener(this);
+        panelBotonesJugadores.add(btnEditarJugador);
         panelJugadores.add(panelBotonesJugadores, BorderLayout.SOUTH);
 
         Temporada temporada2025_26 = new Temporada("Temporada 2025/26", Temporada.FUTURA);
@@ -477,7 +482,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         panelClasificacion = new JPanel(new BorderLayout());
         panelClasificacion.setBackground(new Color(20, 24, 31));
         panelCards.add(panelClasificacion, "clasificacion");
-        panelClasificacion.add(new PanelClasificacion(), BorderLayout.CENTER);////////////Metido por Maha
+        //panelClasificacion.add(new PanelClasificacion(), BorderLayout.CENTER);////////////Metido por Maha
 
 
 
@@ -571,8 +576,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
             GestorLog.info("Navegación: Clasificación");
         }
         else if (e.getSource() == btnCerrarSesion) {
-            GestorLog.cerrarSesion("Admin");
-            System.exit(0);
+        	cerrarSesion();
         }
 
         else if (e.getSource() == btnVerFoto) {
@@ -593,6 +597,12 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         }
 
         else if (e.getSource() == btnCambiarFoto) {
+            // --- PROTECCIÓN DE SEGURIDAD ---
+            if (rolUsuario != Rol.ADMINISTRADOR && rolUsuario != Rol.MANAGER) {
+                JOptionPane.showMessageDialog(this, "No tienes permisos para realizar esta acción.");
+                return;
+            }
+
             if (jugadorSeleccionado == null) {
                 JOptionPane.showMessageDialog(this, "Selecciona un jugador");
                 GestorLog.advertencia("Intento de cambiar foto sin jugador seleccionado");
@@ -613,12 +623,10 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
             
             JFileChooser chooser = new JFileChooser();
             if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                String rutaAnterior = jugadorSeleccionado.getFotoURL();
                 jugadorSeleccionado.setFotoURL(chooser.getSelectedFile().getAbsolutePath());
                 actualizarJugadoresPorTemporada((String) comboTemporadasJugadores.getSelectedItem(), 
                                                (String) comboEquiposJugadores.getSelectedItem());
-                GestorLog.exito("Foto actualizada para: " + jugadorSeleccionado.getNombre() + 
-                              " | Ruta: " + chooser.getSelectedFile().getAbsolutePath());
+                GestorLog.exito("Foto actualizada para: " + jugadorSeleccionado.getNombre());
             }
         }
 
@@ -811,140 +819,336 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
             GestorLog.info("Iniciando proceso de inscripción de equipo");
             ejecutarInscripcionEquipo();
         }
-    }
-
-    private JPanel crearTarjetaEquipo(String nombreEquipo) {
-        JPanel panelTarjetaEquiposInterior = new JPanel();
-        panelTarjetaEquiposInterior.setMaximumSize(new Dimension(Integer.MAX_VALUE, 90));
-        panelTarjetaEquiposInterior.setBackground(new Color(24, 25, 50));
-        panelTarjetaEquiposInterior.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        panelTarjetaEquiposInterior.setLayout(new BorderLayout(10, 10));
-
-        JLabel lblFotoEquipo = new JLabel();
-        lblFotoEquipo.setPreferredSize(new Dimension(80, 80));
-        lblFotoEquipo.setHorizontalAlignment(SwingConstants.CENTER);
-        lblFotoEquipo.setVerticalAlignment(SwingConstants.CENTER);
-        lblFotoEquipo.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-        lblFotoEquipo.setText("Sin foto");
-        panelTarjetaEquiposInterior.add(lblFotoEquipo, BorderLayout.WEST);
-
-        JPanel panelCentro = new JPanel();
-        panelCentro.setLayout(new BoxLayout(panelCentro, BoxLayout.Y_AXIS));
-        panelCentro.setOpaque(false);
-        
-        JLabel lblNombre = new JLabel(nombreEquipo);
-        lblNombre.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        lblNombre.setForeground(Color.WHITE);
-        panelCentro.add(lblNombre);
-        
-        panelTarjetaEquiposInterior.add(panelCentro, BorderLayout.CENTER);
-
-        JPanel panelBotonesEquipo = new JPanel();
-        panelBotonesEquipo.setOpaque(false);
-        panelBotonesEquipo.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 0));
-
-        JButton btnCambiarEscudo = new JButton("Cambiar Escudo");
-        btnCambiarEscudo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        btnCambiarEscudo.addActionListener(e -> {
-            String tempNom = (String) comboTemporadas.getSelectedItem();
+        else if (e.getSource() == btnEditarJugador) {
+            if (jugadorSeleccionado == null) {
+                JOptionPane.showMessageDialog(this, "Selecciona un jugador primero");
+                return;
+            }
+            
+            String tempNom = (String) comboTemporadasJugadores.getSelectedItem();
             Temporada t = datosFederacion.buscarTemporadaPorNombre(tempNom);
             
             if (t != null && !t.getEstado().equals(Temporada.FUTURA)) {
-                JOptionPane.showMessageDialog(this, 
-                    "Solo se pueden hacer cambios en temporadas FUTURAS",
-                    "Operación no permitida", 
+                JOptionPane.showMessageDialog(this,
+                    "Solo se pueden editar jugadores en temporadas FUTURAS",
+                    "Operación no permitida",
                     JOptionPane.WARNING_MESSAGE);
                 return;
             }
             
-            JFileChooser chooser = new JFileChooser();
-            int resultado = chooser.showOpenDialog(this);
-            if (resultado == JFileChooser.APPROVE_OPTION) {
-                ImageIcon icon = new ImageIcon(
-                        new ImageIcon(chooser.getSelectedFile().getAbsolutePath())
-                                .getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH)
+            DialogoEditarJugador dialogo = new DialogoEditarJugador(this, jugadorSeleccionado);
+            dialogo.setVisible(true);
+            
+            if (dialogo.isAceptado()) {
+                // Refrescar vista
+                actualizarJugadoresPorTemporada(
+                    (String) comboTemporadasJugadores.getSelectedItem(),
+                    (String) comboEquiposJugadores.getSelectedItem()
                 );
-                lblFotoEquipo.setIcon(icon);
-                lblFotoEquipo.setText("");
+                GestorLog.exito("Jugador editado: " + jugadorSeleccionado.getNombre());
             }
-        });
-        panelBotonesEquipo.add(btnCambiarEscudo);
-
-        JButton btnVerEscudo = new JButton("Ver Escudo");
-        btnVerEscudo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        btnVerEscudo.addActionListener(e -> {
-            Icon icon = lblFotoEquipo.getIcon();
-            if (icon != null) {
-                ImageIcon img = new ImageIcon(
-                        ((ImageIcon) icon).getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH)
-                );
-                JOptionPane.showMessageDialog(this, "", nombreEquipo, JOptionPane.INFORMATION_MESSAGE, img);
-            } else {
-                JOptionPane.showMessageDialog(this, "No tiene escudo", nombreEquipo, JOptionPane.WARNING_MESSAGE);
-            }
-        });
-        panelBotonesEquipo.add(btnVerEscudo);
-
-        panelTarjetaEquiposInterior.add(panelBotonesEquipo, BorderLayout.EAST);
-
-        return panelTarjetaEquiposInterior;
-    }
-
-    private JPanel crearTarjetaJugador(Jugador jugador) {
-        JPanel tarjeta = new JPanel(new BorderLayout(10, 10));
-        tarjeta.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
-        tarjeta.setBackground(new Color(24, 25, 50));
-        tarjeta.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
-
-        JLabel lblFoto = new JLabel("Sin foto", SwingConstants.CENTER);
-        lblFoto.setPreferredSize(new Dimension(80, 80));
-        lblFoto.setForeground(Color.WHITE);
-        lblFoto.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-
-        if (jugador.getFotoURL() != null) {
-            ImageIcon icon = new ImageIcon(
-                new ImageIcon(jugador.getFotoURL())
-                    .getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH)
-            );
-            lblFoto.setIcon(icon);
-            lblFoto.setText("");
         }
-        tarjeta.add(lblFoto, BorderLayout.WEST);
-
-        JPanel panelInfo = new JPanel();
-        panelInfo.setLayout(new BoxLayout(panelInfo, BoxLayout.Y_AXIS));
-        panelInfo.setOpaque(false);
-
-        JLabel lblNombre = new JLabel(jugador.getNombre());
-        lblNombre.setForeground(Color.WHITE);
-        lblNombre.setFont(new Font("Segoe UI", Font.BOLD, 14));
-
-        JLabel lblPos = new JLabel("Posición: " + jugador.getPosicion());
-        lblPos.setForeground(Color.WHITE);
-
-        JLabel lblEdad = new JLabel("Edad: " + jugador.getEdad());
-        lblEdad.setForeground(Color.WHITE);
-
-        panelInfo.add(lblNombre);
-        panelInfo.add(lblPos);
-        panelInfo.add(lblEdad);
-        tarjeta.add(panelInfo, BorderLayout.CENTER);
-
-        tarjeta.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                jugadorSeleccionado = jugador;
-
-                for (Component c : panelTarjetasJugadores.getComponents()) {
-                    c.setBackground(new Color(24, 25, 50));
-                }
-
-                tarjeta.setBackground(new Color(60, 60, 120));
-            }
-        });
-
-        return tarjeta;
     }
+
+
+ // ============================================
+ // MÉTODOS MEJORADOS PARA newVentanaPrincipal
+ // ============================================
+
+ /**
+  * Crea una tarjeta mejorada de jugador con todos los datos del XML
+  */
+ private JPanel crearTarjetaJugador(Jugador jugador) {
+     JPanel tarjeta = new JPanel(new BorderLayout(10, 5));
+     tarjeta.setMaximumSize(new Dimension(Integer.MAX_VALUE, 140));
+     tarjeta.setBackground(new Color(24, 25, 50));
+     tarjeta.setBorder(BorderFactory.createCompoundBorder(
+         BorderFactory.createLineBorder(new Color(60, 60, 80), 1),
+         BorderFactory.createEmptyBorder(10, 10, 10, 10)
+     ));
+
+     // ===== FOTO =====
+     JLabel lblFoto = new JLabel("Sin foto", SwingConstants.CENTER);
+     lblFoto.setPreferredSize(new Dimension(100, 100));
+     lblFoto.setForeground(Color.WHITE);
+   
+     lblFoto.setBackground(new Color(30, 34, 41));
+     lblFoto.setOpaque(true);
+
+     if (jugador.getFotoURL() != null && !jugador.getFotoURL().isEmpty()) {
+         try {
+             ImageIcon icon = new ImageIcon(
+                 new ImageIcon(jugador.getFotoURL())
+                     .getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)
+             );
+             lblFoto.setIcon(icon);
+             lblFoto.setText("");
+         } catch (Exception e) {
+             // Mantener "Sin foto" si hay error
+         }
+     }
+     tarjeta.add(lblFoto, BorderLayout.WEST);
+
+     // ===== INFORMACIÓN PRINCIPAL =====
+     JPanel panelInfo = new JPanel();
+     panelInfo.setLayout(new BoxLayout(panelInfo, BoxLayout.Y_AXIS));
+     panelInfo.setOpaque(false);
+     panelInfo.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+     // Nombre y Dorsal
+     JPanel panelNombreDorsal = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+     panelNombreDorsal.setOpaque(false);
+     
+     JLabel lblNombre = new JLabel(jugador.getNombre());
+     lblNombre.setForeground(Color.WHITE);
+     lblNombre.setFont(new Font("Segoe UI", Font.BOLD, 16));
+     panelNombreDorsal.add(lblNombre);
+     
+     if (jugador.getDorsal() > 0) {
+         JLabel lblDorsal = new JLabel("#" + jugador.getDorsal());
+         lblDorsal.setForeground(new Color(45, 55, 140));
+         lblDorsal.setFont(new Font("Segoe UI", Font.BOLD, 16));
+         panelNombreDorsal.add(lblDorsal);
+     }
+     panelInfo.add(panelNombreDorsal);
+
+     // Posición
+     JLabel lblPos = new JLabel(" " + jugador.getPosicion());
+     lblPos.setForeground(new Color(100, 181, 246));
+     lblPos.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+     panelInfo.add(lblPos);
+
+     // Nacionalidad y Edad
+     JPanel panelNacEdad = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
+     panelNacEdad.setOpaque(false);
+     
+     JLabel lblNacionalidad = new JLabel(" " + jugador.getNacionalidad());
+     lblNacionalidad.setForeground(new Color(220, 220, 220));
+     lblNacionalidad.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+     panelNacEdad.add(lblNacionalidad);
+     
+     JLabel lblEdad = new JLabel(" " + jugador.getEdad() + " años");
+     lblEdad.setForeground(new Color(220, 220, 220));
+     lblEdad.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+     panelNacEdad.add(lblEdad);
+     
+     panelInfo.add(panelNacEdad);
+
+     // Altura y Peso
+     JPanel panelFisico = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
+     panelFisico.setOpaque(false);
+     
+     JLabel lblAltura = new JLabel(" " + jugador.getAltura());
+     lblAltura.setForeground(new Color(220, 220, 220));
+     lblAltura.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+     panelFisico.add(lblAltura);
+     
+     JLabel lblPeso = new JLabel(" " + jugador.getPeso());
+     lblPeso.setForeground(new Color(220, 220, 220));
+     lblPeso.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+     panelFisico.add(lblPeso);
+     
+     panelInfo.add(panelFisico);
+
+     tarjeta.add(panelInfo, BorderLayout.CENTER);
+
+     // ===== EVENTO DE SELECCIÓN =====
+     tarjeta.addMouseListener(new MouseAdapter() {
+         @Override
+         public void mouseClicked(MouseEvent e) {
+             jugadorSeleccionado = jugador;
+
+             // Desmarcar todas las tarjetas
+             for (Component c : panelTarjetasJugadores.getComponents()) {
+                 if (c instanceof JPanel) {
+                     c.setBackground(new Color(24, 25, 50));
+                     ((JPanel) c).setBorder(BorderFactory.createCompoundBorder(
+                         BorderFactory.createLineBorder(new Color(60, 60, 80), 1),
+                         BorderFactory.createEmptyBorder(10, 10, 10, 10)
+                     ));
+                 }
+             }
+
+             // Marcar tarjeta seleccionada
+             tarjeta.setBackground(new Color(45, 55, 140));
+             tarjeta.setBorder(BorderFactory.createCompoundBorder(
+                 BorderFactory.createLineBorder(new Color(100, 150, 255), 2),
+                 BorderFactory.createEmptyBorder(10, 10, 10, 10)
+             ));
+         }
+         
+         @Override
+         public void mouseEntered(MouseEvent e) {
+             if (jugadorSeleccionado != jugador) {
+                 tarjeta.setBorder(BorderFactory.createCompoundBorder(
+                     BorderFactory.createLineBorder(new Color(80, 90, 140), 2),
+                     BorderFactory.createEmptyBorder(10, 10, 10, 10)
+                 ));
+             }
+         }
+         
+         @Override
+         public void mouseExited(MouseEvent e) {
+             if (jugadorSeleccionado != jugador) {
+                 tarjeta.setBorder(BorderFactory.createCompoundBorder(
+                     BorderFactory.createLineBorder(new Color(60, 60, 80), 1),
+                     BorderFactory.createEmptyBorder(10, 10, 10, 10)
+                 ));
+             }
+         }
+     });
+
+     return tarjeta;
+ }
+
+ /**
+  * Crea una tarjeta mejorada de equipo con estadísticas
+  */
+ private JPanel crearTarjetaEquipo(String nombreEquipo) {
+     // Buscar el equipo en la temporada actual
+     String tempNom = (String) comboTemporadas.getSelectedItem();
+     Temporada t = datosFederacion.buscarTemporadaPorNombre(tempNom);
+     Equipo equipo = t != null ? t.buscarEquipoPorNombre(nombreEquipo) : null;
+     
+     JPanel panelTarjeta = new JPanel();
+     panelTarjeta.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
+     panelTarjeta.setBackground(new Color(24, 25, 50));
+     panelTarjeta.setBorder(BorderFactory.createCompoundBorder(
+         BorderFactory.createLineBorder(new Color(60, 60, 80), 1),
+         BorderFactory.createEmptyBorder(10, 10, 10, 10)
+     ));
+     panelTarjeta.setLayout(new BorderLayout(15, 10));
+
+     // ===== ESCUDO =====
+     JLabel lblEscudo = new JLabel();
+     lblEscudo.setPreferredSize(new Dimension(90, 90));
+     lblEscudo.setHorizontalAlignment(SwingConstants.CENTER);
+     lblEscudo.setVerticalAlignment(SwingConstants.CENTER);
+    
+     lblEscudo.setBackground(new Color(30, 34, 41));
+     lblEscudo.setOpaque(true);
+     lblEscudo.setText("🏆");
+     lblEscudo.setFont(new Font("Segoe UI", Font.PLAIN, 40));
+     
+     if (equipo != null && equipo.getRutaEscudo() != null && !equipo.getRutaEscudo().isEmpty()) {
+         try {
+             ImageIcon icon = new ImageIcon(
+                 new ImageIcon(equipo.getRutaEscudo())
+                     .getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH)
+             );
+             lblEscudo.setIcon(icon);
+             lblEscudo.setText("");
+         } catch (Exception e) {
+             // Mantener emoji si hay error
+         }
+     }
+     panelTarjeta.add(lblEscudo, BorderLayout.WEST);
+
+     // ===== INFORMACIÓN DEL EQUIPO =====
+     JPanel panelInfo = new JPanel();
+     panelInfo.setLayout(new BoxLayout(panelInfo, BoxLayout.Y_AXIS));
+     panelInfo.setOpaque(false);
+     
+     // Nombre del equipo
+     JLabel lblNombre = new JLabel(nombreEquipo);
+     lblNombre.setFont(new Font("Segoe UI", Font.BOLD, 18));
+     lblNombre.setForeground(Color.WHITE);
+     panelInfo.add(lblNombre);
+     
+     panelInfo.add(Box.createVerticalStrut(5));
+     
+     // Número de jugadores
+     if (equipo != null) {
+         JLabel lblJugadores = new JLabel("👥 " + equipo.getPlantilla().size() + " jugadores");
+         lblJugadores.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+         lblJugadores.setForeground(new Color(180, 180, 180));
+         panelInfo.add(lblJugadores);
+         
+         // ID del equipo
+         if (equipo.getNombre() != null) {
+             JLabel lblId = new JLabel("ID: " + equipo.getNombre());
+             lblId.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+             lblId.setForeground(new Color(120, 120, 120));
+             panelInfo.add(lblId);
+         }
+     }
+     
+     panelTarjeta.add(panelInfo, BorderLayout.CENTER);
+
+     // ===== BOTONES =====
+     JPanel panelBotones = new JPanel();
+     panelBotones.setOpaque(false);
+     panelBotones.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+
+     JButton btnCambiarEscudo = new JButton("Cambiar Escudo");
+     btnCambiarEscudo.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+
+     btnCambiarEscudo.setFocusPainted(false);
+     btnCambiarEscudo.setBorderPainted(false);
+     btnCambiarEscudo.setPreferredSize(new Dimension(130, 30));
+     
+     btnCambiarEscudo.addActionListener(e -> {
+         String tempNombre = (String) comboTemporadas.getSelectedItem();
+         Temporada temp = datosFederacion.buscarTemporadaPorNombre(tempNombre);
+         
+         if (temp != null && !temp.getEstado().equals(Temporada.FUTURA)) {
+             JOptionPane.showMessageDialog(this, 
+                 "Solo se pueden hacer cambios en temporadas FUTURAS",
+                 "Operación no permitida", 
+                 JOptionPane.WARNING_MESSAGE);
+             return;
+         }
+         
+         JFileChooser chooser = new JFileChooser();
+         chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
+             "Imágenes", "jpg", "jpeg", "png", "gif"));
+         
+         int resultado = chooser.showOpenDialog(this);
+         if (resultado == JFileChooser.APPROVE_OPTION) {
+             String rutaEscudo = chooser.getSelectedFile().getAbsolutePath();
+             
+             if (equipo != null) {
+            	 equipo.setRutaEscudo(rutaEscudo);
+             }
+             
+             ImageIcon icon = new ImageIcon(
+                 new ImageIcon(rutaEscudo).getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH)
+             );
+             lblEscudo.setIcon(icon);
+             lblEscudo.setText("");
+             
+             GestorLog.exito("Escudo actualizado: " + nombreEquipo + " | Ruta: " + rutaEscudo);
+         }
+     });
+     panelBotones.add(btnCambiarEscudo);
+
+     JButton btnVerEscudo = new JButton("Ver Escudo");
+     btnVerEscudo.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+     btnVerEscudo.setBackground(new Color(52, 152, 219));
+     
+     btnVerEscudo.setFocusPainted(false);
+     btnVerEscudo.setBorderPainted(false);
+     btnVerEscudo.setPreferredSize(new Dimension(110, 30));
+     
+     btnVerEscudo.addActionListener(e -> {
+         Icon icon = lblEscudo.getIcon();
+         if (icon != null) {
+             ImageIcon img = new ImageIcon(
+                 ((ImageIcon) icon).getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH)
+             );
+             JOptionPane.showMessageDialog(this, "", nombreEquipo, 
+                 JOptionPane.INFORMATION_MESSAGE, img);
+         } else {
+             JOptionPane.showMessageDialog(this, "No tiene escudo", nombreEquipo, 
+                 JOptionPane.WARNING_MESSAGE);
+         }
+     });
+     panelBotones.add(btnVerEscudo);
+
+     panelTarjeta.add(panelBotones, BorderLayout.EAST);
+
+     return panelTarjeta;
+ }
 
     private void actualizarComboJornadas() {
         String tempNom = (String) comboTemporadasPartidos.getSelectedItem();
@@ -985,8 +1189,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         JPanel card = new JPanel(new BorderLayout(20, 0));
         card.setBackground(new Color(24, 25, 50));
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
-        card.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-
+       
         JPanel panelIzquierda = new JPanel(new BorderLayout(10, 0));
         panelIzquierda.setOpaque(false);
         
@@ -1381,25 +1584,35 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
 
     private void actualizarTablaClasificacionGrafica() {
         Temporada temp = obtenerTemporadaSeleccionada();
+        // Verificamos que la temporada no sea nula y que el modelo de la tabla exista
         if (temp == null || modeloTabla == null) return;
 
+        // Limpiamos la tabla antes de volver a llenarla
         modeloTabla.setRowCount(0);
 
-        java.util.List<FilaClasificacion> ranking = CalculadoraClasificacion.calcular(temp);
+        try {
+            // 1. CORRECCIÓN: Obtener el objeto Clasificacion y luego su lista de filas
+            Clasificacion clasificacion = CalculadoraClasificacion.calcular(temp);
+            java.util.List<FilaClasificacion> ranking = clasificacion.getFilas();
 
-        for (FilaClasificacion fila : ranking) {
-            Object[] datosFila = {
-                fila.getEquipo(),
-                fila.getPj(),
-                fila.getPg(),
-                fila.getPe(),
-                fila.getPp(),
-                fila.getGf(),
-                fila.getGc(),
-                fila.getDf(),
-                fila.getPuntos()
-            };
-            modeloTabla.addRow(datosFila);
+            for (FilaClasificacion fila : ranking) {
+                Object[] datosFila = {
+                    fila.getPosicion(),     
+                    fila.getNombre(),        
+                    fila.getPuntos(),        
+                    fila.getPj(),
+                    fila.getPg(),
+                    fila.getPe(),
+                    fila.getPp(),
+                    fila.getGf(),
+                    fila.getGc(),
+                    fila.getDifFormateada()  // 4. MEJORA: Usar la diferencia con signo (+5, -2, etc.)
+                };
+                modeloTabla.addRow(datosFila);
+            }
+        } catch (Exception e) {
+            System.err.println("Error al actualizar la tabla: " + e.getMessage());
+            // Aquí podrías mostrar un mensaje de error al usuario con JOptionPane
         }
     }
 
@@ -1477,4 +1690,133 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
             tActual.inscribirEquipo(new Equipo(n));
         }
     }
-}
+
+  
+    public void despuesDelLogin(Rol rol, String nombre) {
+        this.rolUsuario = rol; // Guardamos el rol para validaciones en tarjetas
+        this.lblBienvenido.setText("Bienvenido, " + nombre);
+        this.lblUsuario.setText("Rol: " + rol.getNombreLegible());
+        
+        // 1. Limpieza de seguridad
+        ocultarTodosLosControles();
+
+        // 2. Aplicación de permisos específicos
+        switch (rol) {
+            case ADMINISTRADOR:
+                mostrarTodo(true);
+                break;
+
+            case ARBITRO:
+                habilitarNavegacionBasica();
+                panelAdminPartidos.setVisible(true); 
+                btnNuevaJor.setVisible(true);
+                btnNuevoPart.setVisible(true);
+                // El árbitro no crea temporadas, solo gestiona las existentes
+                btnNuevaTemp.setVisible(false); 
+                break;
+
+            case MANAGER:
+                habilitarNavegacionBasica();
+                // El Manager se centra en la gestión de la plantilla y el club
+                btnJugadores.setVisible(true);
+                btnVerFoto.setVisible(true);
+                btnCambiarFoto.setVisible(true); // Cambiar escudo/foto
+                btnAgregarJugador.setVisible(true);
+                btnCambiarEquipo.setVisible(true);
+                btnInscribirEquipo.setVisible(true);
+                break;
+
+            case INVITADO:
+            default:
+                habilitarNavegacionBasica();
+                btnVerFoto.setVisible(true); 
+                panelAdminPartidos.setVisible(true); // El invitado solo puede ver
+                btnCambiarFoto.setVisible(false);
+                btnInscribirEquipo.setVisible(false);
+                break;
+        }
+    }
+    private void cerrarSesion() {
+        // 1. Preguntar al usuario para evitar cierres accidentales
+        int respuesta = JOptionPane.showConfirmDialog(this, 
+                "¿Estás seguro de que quieres cerrar la sesión?", 
+                "Cerrar Sesión", 
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
+        if (respuesta == JOptionPane.YES_OPTION) {
+            // 2. Limpiar el rol por seguridad
+            this.rolUsuario = null; 
+            
+            // 3. Cerrar la ventana principal actual
+            this.dispose(); 
+            
+            // 4. Crear y mostrar una nueva instancia del Login
+            Login ventanaLogin = new Login();
+            ventanaLogin.setVisible(true);
+            
+            // Log de éxito (opcional)
+            System.out.println("Sesión cerrada correctamente.");
+        }
+    }
+    /**
+     * Oculta absolutamente todos los elementos de edición y gestión.
+     */
+    private void ocultarTodosLosControles() {
+        // Navegación principal
+        btnInicio.setVisible(false);
+        btnEquipos.setVisible(false);
+        btnJugadores.setVisible(false);
+        btnPartidos.setVisible(false);
+        btnClasificacin.setVisible(false);
+
+        // Gestión de Partidos y Temporadas
+        panelAdminPartidos.setVisible(false);
+        btnNuevaTemp.setVisible(false);
+        btnNuevaJor.setVisible(false);
+        btnNuevoPart.setVisible(false);
+        
+        // Gestión de Equipos
+        btnAgregarEquipo.setVisible(false);
+        btnInscribirEquipo.setVisible(false);
+        
+        // Gestión de Jugadores
+        btnAgregarJugador.setVisible(false);
+        btnCambiarEquipo.setVisible(false);
+        btnCambiarFoto.setVisible(false);
+        btnVerFoto.setVisible(false);
+    }
+
+    /**
+     * Muestra los botones de navegación que son comunes para todos los usuarios.
+     */
+    private void habilitarNavegacionBasica() {
+        btnInicio.setVisible(true);
+        btnEquipos.setVisible(true);
+        btnJugadores.setVisible(true);
+        btnPartidos.setVisible(true);
+        btnClasificacin.setVisible(true);
+    }
+
+    /**
+     * Activa todos los componentes de la interfaz (Exclusivo para Administrador).
+     */
+    private void mostrarTodo(boolean estado) {
+        habilitarNavegacionBasica();
+        
+        // Paneles y botones de administración
+        panelAdminPartidos.setVisible(estado);
+        btnNuevaTemp.setVisible(estado);
+        btnNuevaJor.setVisible(estado);
+        btnNuevoPart.setVisible(estado);
+        
+        // Botones de equipos
+        btnAgregarEquipo.setVisible(estado);
+        btnInscribirEquipo.setVisible(estado);
+        
+        // Botones de jugadores
+        btnAgregarJugador.setVisible(estado);
+        btnCambiarEquipo.setVisible(estado);
+       
+        btnVerFoto.setVisible(estado);
+    }}
