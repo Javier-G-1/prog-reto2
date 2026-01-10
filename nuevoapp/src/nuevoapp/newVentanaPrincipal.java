@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-     * Muestra los botones de navegación que son comunes para todos los usuarios.
-=======
 package nuevoapp;
 
 import java.awt.*;
@@ -517,24 +514,38 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
     
     /**
      * Actualiza el estado de los botones de jugadores según el estado de la temporada
->>>>>>> parent of e2d9e9c (Revert "Mejoras")
      */
-    private void habilitarNavegacionBasica() {
-        btnInicio.setVisible(true);
-        btnEquipos.setVisible(true);
-        btnJugadores.setVisible(true);
-        btnPartidos.setVisible(true);
-        btnClasificacin.setVisible(true);
+    private void actualizarEstadoBotonesJugadores() {
+        String tempNom = (String) comboTemporadasJugadores.getSelectedItem();
+        if (tempNom == null) return;
+        
+        Temporada t = datosFederacion.buscarTemporadaPorNombre(tempNom);
+        if (t == null) return;
+        
+        boolean esFutura = t.getEstado().equals(Temporada.FUTURA);
+        
+        // Habilitar/deshabilitar botones de modificación
+        btnAgregarJugador.setEnabled(esFutura);
+        btnCambiarEquipo.setEnabled(esFutura);
+        btnCambiarFoto.setEnabled(esFutura);
+        
+        // El botón de ver foto siempre habilitado
+        btnVerFoto.setEnabled(true);
+        
+        // Agregar tooltips informativos
+        if (!esFutura) {
+            String estado = t.getEstado().equals(Temporada.EN_JUEGO) ? "en curso" : "finalizada";
+            btnAgregarJugador.setToolTipText("No se pueden agregar jugadores a temporadas " + estado);
+            btnCambiarEquipo.setToolTipText("No se pueden hacer traspasos en temporadas " + estado);
+            btnCambiarFoto.setToolTipText("No se pueden cambiar fotos en temporadas " + estado);
+        } else {
+            btnAgregarJugador.setToolTipText("Agregar nuevo jugador");
+            btnCambiarEquipo.setToolTipText("Cambiar jugador de equipo");
+            btnCambiarFoto.setToolTipText("Cambiar foto del jugador");
+        }
+        btnVerFoto.setToolTipText("Ver foto del jugador seleccionado");
     }
 
-<<<<<<< HEAD
-    /**
-     * Activa todos los componentes de la interfaz (Exclusivo para Administrador).
-     */
-    private void mostrarTodo(boolean estado) {
-        habilitarNavegacionBasica();
-        
-=======
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnInicio) {
@@ -1793,7 +1804,6 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
     private void mostrarTodo(boolean estado) {
         habilitarNavegacionBasica();
         
->>>>>>> parent of e2d9e9c (Revert "Mejoras")
         // Paneles y botones de administración
         panelAdminPartidos.setVisible(estado);
         btnNuevaTemp.setVisible(estado);
