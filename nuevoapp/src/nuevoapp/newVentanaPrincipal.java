@@ -54,7 +54,10 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
     
     private JButton btnNuevaTemp, btnNuevaJor, btnNuevoPart;
     private JButton btnNuevaTemp_1;
-    
+
+
+ 
+
     private Component verticalStrut;
     private Component verticalStrut_1;
     private Component verticalStrut_2;
@@ -403,6 +406,18 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
 
         comboTemporadas.addActionListener(e -> {
             actualizarVistaEquipos();
+            actualizarIndicadorEstadoTemporada(); 
+        });
+
+        comboTemporadasPartidos.addActionListener(e -> {
+            actualizarComboJornadas();
+            actualizarVistaPartidos();
+            actualizarIndicadorEstadoPartidos(); 
+        });
+
+        comboJornadasPartidos.addActionListener(e -> {
+            actualizarVistaPartidos();
+            actualizarIndicadorEstadoPartidos();
         });
         
         comboTemporadasJugadores.addActionListener(e -> {
@@ -456,6 +471,18 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         panelAdminPartidos_1.add(btnNuevaTemp_1);
         panelAdminPartidos_1.add(btnNuevaJor);
         panelAdminPartidos_1.add(btnNuevoPart);
+        
+        btnFinalizarTemporada = new JButton("Finalizar temporada");
+        btnFinalizarTemporada.addActionListener(this);
+        btnFinalizarTemporada.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        btnFinalizarTemporada.setBackground(Color.PINK);
+        panelAdminPartidos_1.add(btnFinalizarTemporada);
+        
+        btnTxema = new JButton("Txema");
+        btnTxema.addActionListener(this);
+        btnTxema.setBackground(new Color(255, 0, 0));
+        btnTxema.setBorder(new EmptyBorder(10, 10, 10, 10));
+        panelAdminPartidos_1.add(btnTxema);
 
         panelAdminPartidos_1.add(new JLabel(" | "));
 
@@ -469,18 +496,6 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         lblJornadaPartido = new JLabel("Jornada:");
         panelAdminPartidos_1.add(lblJornadaPartido);
         panelAdminPartidos_1.add(comboJornadasPartidos);
-        
-        btnFinalizarTemporada = new JButton("Finalizar temporada");
-        btnFinalizarTemporada.addActionListener(this);
-        btnFinalizarTemporada.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        btnFinalizarTemporada.setBackground(Color.PINK);
-        panelAdminPartidos_1.add(btnFinalizarTemporada);
-        
-        btnTxema = new JButton("Txema");
-        btnTxema.addActionListener(this);
-        btnTxema.setBackground(new Color(255, 0, 0));
-        btnTxema.setBorder(new EmptyBorder(10, 10, 10, 10));
-        panelAdminPartidos_1.add(btnTxema);
 
         JScrollPane scrollPartidos = new JScrollPane();
         panelListaPartidos = new JPanel();
@@ -495,6 +510,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         });
         comboJornadasPartidos.addActionListener(e -> {
             actualizarVistaPartidos();
+            
         });///////////////////////////////////////////////////////////////////////////
         
         panelClasificacion = new JPanel(new BorderLayout());
@@ -811,8 +827,12 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                 GeneradorCalendario.crearCalendario(t);
                 
                 t.setEstado(Temporada.EN_JUEGO);
+                sincronizarCombos(); // 
                 actualizarComboJornadas();
-                actualizarVistaPartidos();
+                actualizarVistaPartidos(); 
+                actualizarIndicadorEstadoTemporada();
+                actualizarIndicadorEstadoPartidos(); 
+                actualizarVistaEquipos();
                 
                 // Log adicional con detalles del cambio de estado
                 GestorLog.exito("Temporada activada: " + t.getNombre() + 
@@ -1273,6 +1293,8 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                               p.getEquipoVisitante().getNombre() + " | Temporada: " + tempNom);
                 
                 actualizarVistaPartidos();
+                actualizarIndicadorEstadoPartidos(); // ← AÑADIR ESTA LÍNEA
+                
                 if (panelClasificacion.isVisible()) {
                     actualizarTablaClasificacionGrafica();
                 }
@@ -1284,25 +1306,30 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         return card;
     }
 
-    private void actualizarIndicadorEstadoTemporada() {
-        JLabel lblEstadoTemp = null;
-        for (Component c : panelSuperior.getComponents()) {
-            if (c instanceof JLabel && ((JLabel) c).getName() != null 
-                && ((JLabel) c).getName().equals("lblEstadoTemporada")) {
-                lblEstadoTemp = (JLabel) c;
-                break;
-            }
-        }
-        
-        if (lblEstadoTemp == null) {
-            lblEstadoTemp = new JLabel();
-            lblEstadoTemp.setName("lblEstadoTemporada");
-            lblEstadoTemp.setFont(new Font("Segoe UI", Font.BOLD, 14));
-            panelSuperior.add(lblEstadoTemp, 2);
-        }
-        
-        String tempNom = (String) comboTemporadas.getSelectedItem();
-        Temporada t = datosFederacion.buscarTemporadaPorNombre(tempNom);
+ 
+    	private void actualizarIndicadorEstadoTemporada() {
+    	    JLabel lblEstadoTemp = null;
+    	    
+    	    // Buscar el label existente
+    	    for (Component c : panelSuperior.getComponents()) {
+    	        if (c instanceof JLabel && ((JLabel) c).getName() != null 
+    	            && ((JLabel) c).getName().equals("lblEstadoTemporada")) {
+    	            lblEstadoTemp = (JLabel) c;
+    	            break;
+    	        }
+    	    }
+    	    
+    	    
+    	    if (lblEstadoTemp == null) {
+    	        lblEstadoTemp = new JLabel();
+    	        lblEstadoTemp.setName("lblEstadoTemporada");
+    	        lblEstadoTemp.setFont(new Font("Segoe UI", Font.BOLD, 14));
+    	        panelSuperior.add(lblEstadoTemp, 2);
+    	    }
+    	    
+    	    // Obtener la temporada seleccionada
+    	    String tempNom = (String) comboTemporadas.getSelectedItem();
+    	    Temporada t = datosFederacion.buscarTemporadaPorNombre(tempNom);
         
         if (t != null) {
             switch (t.getEstado()) {
@@ -1726,11 +1753,56 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
 					} 
 				} 
 			} 
-    		JOptionPane.showMessageDialog(this, "No se puede finalizar la temporada.\n" + "Aún hay " + partidosPendientes + " partido(s) sin jugar.", "Partidos pendientes", JOptionPane.WARNING_MESSAGE); 
-    		GestorLog.advertencia("Intento de finalizar temporada con " + partidosPendientes + " partidos pendientes"); 
-    		return; 
-		}
-	}
+    		 JOptionPane.showMessageDialog(this, 
+    		            "No se puede finalizar la temporada.\n" + 
+    		            "Aún hay " + partidosPendientes + " partido(s) sin jugar.", 
+    		            "Partidos pendientes", 
+    		            JOptionPane.WARNING_MESSAGE);
+    		        GestorLog.advertencia("Intento de finalizar temporada con " + partidosPendientes + " partidos pendientes | " + temp.getNombre());
+    		        return;
+    		    }
+    		    
+    		    // Confirmar con el usuario
+    		    int confirmar = JOptionPane.showConfirmDialog(this,
+    		        "¿Estás seguro de finalizar la temporada " + temp.getNombre() + "?\n" +
+    		        "Esta acción no se puede deshacer.",
+    		        "Confirmar finalización",
+    		        JOptionPane.YES_NO_OPTION,
+    		        JOptionPane.WARNING_MESSAGE);
+    		    
+    		    if (confirmar != JOptionPane.YES_OPTION) {
+    		        GestorLog.info("Finalización de temporada cancelada por el usuario | " + temp.getNombre());
+    		        return;
+    		    }
+    		    
+    		    // Finalizar temporada
+    		    String estadoAnterior = temp.getEstado();
+    		    temp.setEstado(Temporada.TERMINADA);
+    		    
+      		    sincronizarCombos(); // Recargar combos
+    		    actualizarIndicadorEstadoPartidos(); // Actualizar indicadores de partidos
+    		    actualizarIndicadorEstadoTemporada(); // Actualizar indicadores de equipos
+    		    actualizarEstadoInterfaz(); // Actualizar estado general
+    		    actualizarVistaPartidos(); // Refrescar vista de partidos
+    		    actualizarVistaEquipos(); // Refrescar vista de equipos
+    		    
+    		    // Log de éxito
+    		    GestorLog.exito("Temporada finalizada: " + temp.getNombre() + 
+    		                  " | Estado: " + estadoAnterior + " → " + Temporada.TERMINADA +
+    		                  " | Equipos: " + temp.getEquiposParticipantes().size() +
+    		                  " | Jornadas: " + temp.getListaJornadas().size());
+    		    
+    		    // Mensaje al usuario
+    		    JOptionPane.showMessageDialog(this,
+    		        "Temporada " + temp.getNombre() + " finalizada con éxito.\n" +
+    		        "Puedes consultar la clasificación final en la pestaña Clasificación.",
+    		        "Temporada finalizada",
+    		        JOptionPane.INFORMATION_MESSAGE);
+    		  
+    		  
+   
+  
+    		}
     
     private void funcionTxema() {
 		// TODO Auto-generated method stub
@@ -1749,6 +1821,20 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
 				}
 			}
 		}
+	    // ⭐ ACTUALIZAR TODO DESPUÉS DE LA SIMULACIÓN
+        actualizarVistaPartidos(); // Refrescar vista de partidos
+        actualizarIndicadorEstadoPartidos(); // Actualizar indicadores
+        
+        // Si estás en la vista de clasificación, actualizarla también
+        if (panelClasificacion.isVisible()) {
+            actualizarTablaClasificacionGrafica();
+        }
+        
+        GestorLog.exito("Función Txema ejecutada | " + temp.getNombre());
+        
+       
+    
+
     }
 
   
