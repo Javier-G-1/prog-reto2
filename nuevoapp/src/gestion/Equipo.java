@@ -3,6 +3,7 @@ package gestion;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Equipo implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -11,14 +12,21 @@ public class Equipo implements Serializable {
     private String rutaEscudo;
     private List<Jugador> plantilla;
 
+    // Constructor completo
     public Equipo(String nombre, String rutaEscudo) {
         this.nombre = nombre;
-        this.rutaEscudo = rutaEscudo;
+        this.rutaEscudo = (rutaEscudo == null || rutaEscudo.isBlank()) ? "img/default_escudo.png" : rutaEscudo;
         this.plantilla = new ArrayList<>();
     }
 
-    // Gestion de jugadores
+    // Constructor simplificado
+    public Equipo(String nombre) {
+        this(nombre, "img/default_escudo.png");
+    }
+
+    // --- Gestión de jugadores ---
     public void ficharJugador(Jugador j) {
+        // Al usar el nuevo equals de Jugador, esto comparará por ID automáticamente
         if (j != null && !plantilla.contains(j)) {
             plantilla.add(j);
         }
@@ -28,7 +36,7 @@ public class Equipo implements Serializable {
         plantilla.remove(j);
     }
 
-    // Getters y Setters
+    // --- Getters y Setters ---
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
 
@@ -36,10 +44,7 @@ public class Equipo implements Serializable {
     public void setRutaEscudo(String rutaEscudo) { this.rutaEscudo = rutaEscudo; }
 
     public List<Jugador> getPlantilla() { return plantilla; }
- // Nuevo constructor que solo pide el nombre
-    public Equipo(String nombre) {
-        this(nombre, "img/default_escudo.png"); // Llama al otro constructor con una ruta por defecto
-    }
+
     @Override
     public String toString() { return nombre; }
 
@@ -53,6 +58,6 @@ public class Equipo implements Serializable {
 
     @Override
     public int hashCode() {
-        return nombre.toLowerCase().hashCode();
+        return Objects.hash(nombre.toLowerCase());
     }
 }
