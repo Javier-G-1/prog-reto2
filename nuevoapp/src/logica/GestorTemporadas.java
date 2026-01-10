@@ -98,18 +98,6 @@ public class GestorTemporadas {
         // Lo inscribimos en la temporada específica
         t.inscribirEquipo(equipoARegistrar);
         GestorLog.exito("Equipo inscrito: " + nombreE + " → Temporada: " + nombreT);
-        
-        
-    }// En GestorTemporadas o donde prefieras
-    public void asignarDorsalesAutomaticos(Temporada t) {
-        for (Equipo eq : t.getEquiposParticipantes()) {
-            int dorsal = 1;
-            for (Jugador j : eq.getPlantilla()) {
-                if (j.getDorsal() == 0) {
-                    j.setDorsal(dorsal++);
-                }
-            }
-        }
     }
 
     /**
@@ -154,5 +142,4 @@ public class GestorTemporadas {
                           " | Equipos: " + equiposInscritos + " | Jugadores: " + jugadoresCreados);
         }
     }
-    
 }
