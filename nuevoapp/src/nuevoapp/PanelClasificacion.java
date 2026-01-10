@@ -109,11 +109,12 @@ public class PanelClasificacion extends JPanel {
         if (temporada == null) return;
 
         List<FilaClasificacion> filas = CalculadoraClasificacion.calcular(temporada);
+        
 
         int pos = 1;
         for (FilaClasificacion f : filas) {
             dlmPosicion.addElement(pos++);
-            dlmEquipo.addElement(f.getEquipo());
+            dlmEquipo.addElement(f.getNombre());
             dlmPJ.addElement(f.getPj());
             dlmPG.addElement(f.getPg());
             dlmPP.addElement(f.getPp());
