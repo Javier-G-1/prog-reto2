@@ -820,3 +820,259 @@
 [2026-01-10 19:59:06] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
 [2026-01-10 19:59:08] [INFO] Navegación: Clasificación
 [2026-01-10 19:59:09] [INFO] Navegación: Partidos
+[2026-01-10 20:24:57] [INFO] ================================================================================
+[2026-01-10 20:24:57] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-10 20:24:57] [INFO] Sistema: Windows 10 10.0
+[2026-01-10 20:24:57] [INFO] Java: 21.0.8
+[2026-01-10 20:24:57] [INFO] ================================================================================
+[2026-01-10 20:24:57] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-10 20:24:57] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA
+[2026-01-10 20:24:57] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-10 20:24:57] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:24:57] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:24:57] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:24:57] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:24:57] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:24:57] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:24:57] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-10 20:26:49] [INFO] ================================================================================
+[2026-01-10 20:26:49] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-10 20:26:49] [INFO] Sistema: Windows 10 10.0
+[2026-01-10 20:26:49] [INFO] Java: 21.0.8
+[2026-01-10 20:26:49] [INFO] ================================================================================
+[2026-01-10 20:26:49] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-10 20:26:49] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA
+[2026-01-10 20:26:49] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-10 20:26:49] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:26:49] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:26:49] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:26:49] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:26:49] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:26:49] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:26:49] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-10 20:26:50] [INFO] Navegación: Equipos
+[2026-01-10 20:26:50] [INFO] Navegación: Jugadores
+[2026-01-10 20:26:51] [INFO] Navegación: Partidos
+[2026-01-10 20:26:51] [INFO] Navegación: Inicio
+[2026-01-10 20:27:01] [INFO] Navegación: Jugadores
+[2026-01-10 20:27:20] [INFO] Navegación: Clasificación
+[2026-01-10 20:27:21] [INFO] Navegación: Partidos
+[2026-01-10 20:27:27] [INFO] Navegación: Partidos
+[2026-01-10 20:27:58] [INFO] Navegación: Clasificación
+[2026-01-10 20:27:59] [INFO] Navegación: Inicio
+[2026-01-10 20:27:59] [INFO] Navegación: Equipos
+[2026-01-10 20:28:04] [INFO] Navegación: Jugadores
+[2026-01-10 20:28:10] [INFO] Navegación: Partidos
+[2026-01-10 20:28:13] [INFO] Navegación: Equipos
+[2026-01-10 20:28:22] [INFO] Navegación: Jugadores
+[2026-01-10 20:28:29] [SUCCESS] Traspaso completado: Álvaro Mena | De: Barcelona → A: Athletic Club | Temporada: Temporada 2025/26
+[2026-01-10 20:29:30] [INFO] Navegación: Partidos
+[2026-01-10 20:29:41] [INFO] Navegación: Partidos
+[2026-01-10 20:29:41] [INFO] Navegación: Partidos
+[2026-01-10 20:29:41] [INFO] Navegación: Partidos
+[2026-01-10 20:29:42] [INFO] Navegación: Partidos
+[2026-01-10 20:29:42] [INFO] Navegación: Jugadores
+[2026-01-10 20:29:42] [INFO] Navegación: Partidos
+[2026-01-10 20:29:43] [INFO] Navegación: Jugadores
+[2026-01-10 20:29:43] [INFO] Navegación: Equipos
+[2026-01-10 20:29:44] [INFO] Navegación: Partidos
+[2026-01-10 20:29:45] [INFO] Navegación: Clasificación
+[2026-01-10 20:29:46] [INFO] Navegación: Partidos
+[2026-01-10 20:29:46] [INFO] Navegación: Clasificación
+[2026-01-10 20:29:47] [INFO] Navegación: Partidos
+[2026-01-10 20:29:50] [INFO] Navegación: Jugadores
+[2026-01-10 20:29:50] [INFO] Navegación: Partidos
+[2026-01-10 20:42:42] [INFO] ================================================================================
+[2026-01-10 20:42:42] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-10 20:42:42] [INFO] Sistema: Windows 10 10.0
+[2026-01-10 20:42:42] [INFO] Java: 21.0.8
+[2026-01-10 20:42:42] [INFO] ================================================================================
+[2026-01-10 20:42:42] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-10 20:42:42] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA
+[2026-01-10 20:42:42] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-10 20:42:42] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:42:42] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:42:42] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:42:42] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:42:42] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:42:42] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:42:42] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-10 20:43:02] [INFO] ================================================================================
+[2026-01-10 20:43:02] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-10 20:43:02] [INFO] Sistema: Windows 10 10.0
+[2026-01-10 20:43:02] [INFO] Java: 21.0.8
+[2026-01-10 20:43:02] [INFO] ================================================================================
+[2026-01-10 20:43:02] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-10 20:43:02] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA
+[2026-01-10 20:43:02] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-10 20:43:02] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:43:02] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:43:02] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:43:02] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:43:02] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:43:02] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:43:02] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-10 20:43:03] [INFO] Navegación: Partidos
+[2026-01-10 20:43:31] [INFO] Navegación: Inicio
+[2026-01-10 20:43:31] [INFO] Navegación: Equipos
+[2026-01-10 20:43:43] [INFO] Navegación: Partidos
+[2026-01-10 20:43:44] [INFO] Iniciando generación de calendario: Temporada 2025/26 | Equipos: 6
+[2026-01-10 20:43:44] [DEBUG] Fase de IDA completada - Jornadas: 5 | Partidos: 15
+[2026-01-10 20:43:44] [SUCCESS] Calendario generado completamente: Temporada 2025/26 | Equipos: 6 | Jornadas totales: 10 | Partidos totales: 30 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-10 20:43:44] [SUCCESS] Temporada activada: Temporada 2025/26 | Equipos: 6 | Jornadas creadas: 10 | Estado: FUTURA → EN JUEGO
+[2026-01-10 20:44:08] [INFO] ================================================================================
+[2026-01-10 20:44:08] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-10 20:44:08] [INFO] Sistema: Windows 10 10.0
+[2026-01-10 20:44:08] [INFO] Java: 21.0.8
+[2026-01-10 20:44:08] [INFO] ================================================================================
+[2026-01-10 20:44:08] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-10 20:44:08] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA
+[2026-01-10 20:44:08] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-10 20:44:08] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:44:08] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:44:08] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:44:08] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:44:08] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:44:08] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:44:08] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-10 20:44:10] [INFO] Navegación: Partidos
+[2026-01-10 20:44:15] [INFO] Iniciando generación de calendario: Temporada 2025/26 | Equipos: 6
+[2026-01-10 20:44:15] [DEBUG] Fase de IDA completada - Jornadas: 5 | Partidos: 15
+[2026-01-10 20:44:15] [SUCCESS] Calendario generado completamente: Temporada 2025/26 | Equipos: 6 | Jornadas totales: 10 | Partidos totales: 30 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-10 20:44:15] [SUCCESS] Temporada activada: Temporada 2025/26 | Equipos: 6 | Jornadas creadas: 10 | Estado: FUTURA → EN JUEGO
+[2026-01-10 20:53:35] [INFO] ================================================================================
+[2026-01-10 20:53:35] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-10 20:53:35] [INFO] Sistema: Windows 10 10.0
+[2026-01-10 20:53:35] [INFO] Java: 21.0.8
+[2026-01-10 20:53:35] [INFO] ================================================================================
+[2026-01-10 20:53:35] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-10 20:53:35] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA
+[2026-01-10 20:53:35] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-10 20:53:35] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:53:35] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:53:35] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:53:35] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:53:35] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:53:35] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:53:35] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-10 20:53:36] [INFO] Navegación: Partidos
+[2026-01-10 20:53:42] [INFO] Iniciando generación de calendario: Temporada 2025/26 | Equipos: 6
+[2026-01-10 20:53:42] [DEBUG] Fase de IDA completada - Jornadas: 5 | Partidos: 15
+[2026-01-10 20:53:42] [SUCCESS] Calendario generado completamente: Temporada 2025/26 | Equipos: 6 | Jornadas totales: 10 | Partidos totales: 30 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-10 20:53:42] [SUCCESS] Temporada activada: Temporada 2025/26 | Equipos: 6 | Jornadas creadas: 10 | Estado: FUTURA → EN JUEGO
+[2026-01-10 20:53:55] [INFO] ================================================================================
+[2026-01-10 20:53:55] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-10 20:53:55] [INFO] Sistema: Windows 10 10.0
+[2026-01-10 20:53:55] [INFO] Java: 21.0.8
+[2026-01-10 20:53:55] [INFO] ================================================================================
+[2026-01-10 20:53:55] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-10 20:53:55] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA
+[2026-01-10 20:53:55] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-10 20:53:55] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:53:55] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:53:55] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:53:55] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:53:55] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:53:55] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 20:53:55] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-10 20:53:56] [INFO] Navegación: Partidos
+[2026-01-10 21:13:49] [INFO] ================================================================================
+[2026-01-10 21:13:49] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-10 21:13:49] [INFO] Sistema: Windows 10 10.0
+[2026-01-10 21:13:49] [INFO] Java: 21.0.8
+[2026-01-10 21:13:49] [INFO] ================================================================================
+[2026-01-10 21:13:49] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-10 21:13:49] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA
+[2026-01-10 21:13:49] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-10 21:13:49] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:13:49] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:13:49] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:13:49] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:13:49] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:13:49] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:13:49] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-10 21:13:50] [INFO] Navegación: Partidos
+[2026-01-10 21:13:55] [INFO] Iniciando generación de calendario: Temporada 2025/26 | Equipos: 6
+[2026-01-10 21:13:55] [DEBUG] Fase de IDA completada - Jornadas: 5 | Partidos: 15
+[2026-01-10 21:13:55] [SUCCESS] Calendario generado completamente: Temporada 2025/26 | Equipos: 6 | Jornadas totales: 10 | Partidos totales: 30 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-10 21:13:55] [SUCCESS] Temporada activada: Temporada 2025/26 | Equipos: 6 | Jornadas creadas: 10 | Estado: FUTURA → EN JUEGO
+[2026-01-10 21:14:01] [WARN] Intento de finalizar temporada con 30 partidos pendientes
+[2026-01-10 21:14:16] [WARN] Intento de finalizar temporada con 30 partidos pendientes
+[2026-01-10 21:14:18] [WARN] Intento de finalizar temporada con 30 partidos pendientes
+[2026-01-10 21:14:20] [WARN] Intento de finalizar temporada con 30 partidos pendientes
+[2026-01-10 21:14:36] [WARN] Intento de finalizar temporada con 30 partidos pendientes
+[2026-01-10 21:38:31] [INFO] ================================================================================
+[2026-01-10 21:38:31] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-10 21:38:31] [INFO] Sistema: Windows 10 10.0
+[2026-01-10 21:38:31] [INFO] Java: 21.0.8
+[2026-01-10 21:38:31] [INFO] ================================================================================
+[2026-01-10 21:38:31] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-10 21:38:31] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA
+[2026-01-10 21:38:31] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-10 21:38:31] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:38:31] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:38:31] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:38:31] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:38:31] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:38:31] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:38:31] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-10 21:38:33] [INFO] Navegación: Partidos
+[2026-01-10 21:39:11] [INFO] ================================================================================
+[2026-01-10 21:39:11] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-10 21:39:11] [INFO] Sistema: Windows 10 10.0
+[2026-01-10 21:39:11] [INFO] Java: 21.0.8
+[2026-01-10 21:39:11] [INFO] ================================================================================
+[2026-01-10 21:39:11] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-10 21:39:11] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA
+[2026-01-10 21:39:11] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-10 21:39:11] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:39:11] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:39:11] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:39:11] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:39:11] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:39:11] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:39:11] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-10 21:39:12] [INFO] Navegación: Partidos
+[2026-01-10 21:39:18] [INFO] Iniciando generación de calendario: Temporada 2025/26 | Equipos: 6
+[2026-01-10 21:39:18] [DEBUG] Fase de IDA completada - Jornadas: 5 | Partidos: 15
+[2026-01-10 21:39:18] [SUCCESS] Calendario generado completamente: Temporada 2025/26 | Equipos: 6 | Jornadas totales: 10 | Partidos totales: 30 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-10 21:39:18] [SUCCESS] Temporada activada: Temporada 2025/26 | Equipos: 6 | Jornadas creadas: 10 | Estado: FUTURA → EN JUEGO
+[2026-01-10 21:39:49] [INFO] Navegación: Clasificación
+[2026-01-10 21:39:50] [INFO] Navegación: Jugadores
+[2026-01-10 21:39:50] [INFO] Navegación: Equipos
+[2026-01-10 21:39:57] [INFO] Navegación: Clasificación
+[2026-01-10 21:39:58] [INFO] Navegación: Jugadores
+[2026-01-10 21:39:58] [INFO] Navegación: Equipos
+[2026-01-10 21:40:03] [INFO] Navegación: Partidos
+[2026-01-10 21:40:11] [INFO] Iniciando generación de calendario: Temporada 2025/26 | Equipos: 6
+[2026-01-10 21:40:11] [DEBUG] Fase de IDA completada - Jornadas: 5 | Partidos: 15
+[2026-01-10 21:40:11] [SUCCESS] Calendario generado completamente: Temporada 2025/26 | Equipos: 6 | Jornadas totales: 30 | Partidos totales: 60 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-10 21:40:11] [SUCCESS] Temporada activada: Temporada 2025/26 | Equipos: 6 | Jornadas creadas: 30 | Estado: EN JUEGO → EN JUEGO
+[2026-01-10 21:40:23] [INFO] Iniciando generación de calendario: Temporada 2025/26 | Equipos: 6
+[2026-01-10 21:40:23] [DEBUG] Fase de IDA completada - Jornadas: 5 | Partidos: 15
+[2026-01-10 21:40:23] [SUCCESS] Calendario generado completamente: Temporada 2025/26 | Equipos: 6 | Jornadas totales: 70 | Partidos totales: 120 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-10 21:40:23] [SUCCESS] Temporada activada: Temporada 2025/26 | Equipos: 6 | Jornadas creadas: 70 | Estado: EN JUEGO → EN JUEGO
+[2026-01-10 21:40:26] [INFO] Iniciando generación de calendario: Temporada 2025/26 | Equipos: 6
+[2026-01-10 21:40:26] [DEBUG] Fase de IDA completada - Jornadas: 5 | Partidos: 15
+[2026-01-10 21:40:26] [SUCCESS] Calendario generado completamente: Temporada 2025/26 | Equipos: 6 | Jornadas totales: 150 | Partidos totales: 240 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-10 21:40:26] [SUCCESS] Temporada activada: Temporada 2025/26 | Equipos: 6 | Jornadas creadas: 150 | Estado: EN JUEGO → EN JUEGO
+[2026-01-10 21:40:34] [INFO] ================================================================================
+[2026-01-10 21:40:34] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-10 21:40:34] [INFO] Sistema: Windows 10 10.0
+[2026-01-10 21:40:34] [INFO] Java: 21.0.8
+[2026-01-10 21:40:34] [INFO] ================================================================================
+[2026-01-10 21:40:34] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-10 21:40:34] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA
+[2026-01-10 21:40:34] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-10 21:40:34] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:40:34] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:40:34] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:40:34] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:40:34] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:40:34] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-10 21:40:34] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-10 21:40:36] [INFO] Navegación: Partidos
+[2026-01-10 21:40:38] [INFO] Iniciando generación de calendario: Temporada 2025/26 | Equipos: 6
+[2026-01-10 21:40:38] [DEBUG] Fase de IDA completada - Jornadas: 5 | Partidos: 15
+[2026-01-10 21:40:38] [SUCCESS] Calendario generado completamente: Temporada 2025/26 | Equipos: 6 | Jornadas totales: 10 | Partidos totales: 30 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-10 21:40:38] [SUCCESS] Temporada activada: Temporada 2025/26 | Equipos: 6 | Jornadas creadas: 10 | Estado: FUTURA → EN JUEGO

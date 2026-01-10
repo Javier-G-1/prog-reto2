@@ -3,6 +3,7 @@ package nuevoapp;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Random;
 import gestion.Jugador;
 import gestion.Partido;
 import logica.GeneradorCalendario;
@@ -69,6 +70,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
     private JLabel lblTemporadaPartido;
     private JLabel lblJornadaPartido;
     private JButton btnTxema;
+    private JButton btnFinalizarTemporada;
 
     public static void main(String[] args) {
     	  EventQueue.invokeLater(() -> {
@@ -100,7 +102,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         setIconImage(icono.getImage());
         setTitle("Federación de Balonmano");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 1200, 700);
+        setBounds(100, 100, 1685, 846);
 
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -468,7 +470,14 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         panelAdminPartidos_1.add(lblJornadaPartido);
         panelAdminPartidos_1.add(comboJornadasPartidos);
         
+        btnFinalizarTemporada = new JButton("Finalizar temporada");
+        btnFinalizarTemporada.addActionListener(this);
+        btnFinalizarTemporada.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        btnFinalizarTemporada.setBackground(Color.PINK);
+        panelAdminPartidos_1.add(btnFinalizarTemporada);
+        
         btnTxema = new JButton("Txema");
+        btnTxema.addActionListener(this);
         btnTxema.setBackground(new Color(255, 0, 0));
         btnTxema.setBorder(new EmptyBorder(10, 10, 10, 10));
         panelAdminPartidos_1.add(btnTxema);
@@ -857,8 +866,17 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                 GestorLog.exito("Jugador editado: " + jugadorSeleccionado.getNombre());
             }
         }
+        else if (e.getSource() == btnFinalizarTemporada) {
+        	// Mirar si todos los partidos están jugados
+        	finalizarTemporada();
+        }
+        else if (e.getSource() == btnTxema) {
+        	funcionTxema();
+        }
     }
 
+
+ 
 
  // ============================================
  // MÉTODOS MEJORADOS PARA newVentanaPrincipal
@@ -1341,6 +1359,8 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                     btnNuevaJor.setEnabled(true);
                     btnNuevoPart.setEnabled(true);
                     btnInscribirEquipo.setEnabled(true);
+                    btnFinalizarTemporada.setEnabled(false);
+                    btnTxema.setEnabled(false);
                     break;
                 case Temporada.EN_JUEGO:
                     lblEstadoTempPartidos.setText("  |  ● EN CURSO");
@@ -1348,6 +1368,8 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                     btnNuevaJor.setEnabled(true);
                     btnNuevoPart.setEnabled(true);
                     btnInscribirEquipo.setEnabled(false);
+                    btnFinalizarTemporada.setEnabled(true);
+                    btnTxema.setEnabled(true);
                     break;
                 case Temporada.TERMINADA:
                     lblEstadoTempPartidos.setText("  |  ● FINALIZADA");
@@ -1355,6 +1377,8 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                     btnNuevaJor.setEnabled(false);
                     btnNuevoPart.setEnabled(false);
                     btnInscribirEquipo.setEnabled(false);
+                    btnFinalizarTemporada.setEnabled(false);
+                    btnTxema.setEnabled(false);
                     break;
             }
         }
@@ -1687,21 +1711,66 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         }
     }
 
-    private void prepararDatosFederacion() {
-        Temporada tPasada = new Temporada("Temporada 2024/25", Temporada.TERMINADA);
-        datosFederacion.getListaTemporadas().add(tPasada);
-
-        Temporada tActual = new Temporada("Temporada 2025/26", Temporada.EN_JUEGO);
-        datosFederacion.getListaTemporadas().add(tActual);
-        
-        String[] nombres = {"Barcelona", "Granada", "Sevilla", "Zaragoza", "Valencia", "Athletic"};
-        for(String n : nombres) {
-            tActual.inscribirEquipo(new Equipo(n));
-        }
+    
+    private void finalizarTemporada() {
+		// TODO Auto-generated method stub
+    	Temporada temp = obtenerTemporadaSeleccionada();
+    	if (!temp.getEstado().equals(Temporada.EN_JUEGO)) { 
+    		JOptionPane.showMessageDialog(this, "Solo se pueden finalizar temporadas EN CURSO", "Operación no permitida", JOptionPane.WARNING_MESSAGE); return; } 
+    	if (!todosLosPartidosFinalizados(temp)) { 
+    		int partidosPendientes = 0; 
+    		for (Jornada j : temp.getListaJornadas()) { 
+    			for (Partido p : j.getListaPartidos()) { 
+    				if (!p.isFinalizado()) { 
+    					partidosPendientes++; 
+					} 
+				} 
+			} 
+    		JOptionPane.showMessageDialog(this, "No se puede finalizar la temporada.\n" + "Aún hay " + partidosPendientes + " partido(s) sin jugar.", "Partidos pendientes", JOptionPane.WARNING_MESSAGE); 
+    		GestorLog.advertencia("Intento de finalizar temporada con " + partidosPendientes + " partidos pendientes"); 
+    		return; 
+		}
+	}
+    
+    private void funcionTxema() {
+		// TODO Auto-generated method stub
+    	Temporada temp = obtenerTemporadaSeleccionada();
+		Random random = new Random();
+		if(!todosLosPartidosFinalizados(temp)) {
+			for (Jornada j : temp.getListaJornadas()) {
+				for (Partido p : j.getListaPartidos()) {
+					if (!p.isFinalizado()) {
+						int golesLocal = random.nextInt(49)+1;
+						int golesVisitante = random.nextInt(49)+1;
+						p.setGolesLocal(golesLocal);
+						p.setGolesVisitante(golesVisitante);
+						p.setFinalizado(true);
+					}
+				}
+			}
+		}
     }
 
   
-    public void despuesDelLogin(Rol rol, String nombre) {
+    private boolean todosLosPartidosFinalizados(Temporada temp) {
+		// TODO Auto-generated method stub
+    	int partidosSinJugar = 0;
+    	for (Jornada j : temp.getListaJornadas()) { 
+			for (Partido p : j.getListaPartidos()) { 
+				if (!p.isFinalizado()) { 
+					partidosSinJugar++; 
+				} 
+			} 
+		}
+    	if (partidosSinJugar == 0) {
+    		return true;
+    	}
+    	else {
+    		return false;
+    	}
+	}
+
+	public void despuesDelLogin(Rol rol, String nombre) {
         this.rolUsuario = rol; // Guardamos el rol para validaciones en tarjetas
         this.lblBienvenido.setText("Bienvenido, " + nombre);
         this.lblUsuario.setText("Rol: " + rol.getNombreLegible());
