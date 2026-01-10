@@ -22,6 +22,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
     private DatosFederacion datosFederacion;
     private JPanel contentPane;
     private JPanel panelAdminPartidos;
+    private JPanel panelAdminPartidos_1;
     private Rol rolUsuario; // Ahora usamos el Enum de tu paquete gestion
     private JPanel panelMenu;
     private JPanel panelCards;
@@ -51,6 +52,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
     private JButton btnAgregarJugador;
     
     private JButton btnNuevaTemp, btnNuevaJor, btnNuevoPart;
+    private JButton btnNuevaTemp_1;
     
     private Component verticalStrut;
     private Component verticalStrut_1;
@@ -66,6 +68,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
     private JButton btnInscribirEquipo;
     private JLabel lblTemporadaPartido;
     private JLabel lblJornadaPartido;
+    private JButton btnTxema;
 
     public static void main(String[] args) {
     	  EventQueue.invokeLater(() -> {
@@ -430,39 +433,45 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         panelSuperior.add(btnInscribirEquipo);
         panelAdminPartidos.add(btnNuevaJor);
         
-        panelAdminPartidos = new JPanel();
-        panelAdminPartidos.setBackground(new Color(30, 34, 45));
-        panelAdminPartidos.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 10));
-        panelPartidos.add(panelAdminPartidos, BorderLayout.NORTH);
+        panelAdminPartidos_1 = new JPanel();
+        panelAdminPartidos_1.setBackground(new Color(30, 34, 45));
+        panelAdminPartidos_1.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 10));
+        panelPartidos.add(panelAdminPartidos_1, BorderLayout.NORTH);
 
-        btnNuevaTemp = new JButton("+ Temporada");
+        btnNuevaTemp_1 = new JButton("+ Temporada");
+        btnNuevaTemp_1.setBorder(null);
         btnNuevaJor = new JButton("+ Jornada");
         btnNuevoPart = new JButton("+ Partido");
 
-        btnNuevaTemp.setBackground(new Color(46, 204, 113)); 
-        btnNuevaTemp.setForeground(Color.WHITE);
-        btnNuevaTemp.setFocusPainted(false);
+        btnNuevaTemp_1.setBackground(new Color(0, 128, 0)); 
+        btnNuevaTemp_1.setForeground(Color.WHITE);
+        btnNuevaTemp_1.setFocusPainted(false);
 
-        btnNuevaTemp.addActionListener(this);
+        btnNuevaTemp_1.addActionListener(this);
         btnNuevaJor.addActionListener(this);
         btnNuevoPart.addActionListener(this);
 
-        panelAdminPartidos.add(btnNuevaTemp);
-        panelAdminPartidos.add(btnNuevaJor);
-        panelAdminPartidos.add(btnNuevoPart);
+        panelAdminPartidos_1.add(btnNuevaTemp_1);
+        panelAdminPartidos_1.add(btnNuevaJor);
+        panelAdminPartidos_1.add(btnNuevoPart);
 
-        panelAdminPartidos.add(new JLabel(" | "));
+        panelAdminPartidos_1.add(new JLabel(" | "));
 
         comboTemporadasPartidos = new JComboBox<>();
         comboJornadasPartidos = new JComboBox<>();
         
         lblTemporadaPartido = new JLabel("Temporada:");
-        panelAdminPartidos.add(lblTemporadaPartido);
-        panelAdminPartidos.add(comboTemporadasPartidos);
+        panelAdminPartidos_1.add(lblTemporadaPartido);
+        panelAdminPartidos_1.add(comboTemporadasPartidos);
         
         lblJornadaPartido = new JLabel("Jornada:");
-        panelAdminPartidos.add(lblJornadaPartido);
-        panelAdminPartidos.add(comboJornadasPartidos);
+        panelAdminPartidos_1.add(lblJornadaPartido);
+        panelAdminPartidos_1.add(comboJornadasPartidos);
+        
+        btnTxema = new JButton("Txema");
+        btnTxema.setBackground(new Color(255, 0, 0));
+        btnTxema.setBorder(new EmptyBorder(10, 10, 10, 10));
+        panelAdminPartidos_1.add(btnTxema);
 
         JScrollPane scrollPartidos = new JScrollPane();
         panelListaPartidos = new JPanel();
@@ -768,7 +777,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
             }
         }
 
-        if (e.getSource() == btnNuevaTemp) {
+        if (e.getSource() == btnNuevaTemp_1) {
             String nombre = JOptionPane.showInputDialog(this, "Nombre de la Temporada (ej: 2025/26):");
             if (nombre != null && !nombre.trim().isEmpty()) {
                 new GestorTemporadas().crearTemporadaFutura(nombre, datosFederacion);
@@ -1393,8 +1402,8 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
             }
         }
         
-        panelAdminPartidos.revalidate();
-        panelAdminPartidos.repaint();
+        panelAdminPartidos_1.revalidate();
+        panelAdminPartidos_1.repaint();
     }
 
     private void actualizarComboEquipos() {
@@ -1708,11 +1717,11 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
 
             case ARBITRO:
                 habilitarNavegacionBasica();
-                panelAdminPartidos.setVisible(true); 
+                panelAdminPartidos_1.setVisible(true); 
                 btnNuevaJor.setVisible(true);
                 btnNuevoPart.setVisible(true);
                 // El árbitro no crea temporadas, solo gestiona las existentes
-                btnNuevaTemp.setVisible(false); 
+                btnNuevaTemp_1.setVisible(false); 
                 break;
 
             case MANAGER:
@@ -1730,7 +1739,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
             default:
                 habilitarNavegacionBasica();
                 btnVerFoto.setVisible(true); 
-                panelAdminPartidos.setVisible(true); // El invitado solo puede ver
+                panelAdminPartidos_1.setVisible(true); // El invitado solo puede ver
                 btnCambiarFoto.setVisible(false);
                 btnInscribirEquipo.setVisible(false);
                 break;
@@ -1771,8 +1780,8 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         btnClasificacin.setVisible(false);
 
         // Gestión de Partidos y Temporadas
-        panelAdminPartidos.setVisible(false);
-        btnNuevaTemp.setVisible(false);
+        panelAdminPartidos_1.setVisible(false);
+        btnNuevaTemp_1.setVisible(false);
         btnNuevaJor.setVisible(false);
         btnNuevoPart.setVisible(false);
         
@@ -1805,8 +1814,8 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         habilitarNavegacionBasica();
         
         // Paneles y botones de administración
-        panelAdminPartidos.setVisible(estado);
-        btnNuevaTemp.setVisible(estado);
+        panelAdminPartidos_1.setVisible(estado);
+        btnNuevaTemp_1.setVisible(estado);
         btnNuevaJor.setVisible(estado);
         btnNuevoPart.setVisible(estado);
         
