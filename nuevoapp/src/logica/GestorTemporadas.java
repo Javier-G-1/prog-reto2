@@ -46,18 +46,142 @@ public class GestorTemporadas {
     }
 
     /**
-     * Crea una nueva temporada futura.
+     * ⭐ MEJORADO: Crea una nueva temporada futura copiando de una temporada específica.
+     * IMPORTANTE: Solo se puede crear si NO hay ninguna temporada EN_JUEGO.
+     * @param temporadaOrigen La temporada desde la cual copiar (puede ser null para crear vacía)
+     * @return true si se creó exitosamente, false si no se pudo crear
      */
-    public void crearTemporadaFutura(String nombre, DatosFederacion datos) {
+    public boolean crearTemporadaFutura(String nombre, DatosFederacion datos, Temporada temporadaOrigen) {
         if (nombre == null || nombre.isBlank() || datos == null) {
             GestorLog.error("Parámetros inválidos para crear temporada");
-            return;
+            return false;
         }
         
-        Temporada nueva = new Temporada(nombre, Temporada.FUTURA);
-        datos.getListaTemporadas().add(nueva);
+        // ⭐ VALIDACIÓN CRÍTICA: No crear si hay temporada EN_JUEGO
+        if (existeTemporadaEnCurso(datos)) {
+            Temporada enCurso = obtenerTemporadaEnCurso(datos);
+            GestorLog.advertencia("Intento de crear temporada con " + enCurso.getNombre() + " EN_JUEGO");
+            return false;
+        }
         
-        GestorLog.exito("Temporada creada: " + nombre + " | Estado: FUTURA");
+        // Crear la nueva temporada FUTURA
+        Temporada nueva = new Temporada(nombre, Temporada.FUTURA);
+        
+        // Si hay temporada origen, copiar sus datos
+        if (temporadaOrigen != null) {
+            GestorLog.info("Copiando datos desde: " + temporadaOrigen.getNombre());
+            
+            int equiposCopiados = 0;
+            int jugadoresCopiados = 0;
+            
+            // Copiar equipos y jugadores de la temporada origen
+            for (Equipo equipoOriginal : temporadaOrigen.getEquiposParticipantes()) {
+                // Crear una COPIA del equipo (no el mismo objeto)
+                Equipo equipoNuevo = new Equipo(equipoOriginal.getNombre());
+                equipoNuevo.setRutaEscudo(equipoOriginal.getRutaEscudo()); // Mantener escudo
+                
+                // Copiar todos los jugadores del equipo
+                for (Jugador jugadorOriginal : equipoOriginal.getPlantilla()) {
+                    // Crear una COPIA del jugador (no el mismo objeto)
+                    Jugador jugadorNuevo = new Jugador(
+                        jugadorOriginal.getNombre(),
+                        jugadorOriginal.getPosicion(),
+                        jugadorOriginal.getEdad(),
+                        jugadorOriginal.getFotoURL()
+                    );
+                    
+                    // Copiar atributos adicionales
+                    jugadorNuevo.setDorsal(jugadorOriginal.getDorsal());
+                    jugadorNuevo.setNacionalidad(jugadorOriginal.getNacionalidad());
+                    jugadorNuevo.setAltura(jugadorOriginal.getAltura());
+                    jugadorNuevo.setPeso(jugadorOriginal.getPeso());
+                    
+                    equipoNuevo.ficharJugador(jugadorNuevo);
+                    jugadoresCopiados++;
+                }
+                
+                nueva.inscribirEquipo(equipoNuevo);
+                equiposCopiados++;
+            }
+            
+            GestorLog.exito("Temporada creada: " + nombre + " | Estado: FUTURA | " +
+                          "Equipos copiados: " + equiposCopiados + " | " +
+                          "Jugadores copiados: " + jugadoresCopiados + " | " +
+                          "Origen: " + temporadaOrigen.getNombre());
+        } else {
+            GestorLog.info("Temporada creada vacía (sin temporada origen)");
+            GestorLog.exito("Temporada creada: " + nombre + " | Estado: FUTURA | Sin equipos");
+        }
+        
+        // Añadir la nueva temporada a la federación
+        datos.getListaTemporadas().add(nueva);
+        return true;
+    }
+    
+    /**
+     * ⭐ NUEVO: Obtiene todas las temporadas FINALIZADAS
+     */
+    public java.util.List<Temporada> obtenerTemporadasFinalizadas(DatosFederacion datos) {
+        java.util.List<Temporada> finalizadas = new java.util.ArrayList<>();
+        
+        if (datos != null) {
+            for (Temporada t : datos.getListaTemporadas()) {
+                if (t.getEstado().equals(Temporada.TERMINADA)) {
+                    finalizadas.add(t);
+                }
+            }
+        }
+        
+        return finalizadas;
+    }
+    
+    /**
+     * ⭐ NUEVO: Obtiene la última temporada que esté FINALIZADA
+     */
+    public Temporada obtenerUltimaTemporadaFinalizada(DatosFederacion datos) {
+        if (datos == null || datos.getListaTemporadas().isEmpty()) {
+            return null;
+        }
+        
+        Temporada ultimaFinalizada = null;
+        
+        // Recorrer todas las temporadas para encontrar la última finalizada
+        for (Temporada t : datos.getListaTemporadas()) {
+            if (t.getEstado().equals(Temporada.TERMINADA)) {
+                // Si no hay ninguna o esta es más reciente (está más al final de la lista)
+                ultimaFinalizada = t;
+            }
+        }
+        
+        return ultimaFinalizada;
+    }
+
+    /**
+     * ⭐ NUEVO: Verifica si ya existe una temporada EN_JUEGO
+     */
+    public boolean existeTemporadaEnCurso(DatosFederacion datos) {
+        if (datos == null) return false;
+        
+        for (Temporada t : datos.getListaTemporadas()) {
+            if (t.getEstado().equals(Temporada.EN_JUEGO)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * ⭐ NUEVO: Obtiene la temporada que está EN_JUEGO (si existe)
+     */
+    public Temporada obtenerTemporadaEnCurso(DatosFederacion datos) {
+        if (datos == null) return null;
+        
+        for (Temporada t : datos.getListaTemporadas()) {
+            if (t.getEstado().equals(Temporada.EN_JUEGO)) {
+                return t;
+            }
+        }
+        return null;
     }
 
     /**
@@ -98,9 +222,11 @@ public class GestorTemporadas {
         // Lo inscribimos en la temporada específica
         t.inscribirEquipo(equipoARegistrar);
         GestorLog.exito("Equipo inscrito: " + nombreE + " → Temporada: " + nombreT);
-        
-        
-    }// En GestorTemporadas o donde prefieras
+    }
+
+    /**
+     * Asigna dorsales automáticos
+     */
     public void asignarDorsalesAutomaticos(Temporada t) {
         for (Equipo eq : t.getEquiposParticipantes()) {
             int dorsal = 1;
@@ -123,9 +249,9 @@ public class GestorTemporadas {
 
         GestorLog.info("=== PREPARANDO ESCENARIO INICIAL ===");
 
-        // 1. CREAR TEMPORADA PASADA
+        // 1. CREAR TEMPORADA PASADA (sin origen porque es la primera)
         String nombreT1 = "Temporada 2024/25";
-        crearTemporadaFutura(nombreT1, datos);
+        crearTemporadaFutura(nombreT1, datos, null); // ⭐ AÑADIR null como tercer parámetro
         Temporada t1 = datos.buscarTemporadaPorNombre(nombreT1);
 
         if (t1 != null) {
@@ -154,5 +280,4 @@ public class GestorTemporadas {
                           " | Equipos: " + equiposInscritos + " | Jugadores: " + jugadoresCreados);
         }
     }
-    
 }

@@ -41,7 +41,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
     private JComboBox<String> comboEquiposJugadores;
     private JButton btnEditarJugador;
     private JPanel panelListaPartidos;
-    private JTable tablaClasificacion;
+
     private DefaultTableModel modeloTabla;
 
     private JPanel panelTarjetasJugadores;
@@ -52,7 +52,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
     private JButton btnCambiarEquipo;
     private JButton btnAgregarJugador;
     
-    private JButton btnNuevaTemp, btnNuevaJor, btnNuevoPart;
+    private JButton  btnNuevaJor, btnNuevoPart;
     private JButton btnNuevaTemp_1;
 
 
@@ -95,7 +95,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         
         new GestorTemporadas().prepararEscenarioInicial(this.datosFederacion); 
         
-        btnNuevaTemp = new JButton("+ Temporada");
+   
         btnNuevaJor = new JButton("+ Jornada");
         btnInscribirEquipo = new JButton("Inscribir Equipo");
         comboTemporadasPartidos = new JComboBox<>();
@@ -394,6 +394,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
             {"Valencia","Raúl Pérez","Andrea Delgado","Luis Navarro","Marta Ramírez"},
             {"Athletic Club","Pablo Martínez","Alicia Gómez","Daniel Reyes","Elena López"}
         };
+        
 
         for (String[] equipoData : equiposConJugadores) {
             Equipo eq = new Equipo(equipoData[0], null);
@@ -803,12 +804,132 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         }
 
         if (e.getSource() == btnNuevaTemp_1) {
-            String nombre = JOptionPane.showInputDialog(this, "Nombre de la Temporada (ej: 2025/26):");
+            String nombre = JOptionPane.showInputDialog(this, "Nombre de la Temporada (ej: 2026/27):");
+            
             if (nombre != null && !nombre.trim().isEmpty()) {
-                new GestorTemporadas().crearTemporadaFutura(nombre, datosFederacion);
-                sincronizarCombos();
-                GestorLog.exito("Nueva temporada creada: " + nombre + " | Estado: FUTURA");
-                JOptionPane.showMessageDialog(this, "Temporada " + nombre + " creada con éxito.");
+                GestorTemporadas gestor = new GestorTemporadas();
+                
+                // ⭐ VALIDACIÓN: Verificar que no haya temporada EN_JUEGO
+                if (gestor.existeTemporadaEnCurso(datosFederacion)) {
+                    Temporada enCurso = gestor.obtenerTemporadaEnCurso(datosFederacion);
+                    
+                    JOptionPane.showMessageDialog(this,
+                        "No se puede crear una nueva temporada.\n\n" +
+                        "❌ Temporada en curso: " + enCurso.getNombre() + "\n\n" +
+                        "Debes finalizarla antes de crear una nueva temporada.",
+                        "Temporada en curso activa",
+                        JOptionPane.WARNING_MESSAGE);
+                    
+                    GestorLog.advertencia("Intento de crear temporada con " + enCurso.getNombre() + " EN_JUEGO");
+                    return;
+                }
+                
+                // ⭐ NUEVO: Obtener todas las temporadas finalizadas
+                java.util.List<Temporada> temporadasFinalizadas = gestor.obtenerTemporadasFinalizadas(datosFederacion);
+                Temporada temporadaOrigen = null;
+                
+                if (!temporadasFinalizadas.isEmpty()) {
+                    // Crear array de opciones incluyendo "Crear vacía"
+                    String[] opciones = new String[temporadasFinalizadas.size() + 1];
+                    opciones[0] = "--- Crear temporada vacía ---";
+                    
+                    for (int i = 0; i < temporadasFinalizadas.size(); i++) {
+                        Temporada t = temporadasFinalizadas.get(i);
+                        int equipos = t.getEquiposParticipantes().size();
+                        int jugadores = 0;
+                        for (Equipo eq : t.getEquiposParticipantes()) {
+                            jugadores += eq.getPlantilla().size();
+                        }
+                        opciones[i + 1] = t.getNombre() + " (" + equipos + " equipos, " + jugadores + " jugadores)";
+                    }
+                    
+                    String seleccion = (String) JOptionPane.showInputDialog(
+                        this,
+                        "Selecciona de qué temporada copiar los datos:\n" +
+                        "(Equipos, jugadores y configuraciones)",
+                        "Origen de datos para " + nombre,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        opciones,
+                        opciones[opciones.length - 1] // Última temporada por defecto
+                    );
+                    
+                    if (seleccion == null) {
+                        GestorLog.info("Creación de temporada cancelada por el usuario");
+                        return;
+                    }
+                    
+                    // Si NO eligió "Crear vacía", buscar la temporada seleccionada
+                    if (!seleccion.equals(opciones[0])) {
+                        String nombreTemp = seleccion.split(" \\(")[0]; // Extraer solo el nombre
+                        temporadaOrigen = datosFederacion.buscarTemporadaPorNombre(nombreTemp);
+                        
+                        // Confirmar la copia
+                        int equipos = temporadaOrigen.getEquiposParticipantes().size();
+                        int jugadores = 0;
+                        for (Equipo eq : temporadaOrigen.getEquiposParticipantes()) {
+                            jugadores += eq.getPlantilla().size();
+                        }
+                        
+                        int confirmar = JOptionPane.showConfirmDialog(this,
+                            "Se copiarán automáticamente:\n\n" +
+                            " Equipos: " + equipos + "\n" +
+                            " Jugadores: " + jugadores + "\n\n" +
+                            "Desde: " + temporadaOrigen.getNombre() + "\n" +
+                            "Hacia: " + nombre + "\n\n" +
+                            "¿Continuar?",
+                            "Confirmar creación de temporada",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.INFORMATION_MESSAGE);
+                        
+                        if (confirmar != JOptionPane.YES_OPTION) {
+                            GestorLog.info("Creación de temporada cancelada por el usuario");
+                            return;
+                        }
+                    }
+                }
+                
+                // ⭐ Crear la temporada con el origen seleccionado (o null para vacía)
+                boolean creada = gestor.crearTemporadaFutura(nombre, datosFederacion, temporadaOrigen);
+                
+                if (creada) {
+                    sincronizarCombos();
+                    actualizarVistaEquipos();
+                    actualizarIndicadorEstadoTemporada();
+                    
+                    // Mostrar resumen final
+                    Temporada nuevaCreada = datosFederacion.buscarTemporadaPorNombre(nombre);
+                    if (nuevaCreada != null) {
+                        int equiposFinales = nuevaCreada.getEquiposParticipantes().size();
+                        int jugadoresFinales = 0;
+                        for (Equipo eq : nuevaCreada.getEquiposParticipantes()) {
+                            jugadoresFinales += eq.getPlantilla().size();
+                        }
+                        
+                        String mensaje;
+                        if (temporadaOrigen != null) {
+                            mensaje = "Temporada " + nombre + " creada con éxito.\n\n" +
+                                      " " + equiposFinales + " equipos inscritos\n" +
+                                      " " + jugadoresFinales + " jugadores fichados\n\n" +
+                                      "Copiados desde: " + temporadaOrigen.getNombre();
+                        } else {
+                            mensaje = equiposFinales > 0 
+                                ? "Temporada " + nombre + " creada con éxito.\n\n" +
+                                  " " + equiposFinales + " equipos inscritos\n" +
+                                  " " + jugadoresFinales + " jugadores fichados"
+                                : "Temporada " + nombre + " creada con éxito.\n\n" +
+                                  " Temporada vacía (sin equipos)";
+                        }
+                        
+                        JOptionPane.showMessageDialog(this, mensaje, 
+                            "Temporada creada", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                        "No se pudo crear la temporada. Revisa los logs.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
 
@@ -816,6 +937,19 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
             Temporada t = obtenerTemporadaSeleccionada();
             if (t == null) {
                 GestorLog.advertencia("Intento de crear jornada sin temporada seleccionada");
+                return;
+            }  GestorTemporadas gestor = new GestorTemporadas();
+            if (gestor.existeTemporadaEnCurso(datosFederacion)) {
+                Temporada temporadaEnCurso = gestor.obtenerTemporadaEnCurso(datosFederacion);
+                
+                JOptionPane.showMessageDialog(this,
+                    "Ya existe una temporada en curso: " + temporadaEnCurso.getNombre() + "\n" +
+                    "Debes finalizarla antes de iniciar una nueva temporada.",
+                    "Temporada en curso activa",
+                    JOptionPane.WARNING_MESSAGE);
+                
+                GestorLog.advertencia("Intento de activar " + t.getNombre() + 
+                                    " mientras " + temporadaEnCurso.getNombre() + " está EN_JUEGO");
                 return;
             }
 
@@ -1307,30 +1441,36 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
     }
 
  
-    	private void actualizarIndicadorEstadoTemporada() {
-    	    JLabel lblEstadoTemp = null;
-    	    
-    	    // Buscar el label existente
-    	    for (Component c : panelSuperior.getComponents()) {
-    	        if (c instanceof JLabel && ((JLabel) c).getName() != null 
-    	            && ((JLabel) c).getName().equals("lblEstadoTemporada")) {
-    	            lblEstadoTemp = (JLabel) c;
-    	            break;
-    	        }
-    	    }
-    	    
-    	    
-    	    if (lblEstadoTemp == null) {
-    	        lblEstadoTemp = new JLabel();
-    	        lblEstadoTemp.setName("lblEstadoTemporada");
-    	        lblEstadoTemp.setFont(new Font("Segoe UI", Font.BOLD, 14));
-    	        panelSuperior.add(lblEstadoTemp, 2);
-    	    }
-    	    
-    	    // Obtener la temporada seleccionada
-    	    String tempNom = (String) comboTemporadas.getSelectedItem();
-    	    Temporada t = datosFederacion.buscarTemporadaPorNombre(tempNom);
-        
+    private void actualizarIndicadorEstadoTemporada() {
+        JLabel lblEstadoTemp = null;
+
+        // Buscar el label existente
+        for (Component c : panelSuperior.getComponents()) {
+            if (c instanceof JLabel && ((JLabel) c).getName() != null
+                && ((JLabel) c).getName().equals("lblEstadoTemporada")) {
+                lblEstadoTemp = (JLabel) c;
+                break;
+            }
+        }
+
+        // ⭐ Si no existe, crearlo AL FINAL del panel
+        if (lblEstadoTemp == null) {
+            lblEstadoTemp = new JLabel();
+            lblEstadoTemp.setName("lblEstadoTemporada");
+            lblEstadoTemp.setFont(new Font("Segoe UI", Font.BOLD, 14));
+            
+            // Agregar espaciador antes del label
+            panelSuperior.add(Box.createHorizontalStrut(15));
+            
+            // Agregar al final (sin especificar posición)
+            panelSuperior.add(lblEstadoTemp);
+            
+        }
+
+        // Obtener la temporada seleccionada
+        String tempNom = (String) comboTemporadas.getSelectedItem();
+        Temporada t = datosFederacion.buscarTemporadaPorNombre(tempNom);
+
         if (t != null) {
             switch (t.getEstado()) {
                 case Temporada.FUTURA:
@@ -1338,29 +1478,43 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                     lblEstadoTemp.setForeground(new Color(52, 152, 219));
                     btnAgregarEquipo.setEnabled(true);
                     btnAgregarEquipo.setToolTipText("Agregar nuevo equipo");
+                    
+                    // ⭐ Control de botones según estado
+                    btnFinalizarTemporada.setEnabled(false);
+                    btnTxema.setEnabled(false);
                     break;
+                    
                 case Temporada.EN_JUEGO:
                     lblEstadoTemp.setText("● EN CURSO");
                     lblEstadoTemp.setForeground(new Color(241, 196, 15));
                     btnAgregarEquipo.setEnabled(false);
                     btnAgregarEquipo.setToolTipText("No se pueden agregar equipos a temporadas en curso");
+                    
+                    // ⭐ Habilitar botones de gestión
+                    btnFinalizarTemporada.setEnabled(true);
+                    btnTxema.setEnabled(true);
                     break;
+                    
                 case Temporada.TERMINADA:
                     lblEstadoTemp.setText("● FINALIZADA");
                     lblEstadoTemp.setForeground(new Color(231, 76, 60));
                     btnAgregarEquipo.setEnabled(false);
                     btnAgregarEquipo.setToolTipText("No se pueden agregar equipos a temporadas finalizadas");
+                    
+                    // ⭐ Deshabilitar todos los botones de modificación
+                    btnFinalizarTemporada.setEnabled(false);
+                    btnTxema.setEnabled(false);
                     break;
             }
         }
-        
+
         panelSuperior.revalidate();
         panelSuperior.repaint();
     }
 
     private void actualizarIndicadorEstadoPartidos() {
         JLabel lblEstadoTempPartidos = null;
-        for (Component c : panelAdminPartidos.getComponents()) {
+        for (Component c : panelAdminPartidos_1.getComponents()) {
             if (c instanceof JLabel && ((JLabel) c).getName() != null 
                 && ((JLabel) c).getName().equals("lblEstadoTempPartidos")) {
                 lblEstadoTempPartidos = (JLabel) c;
@@ -1372,7 +1526,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
             lblEstadoTempPartidos = new JLabel();
             lblEstadoTempPartidos.setName("lblEstadoTempPartidos");
             lblEstadoTempPartidos.setFont(new Font("Segoe UI", Font.BOLD, 13));
-            panelAdminPartidos.add(lblEstadoTempPartidos);
+            panelAdminPartidos_1.add(lblEstadoTempPartidos);
         }
         
         String tempNom = (String) comboTemporadasPartidos.getSelectedItem();
@@ -1415,7 +1569,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
             for (Jornada j : t.getListaJornadas()) {
                 if (j.getNombre().equals(jorNom)) {
                     JLabel lblEstadoJornada = null;
-                    for (Component c : panelAdminPartidos.getComponents()) {
+                    for (Component c : panelAdminPartidos_1.getComponents()) {
                         if (c instanceof JLabel && ((JLabel) c).getName() != null 
                             && ((JLabel) c).getName().equals("lblEstadoJornada")) {
                             lblEstadoJornada = (JLabel) c;
@@ -1427,31 +1581,17 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                         lblEstadoJornada = new JLabel();
                         lblEstadoJornada.setName("lblEstadoJornada");
                         lblEstadoJornada.setFont(new Font("Segoe UI", Font.BOLD, 13));
-                        panelAdminPartidos.add(lblEstadoJornada);
+                        panelAdminPartidos_1.add(lblEstadoJornada);
                     }
                     
-                    boolean todosFinalizados = true;
-                    for (Partido p : j.getListaPartidos()) {
-                        if (!p.isFinalizado()) {
-                            todosFinalizados = false;
-                            break;
-                        }
+                  
                     }
                     
-                    if (j.getListaPartidos().isEmpty()) {
-                        lblEstadoJornada.setText("  |  ● JORNADA SIN PARTIDOS");
-                        lblEstadoJornada.setForeground(new Color(149, 165, 166));
-                    } else if (todosFinalizados) {
-                        lblEstadoJornada.setText("  |  ● JORNADA FINALIZADA");
-                        lblEstadoJornada.setForeground(new Color(46, 204, 113));
-                    } else {
-                        lblEstadoJornada.setText("  |  ● JORNADA EN CURSO");
-                        lblEstadoJornada.setForeground(new Color(241, 196, 15));
-                    }
+                  
                     break;
                 }
             }
-        }
+        
         
         panelAdminPartidos_1.revalidate();
         panelAdminPartidos_1.repaint();
