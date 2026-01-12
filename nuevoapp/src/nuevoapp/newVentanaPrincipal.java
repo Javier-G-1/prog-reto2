@@ -17,6 +17,7 @@ import gestion.Equipo;
 import gestion.Jornada;
 import gestion.Temporada;
 import nuevoapp.PanelClasificacion;
+import logica.ExportadorXML;
 
 public class newVentanaPrincipal extends JFrame implements ActionListener {
 
@@ -37,6 +38,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
     private JPanel panelTarjetasEquipo;
     private JButton btnAgregarEquipo;
     private JComboBox<String> comboTemporadas;
+    
     private JComboBox<String> comboTemporadasClasificacion;
     private JPanel panelInicio, panelEquipos, panelJugadores, panelPartidos, panelClasificacion, panelSuperior;
 
@@ -237,10 +239,57 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         verticalStrut_5 = Box.createVerticalStrut(100);
         panelBotones.add(verticalStrut_5);
         
+        
         btnExportar = new JButton("Exportar");
-        btnExportar.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        	}
+        btnExportar.addActionListener(e -> {
+            // Preguntar al usuario qué quiere exportar
+            String[] opciones = {"Temporada actual", "Todas las temporadas"};
+            int eleccion = JOptionPane.showOptionDialog(
+                this,
+                "¿Qué deseas exportar?",
+                "Exportar datos",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opciones,
+                opciones[0]
+            );
+            
+            if (eleccion == -1) return; // Usuario canceló
+            
+            GestorLog.info("Iniciando exportación de datos");
+            ExportadorXML exportador = new ExportadorXML(datosFederacion);
+            
+            if (eleccion == 0) {
+                // Exportar temporada actual (según la vista activa)
+                Temporada temporadaActual = null;
+                
+                // Intentar obtener la temporada de cada combo según qué panel está visible
+                if (panelEquipos.isVisible()) {
+                    String tempNom = (String) comboTemporadas.getSelectedItem();
+                    temporadaActual = datosFederacion.buscarTemporadaPorNombre(tempNom);
+                } else if (panelJugadores.isVisible()) {
+                    String tempNom = (String) comboTemporadasJugadores.getSelectedItem();
+                    temporadaActual = datosFederacion.buscarTemporadaPorNombre(tempNom);
+                } else if (panelPartidos.isVisible()) {
+                    String tempNom = (String) comboTemporadasPartidos.getSelectedItem();
+                    temporadaActual = datosFederacion.buscarTemporadaPorNombre(tempNom);
+                } else {
+                    // Si no hay combo visible, usar la primera temporada disponible
+                    if (!datosFederacion.getListaTemporadas().isEmpty()) {
+                        temporadaActual = datosFederacion.getListaTemporadas().get(0);
+                    }
+                }
+                
+                if (temporadaActual != null) {
+                    exportador.exportarTemporada(temporadaActual);
+                } else {
+                    JOptionPane.showMessageDialog(this, "No hay temporada seleccionada");
+                }
+            } else {
+                // Exportar todas las temporadas
+                exportador.exportarTodo();
+            }
         });
         btnExportar.setMaximumSize(new Dimension(2147483647, 40));
         btnExportar.setForeground(Color.WHITE);
@@ -413,9 +462,11 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         panelBotonesJugadores.add(btnCambiarEquipo);
         panelBotonesJugadores.add(btnAgregarJugador);
      // En la sección de botones de jugadores (línea ~250)
-        JButton btnEditarJugador = new JButton("Editar jugador");
+     // ✅ CORRECTO
+        btnEditarJugador = new JButton("Editar jugador");
         btnEditarJugador.addActionListener(this);
         panelBotonesJugadores.add(btnEditarJugador);
+    
         panelJugadores.add(panelBotonesJugadores, BorderLayout.SOUTH);
 
         Temporada temporada2025_26 = new Temporada("Temporada 2025/26", Temporada.FUTURA);
@@ -802,21 +853,14 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                 return;
             }
 
-            String nombre = JOptionPane.showInputDialog(this, "Nombre del jugador:");
-            if (nombre == null || nombre.trim().isEmpty()) return;
+            // ⭐ NUEVO: Mostrar diálogo mejorado para agregar jugador
+            DialogoAgregarJugador dialogo = new DialogoAgregarJugador(this);
+            dialogo.setVisible(true);
             
-            String pos = JOptionPane.showInputDialog(this, "Posición (ej: Portero, Extremo):");
-            if (pos == null || pos.trim().isEmpty()) pos = "Sin posición";
-            
-            String edadS = JOptionPane.showInputDialog(this, "Edad:");
-            if (edadS == null || edadS.trim().isEmpty()) return;
-            
-            try {
-                int edad = Integer.parseInt(edadS);
+            if (dialogo.isAceptado()) {
+                Jugador nuevo = dialogo.getJugadorCreado();
                 
-                Jugador nuevo = new Jugador(nombre.trim(), pos.trim(), edad, null);
-                
-                if (t != null) {
+                if (t != null && nuevo != null) {
                     boolean encontrado = false;
                     for (Equipo eq : t.getEquiposParticipantes()) {
                         if (eq.getNombre().equals(equipoSel)) {
@@ -829,23 +873,38 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                     if (encontrado) {
                         actualizarJugadoresPorTemporada((String) comboTemporadasJugadores.getSelectedItem(),
                                                        (String) comboEquiposJugadores.getSelectedItem());
-                        GestorLog.exito("Nuevo fichaje: " + nombre + " | Equipo: " + equipoSel + 
-                                      " | Posición: " + pos + " | Edad: " + edad + " | Temporada: " + tempNom);
-                        JOptionPane.showMessageDialog(this, "Jugador " + nombre + " fichado con éxito en " + equipoSel);
+                        
+                        GestorLog.exito("Nuevo fichaje: " + nuevo.getNombre() + " | Equipo: " + equipoSel + 
+                                      " | Posición: " + nuevo.getPosicion() + " | Edad: " + nuevo.getEdad() + 
+                                      " | Nacionalidad: " + nuevo.getNacionalidad() + 
+                                      " | Altura: " + nuevo.getAltura() + 
+                                      " | Peso: " + nuevo.getPeso() + 
+                                      " | Temporada: " + tempNom);
+                        
+                        JOptionPane.showMessageDialog(this, 
+                            "Jugador " + nuevo.getNombre() + " fichado con éxito en " + equipoSel,
+                            "Fichaje exitoso",
+                            JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "La edad debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
-                GestorLog.error("Error al agregar jugador: edad inválida (" + edadS + ")");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Ocurrió un error al agregar el jugador: " + ex.getMessage());
-                GestorLog.error("Error al agregar jugador", ex);
             }
         }
 
         if (e.getSource() == btnNuevaTemp_1) {
-            String nombre = JOptionPane.showInputDialog(this, "Nombre de la Temporada (ej: 2026/27):");
+        	String nombre = JOptionPane.showInputDialog(this, "Nombre de la Temporada (ej: 2026/27):");
             
+            if (nombre != null && !nombre.trim().isEmpty()) {
+                // ⭐ VALIDACIÓN: Verificar que no exista ya una temporada con ese nombre
+                if (datosFederacion.buscarTemporadaPorNombre(nombre) != null) {
+                    JOptionPane.showMessageDialog(this,
+                        "Ya existe una temporada con el nombre: " + nombre,
+                        "Temporada duplicada",
+                        JOptionPane.WARNING_MESSAGE);
+                    GestorLog.advertencia("Intento de crear temporada duplicada: " + nombre);
+                    return;
+                }
+                
+                GestorTemporadas gestor = new GestorTemporadas();}
             if (nombre != null && !nombre.trim().isEmpty()) {
                 GestorTemporadas gestor = new GestorTemporadas();
                 
@@ -1060,6 +1119,8 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                 GestorLog.exito("Jugador editado: " + jugadorSeleccionado.getNombre());
             }
         }
+            
+          
         else if (e.getSource() == btnFinalizarTemporada) {
         	// Mirar si todos los partidos están jugados
         	finalizarTemporada();
@@ -1067,6 +1128,8 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         else if (e.getSource() == btnTxema) {
         	funcionTxema();
         }
+     // En newVentanaPrincipal, el código ya existente:
+    
     }
 
 
@@ -1301,22 +1364,40 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
      panelBotones.setOpaque(false);
      panelBotones.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 
+  
+
      JButton btnCambiarEscudo = new JButton("Cambiar Escudo");
      btnCambiarEscudo.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-
      btnCambiarEscudo.setFocusPainted(false);
      btnCambiarEscudo.setBorderPainted(false);
      btnCambiarEscudo.setPreferredSize(new Dimension(130, 30));
      
+     // ⭐ CONTROL DE VISIBILIDAD POR ROL
+     if (rolUsuario == Rol.INVITADO || rolUsuario == Rol.ARBITRO) {
+         btnCambiarEscudo.setVisible(false);
+     }
+     
      btnCambiarEscudo.addActionListener(e -> {
-         String tempNombre = (String) comboTemporadas.getSelectedItem();
-         Temporada temp = datosFederacion.buscarTemporadaPorNombre(tempNombre);
-         
-         if (temp != null && !temp.getEstado().equals(Temporada.FUTURA)) {
+         // ⭐ VALIDACIÓN ADICIONAL DE SEGURIDAD
+         if (rolUsuario != Rol.ADMINISTRADOR && rolUsuario != Rol.MANAGER) {
              JOptionPane.showMessageDialog(this, 
-                 "Solo se pueden hacer cambios en temporadas FUTURAS",
-                 "Operación no permitida", 
+                 "No tienes permisos para realizar esta acción.",
+                 "Permiso denegado",
                  JOptionPane.WARNING_MESSAGE);
+             GestorLog.advertencia("Intento no autorizado de cambiar escudo | Rol: " + rolUsuario);
+             return;
+         }
+         
+         // ⭐ VALIDACIÓN DE ESTADO DE TEMPORADA
+         String nombreTemporada = (String) comboTemporadas.getSelectedItem();
+         Temporada temporadaActual = datosFederacion.buscarTemporadaPorNombre(nombreTemporada);
+         
+         if (temporadaActual != null && !temporadaActual.getEstado().equals(Temporada.FUTURA)) {
+             JOptionPane.showMessageDialog(this,
+                 "Solo se pueden cambiar escudos en temporadas FUTURAS",
+                 "Operación no permitida",
+                 JOptionPane.WARNING_MESSAGE);
+             GestorLog.advertencia("Intento de cambiar escudo en temporada " + temporadaActual.getEstado() + ": " + nombreTemporada);
              return;
          }
          
@@ -1367,6 +1448,64 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
      panelBotones.add(btnVerEscudo);
 
      panelTarjeta.add(panelBotones, BorderLayout.EAST);
+     JButton btnEliminarEquipo = new JButton("Eliminar");
+     btnEliminarEquipo.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+     btnEliminarEquipo.setBackground(new Color(231, 76, 60)); // Rojo
+     btnEliminarEquipo.setForeground(Color.WHITE);
+     btnEliminarEquipo.setFocusPainted(false);
+     btnEliminarEquipo.setBorderPainted(false);
+     btnEliminarEquipo.setPreferredSize(new Dimension(90, 30));
+     
+     // Solo visible para Administrador
+     if (rolUsuario != Rol.ADMINISTRADOR) {
+         btnEliminarEquipo.setVisible(false);
+     }
+     
+     btnEliminarEquipo.addActionListener(e -> {
+         String tempNombre = (String) comboTemporadas.getSelectedItem();
+         Temporada temp = datosFederacion.buscarTemporadaPorNombre(tempNombre);
+         
+         // Validación de estado
+         if (temp != null && !temp.getEstado().equals(Temporada.FUTURA)) {
+             JOptionPane.showMessageDialog(this,
+                 "Solo se pueden eliminar equipos de temporadas FUTURAS",
+                 "Operación no permitida",
+                 JOptionPane.WARNING_MESSAGE);
+             GestorLog.advertencia("Intento de eliminar equipo en temporada " + temp.getEstado());
+             return;
+         }
+         
+         // Confirmación
+         int confirmar = JOptionPane.showConfirmDialog(this,
+             "¿Estás seguro de eliminar el equipo '" + nombreEquipo + "'?\n" +
+             "Se perderán todos los jugadores asociados.",
+             "Confirmar eliminación",
+             JOptionPane.YES_NO_OPTION,
+             JOptionPane.WARNING_MESSAGE);
+         
+         if (confirmar == JOptionPane.YES_OPTION && temp != null) {
+             Equipo equipoAEliminar = temp.buscarEquipoPorNombre(nombreEquipo);
+             
+             if (equipoAEliminar != null) {
+                 int jugadoresEliminados = equipoAEliminar.getPlantilla().size();
+                 temp.getEquiposParticipantes().remove(equipoAEliminar);
+                 
+                 actualizarVistaEquipos();
+                 sincronizarCombos();
+                 
+                 GestorLog.exito("Equipo eliminado: " + nombreEquipo + 
+                               " | Jugadores eliminados: " + jugadoresEliminados + 
+                               " | Temporada: " + tempNombre);
+                 
+                 JOptionPane.showMessageDialog(this,
+                     "Equipo '" + nombreEquipo + "' eliminado con éxito.",
+                     "Equipo eliminado",
+                     JOptionPane.INFORMATION_MESSAGE);
+             }
+         }
+     });
+     
+     panelBotones.add(btnEliminarEquipo);
 
      return panelTarjeta;
  }
@@ -1582,6 +1721,8 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                     btnInscribirEquipo.setEnabled(true);
                     btnFinalizarTemporada.setEnabled(false);
                     btnTxema.setEnabled(false);
+                    btnEditarJugador.setEnabled(true);
+                    btnCambiarFoto.setEnabled(true);
                     break;
                 case Temporada.EN_JUEGO:
                     lblEstadoTempPartidos.setText("  |  ● EN CURSO");
@@ -1591,6 +1732,8 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                     btnInscribirEquipo.setEnabled(false);
                     btnFinalizarTemporada.setEnabled(true);
                     btnTxema.setEnabled(true);
+                    btnEditarJugador.setEnabled(false);
+                    btnCambiarFoto.setEnabled(false);
                     break;
                 case Temporada.TERMINADA:
                     lblEstadoTempPartidos.setText("  |  ● FINALIZADA");
@@ -1600,6 +1743,8 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                     btnInscribirEquipo.setEnabled(false);
                     btnFinalizarTemporada.setEnabled(false);
                     btnTxema.setEnabled(false);
+                    btnEditarJugador.setEnabled(false);
+                    btnCambiarFoto.setEnabled(false);
                     break;
             }
         }
@@ -2089,6 +2234,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                 panelAdminPartidos_1.setVisible(true); 
                 btnNuevaJor.setVisible(true);
                 btnNuevoPart.setVisible(true);
+                btnCambiarFoto.setVisible(false);
                 // El árbitro no crea temporadas, solo gestiona las existentes
                 btnNuevaTemp_1.setVisible(false); 
                 break;
@@ -2101,6 +2247,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                 btnCambiarFoto.setVisible(true); // Cambiar escudo/foto
                 btnAgregarJugador.setVisible(true);
                 btnCambiarEquipo.setVisible(true);
+                
                 btnInscribirEquipo.setVisible(true);
                 break;
 
