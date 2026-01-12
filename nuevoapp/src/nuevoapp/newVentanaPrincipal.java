@@ -74,6 +74,8 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
     private JLabel lblJornadaPartido;
     private JButton btnTxema;
     private JButton btnFinalizarTemporada;
+    private JButton btnAdministrarUsuario;
+    private Component verticalStrut_6;
 
     public static void main(String[] args) {
     	  EventQueue.invokeLater(() -> {
@@ -229,6 +231,18 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         
         verticalStrut_5 = Box.createVerticalStrut(100);
         panelBotones.add(verticalStrut_5);
+        
+        btnAdministrarUsuario = new JButton("Administrar");
+        btnAdministrarUsuario.setMaximumSize(new Dimension(2147483647, 40));
+        btnAdministrarUsuario.setForeground(Color.WHITE);
+        btnAdministrarUsuario.setFont(new Font("Segoe UI Black", Font.ITALIC, 14));
+        btnAdministrarUsuario.setBorder(null);
+        btnAdministrarUsuario.setBackground(new Color(128, 128, 128));
+        btnAdministrarUsuario.setAlignmentX(0.5f);
+        panelBotones.add(btnAdministrarUsuario);
+        
+        verticalStrut_6 = Box.createVerticalStrut(20);
+        panelBotones.add(verticalStrut_6);
         panelBotones.add(btnCerrarSesion);
 
         // ===== PANEL CENTRAL (CARDS) =====
