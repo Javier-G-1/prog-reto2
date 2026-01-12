@@ -77,8 +77,10 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
     private JLabel lblJornadaPartido;
     private JButton btnTxema;
     private JButton btnFinalizarTemporada;
-    private JButton btnAdministrarUsuario;
+    private JButton btnGestionUsuario;
     private Component verticalStrut_6;
+    private JButton btnExportar;
+    private Component verticalStrut_7;
 
     public static void main(String[] args) {
     	  EventQueue.invokeLater(() -> {
@@ -235,14 +237,30 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         verticalStrut_5 = Box.createVerticalStrut(100);
         panelBotones.add(verticalStrut_5);
         
-        btnAdministrarUsuario = new JButton("Administrar");
-        btnAdministrarUsuario.setMaximumSize(new Dimension(2147483647, 40));
-        btnAdministrarUsuario.setForeground(Color.WHITE);
-        btnAdministrarUsuario.setFont(new Font("Segoe UI Black", Font.ITALIC, 14));
-        btnAdministrarUsuario.setBorder(null);
-        btnAdministrarUsuario.setBackground(new Color(128, 128, 128));
-        btnAdministrarUsuario.setAlignmentX(0.5f);
-        panelBotones.add(btnAdministrarUsuario);
+        btnExportar = new JButton("Exportar");
+        btnExportar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	}
+        });
+        btnExportar.setMaximumSize(new Dimension(2147483647, 40));
+        btnExportar.setForeground(Color.WHITE);
+        btnExportar.setFont(new Font("Segoe UI Black", Font.ITALIC, 14));
+        btnExportar.setBorder(null);
+        btnExportar.setBackground(Color.GRAY);
+        btnExportar.setAlignmentX(0.5f);
+        panelBotones.add(btnExportar);
+        
+        verticalStrut_7 = Box.createVerticalStrut(20);
+        panelBotones.add(verticalStrut_7);
+        
+        btnGestionUsuario = new JButton("Gestión de Usuarios");
+        btnGestionUsuario.setMaximumSize(new Dimension(2147483647, 40));
+        btnGestionUsuario.setForeground(Color.WHITE);
+        btnGestionUsuario.setFont(new Font("Segoe UI Black", Font.ITALIC, 14));
+        btnGestionUsuario.setBorder(null);
+        btnGestionUsuario.setBackground(new Color(128, 128, 128));
+        btnGestionUsuario.setAlignmentX(0.5f);
+        panelBotones.add(btnGestionUsuario);
         
         verticalStrut_6 = Box.createVerticalStrut(20);
         panelBotones.add(verticalStrut_6);
