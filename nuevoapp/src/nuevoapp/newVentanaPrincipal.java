@@ -21,6 +21,7 @@ import nuevoapp.PanelClasificacion;
 public class newVentanaPrincipal extends JFrame implements ActionListener {
 
     private static final long serialVersionUID = 1L;
+    private PanelClasificacion panelClasificacionObjeto; 
     private DatosFederacion datosFederacion;
     private JPanel contentPane;
     private JPanel panelAdminPartidos;
@@ -535,7 +536,9 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         panelClasificacion = new JPanel(new BorderLayout());
         panelClasificacion.setBackground(new Color(20, 24, 31));
         panelCards.add(panelClasificacion, "clasificacion");
-        panelClasificacion.add(new PanelClasificacion(datosFederacion), BorderLayout.CENTER);//Metido por Maha
+        panelClasificacionObjeto = new PanelClasificacion(datosFederacion);
+        panelClasificacion.add(panelClasificacionObjeto, BorderLayout.CENTER);
+       // panelClasificacion.add(new PanelClasificacion(datosFederacion), BorderLayout.CENTER);//Metido por Maha
 
 
 
@@ -1863,22 +1866,49 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
     }
 
     private void sincronizarCombos() {
-    	Object tempSelEquipos = comboTemporadas.getSelectedItem();
+        Object tempSelEquipos = comboTemporadas.getSelectedItem();
         Object tempSelJugadores = comboTemporadasJugadores.getSelectedItem();
         Object tempSelPartidos = comboTemporadasPartidos.getSelectedItem();
-        Object tempSelClasificacion = comboTemporadasClasificacion.getSelectedItem();
-        JComboBox[] combosTemp = {comboTemporadas, comboTemporadasJugadores, comboTemporadasPartidos,comboTemporadasClasificacion};
+        
+        // ✅ Guardar selección del combo de clasificación
+        Object tempSelClasificacion = null;
+        if (panelClasificacionObjeto != null) {
+            tempSelClasificacion = panelClasificacionObjeto.getComboTemporadas().getSelectedItem();
+        }
+        
+        // Actualizar todos los combos principales
+        JComboBox[] combosTemp = {
+            comboTemporadas, 
+            comboTemporadasJugadores, 
+            comboTemporadasPartidos
+        };
+        
         for (JComboBox c : combosTemp) {
+            if (c == null) continue;
             c.removeAllItems();
             for (Temporada t : datosFederacion.getListaTemporadas()) {
                 c.addItem(t.getNombre());
             }
         }
-
+        
+        // ✅ Actualizar el combo de clasificación
+        if (panelClasificacionObjeto != null) {
+            JComboBox<String> comboClasif = panelClasificacionObjeto.getComboTemporadas();
+            comboClasif.removeAllItems();
+            for (Temporada t : datosFederacion.getListaTemporadas()) {
+                comboClasif.addItem(t.getNombre());
+            }
+            
+            // Restaurar selección si es posible
+            if (tempSelClasificacion != null) {
+                comboClasif.setSelectedItem(tempSelClasificacion);
+            }
+        }
+        
+        // Restaurar selecciones de los otros combos
         comboTemporadas.setSelectedItem(tempSelEquipos);
         comboTemporadasJugadores.setSelectedItem(tempSelJugadores);
         comboTemporadasPartidos.setSelectedItem(tempSelPartidos);
-        comboTemporadasClasificacion.setSelectedItem(tempSelClasificacion);
 
         actualizarComboEquipos();
     }
