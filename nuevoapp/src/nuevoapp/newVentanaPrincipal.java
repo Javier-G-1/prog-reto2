@@ -430,6 +430,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
             actualizarComboJornadas();
             actualizarVistaPartidos();
             actualizarIndicadorEstadoPartidos(); 
+            sincronizarCombos();
         });
 
         comboJornadasPartidos.addActionListener(e -> {
@@ -525,6 +526,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
             actualizarComboJornadas();
             actualizarVistaPartidos();
         });
+        
         comboJornadasPartidos.addActionListener(e -> {
             actualizarVistaPartidos();
             
@@ -537,7 +539,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
 
 
 
-
+        comboTemporadasClasificacion = new JComboBox<>();
         JLabel lblInicioTitulo = new JLabel("Bienvenido a la Federación de Balonmano");
         lblInicioTitulo.setFont(new Font("Segoe UI", Font.BOLD, 28));
         lblInicioTitulo.setForeground(Color.WHITE);
@@ -545,6 +547,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
 
         cardLayout.show(panelCards, "inicio");
         
+        sincronizarCombos();
         sincronizarCombos();
         actualizarVistaEquipos();
         actualizarComboEquipos();
@@ -1800,6 +1803,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
 
     private void actualizarTablaClasificacionGrafica() {
         Temporada temp = obtenerTemporadaSeleccionada();
+        
         // Verificamos que la temporada no sea nula y que el modelo de la tabla exista
         if (temp == null || modeloTabla == null) return;
 
@@ -1808,7 +1812,10 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
 
         try {
             // 1. CORRECCIÓN: Obtener el objeto Clasificacion y luego su lista de filas
+            // Aquí llamamos al método estático que devuelve el objeto Clasificacion
             Clasificacion clasificacion = CalculadoraClasificacion.calcular(temp);
+            
+            // Ahora obtenemos la lista de filas desde ese objeto
             java.util.List<FilaClasificacion> ranking = clasificacion.getFilas();
 
             for (FilaClasificacion fila : ranking) {
@@ -1826,10 +1833,13 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                 };
                 modeloTabla.addRow(datosFila);
             }
+        } catch (IllegalArgumentException ex) {
+            // Aquí se captura tu comentario: "La temporada no puede ser nula"
+            System.err.println("Aviso: " + ex.getMessage());
         } catch (Exception e) {
             System.err.println("Error al actualizar la tabla: " + e.getMessage());
-            // Aquí podrías mostrar un mensaje de error al usuario con JOptionPane
-        }
+            e.printStackTrace();
+        }// Aquí podrías mostrar un mensaje de error al usuario con JOptionPane
     }
 
     private void actualizarVistaEquipos() {
@@ -1853,13 +1863,12 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
     }
 
     private void sincronizarCombos() {
-        Object tempSelEquipos = comboTemporadas.getSelectedItem();
+    	Object tempSelEquipos = comboTemporadas.getSelectedItem();
         Object tempSelJugadores = comboTemporadasJugadores.getSelectedItem();
         Object tempSelPartidos = comboTemporadasPartidos.getSelectedItem();
-        //Object tempSelClasificacion = panelClasificacionObjeto.getCombo().getSelectedItem();
+        Object tempSelClasificacion = comboTemporadasClasificacion.getSelectedItem();
         JComboBox[] combosTemp = {comboTemporadas, comboTemporadasJugadores, comboTemporadasPartidos,comboTemporadasClasificacion};
         for (JComboBox c : combosTemp) {
-            if (c == null) continue;
             c.removeAllItems();
             for (Temporada t : datosFederacion.getListaTemporadas()) {
                 c.addItem(t.getNombre());
@@ -1869,7 +1878,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         comboTemporadas.setSelectedItem(tempSelEquipos);
         comboTemporadasJugadores.setSelectedItem(tempSelJugadores);
         comboTemporadasPartidos.setSelectedItem(tempSelPartidos);
-       // comboTemporadasClasificacion.setSelectedItem(tempSelClasificacion);
+        comboTemporadasClasificacion.setSelectedItem(tempSelClasificacion);
 
         actualizarComboEquipos();
     }

@@ -2,44 +2,59 @@ package logica;
 
 import gestion.*;
 import java.util.*;
+import java.util.*;
+import gestion.Temporada;
+import gestion.Equipo;
+import gestion.Jornada;
+import gestion.Partido;
 
 /**
  * Clase responsable de calcular la clasificación de una temporada
  * según los resultados de los partidos finalizados.
  */
 public class CalculadoraClasificacion {
-    
-    /**
-     * Calcula la clasificación completa de una temporada.
-
-     */
-    public static Clasificacion calcular(Temporada t) {
-        if (t == null) {
-            throw new IllegalArgumentException("La temporada no puede ser nula.");
-        }
-        
-        Map<String, FilaClasificacion> mapa = new HashMap<>();
-        
-        // Inicializa la tabla con todos los equipos participantes
-        for (Equipo e : t.getEquiposParticipantes()) {
-            if (e != null && e.getNombre() != null) {
-                mapa.putIfAbsent(e.getNombre(), new FilaClasificacion(e.getNombre()));
-            }
-        }
-        
-        // Procesa todos los partidos finalizados
-        procesarPartidos(t, mapa);
-        
-        // Convierte el mapa a lista y ordena
-        List<FilaClasificacion> lista = new ArrayList<>(mapa.values());
-        ordenarClasificacion(lista);
-        
-        // Asigna las posiciones
-        asignarPosiciones(lista);
-        
-        // Retorna el objeto Clasificacion completo
-        return new Clasificacion(t.getNombre(), lista);
-    }
+	    
+	    /**
+	     * Calcula la clasificación completa de una temporada.
+	     */
+	    public static Clasificacion calcular(Temporada t) {
+	        if (t == null) {
+	            throw new IllegalArgumentException("La temporada no puede ser nula.");
+	        }
+	        
+	        Map<String, FilaClasificacion> mapa = new HashMap<>();
+	        
+	        // Inicializa la tabla con todos los equipos participantes
+	        for (Equipo e : t.getEquiposParticipantes()) {
+	            if (e != null && e.getNombre() != null) {
+	                mapa.putIfAbsent(e.getNombre(), new FilaClasificacion(e.getNombre()));
+	            }
+	        }
+	        
+	        // Procesa todos los partidos finalizados
+	        // Esto permite que resultados como (6 - 48) se sumen a la tabla
+	        for (Jornada j : t.getListaJornadas()) {
+	            for (Partido p : j.getListaPartidos()) {
+	                if (p.getGolesLocal() >= 0 && p.getGolesVisitante() >= 0) {
+	                    FilaClasificacion local = mapa.get(p.getEquipoLocal().getNombre());
+	                    FilaClasificacion visitante = mapa.get(p.getEquipoVisitante().getNombre());
+	                    
+	                    if (local != null && visitante != null) {
+	                        local.registrarPartido(p.getGolesLocal(), p.getGolesVisitante());
+	                        visitante.registrarPartido(p.getGolesVisitante(), p.getGolesLocal());
+	                    }
+	                }
+	            }
+	        }
+	        
+	        List<FilaClasificacion> lista = new ArrayList<>(mapa.values());
+	        // Ordenar por puntos antes de devolver
+	        lista.sort((f1, f2) -> Integer.compare(f2.getPuntos(), f1.getPuntos()));
+	        
+	        // Retorna el objeto Clasificacion completo
+	        return new Clasificacion(t.getNombre(), lista);
+	    }
+	
     
     /**
      * Procesa todos los partidos finalizados de la temporada.

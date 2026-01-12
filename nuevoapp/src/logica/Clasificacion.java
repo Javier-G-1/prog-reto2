@@ -12,9 +12,9 @@ public class Clasificacion {
     private String temporada;
     private List<FilaClasificacion> filas;
     
-    public Clasificacion(String temporada, List<FilaClasificacion> filas) {
-        this.temporada = temporada;
-        this.filas = filas != null ? filas : new ArrayList<>();
+    public Clasificacion(String nombre, List<FilaClasificacion> filas) {
+        this.temporada = nombre;
+        this.filas = filas;
     }
     
     public String getTemporada() {

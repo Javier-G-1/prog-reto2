@@ -5,6 +5,7 @@ import java.awt.*;
 import java.util.List;
 
 import logica.CalculadoraClasificacion;
+import logica.Clasificacion;
 import logica.FilaClasificacion;
 import gestion.Temporada;
 
@@ -136,8 +137,9 @@ public class PanelClasificacion extends JPanel {
         dlmPTS.clear();     
 
         if (temporada == null) return;
+        Clasificacion clasificacionObjeto = CalculadoraClasificacion.calcular(temporada);
 
-        List<FilaClasificacion> filas = (List<FilaClasificacion>) CalculadoraClasificacion.calcular(temporada);
+        List<FilaClasificacion> filas = clasificacionObjeto.getFilas();
 
         int pos = 1;
         for (FilaClasificacion f : filas) {
