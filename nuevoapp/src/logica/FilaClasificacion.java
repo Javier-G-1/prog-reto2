@@ -42,7 +42,7 @@ public class FilaClasificacion {
 
     // --- Getters y Setters ---
 
-    public String getNombre() { return equipo; }
+    public String getEquipo() { return equipo; }
     
     public int getPosicion() { return posicion; }
     public void setPosicion(int posicion) { this.posicion = posicion; }

@@ -34,7 +34,7 @@ public class Clasificacion {
      */
     public FilaClasificacion getFilaEquipo(String nombreEquipo) {
         for (FilaClasificacion fila : filas) {
-            if (fila.getNombre().equals(nombreEquipo)) {
+            if (fila.getEquipo().equals(nombreEquipo)) {
                 return fila;
             }
         }
@@ -61,7 +61,7 @@ public class Clasificacion {
         for (FilaClasificacion fila : filas) {
             xml.append("    <equipo>\n");
             xml.append("        <posicion>").append(fila.getPosicion()).append("</posicion>\n");
-            xml.append("        <nombre>").append(escaparXML(fila.getNombre())).append("</nombre>\n");
+            xml.append("        <nombre>").append(escaparXML(fila.getEquipo())).append("</nombre>\n");
             xml.append("        <pj>").append(fila.getPj()).append("</pj>\n");
             xml.append("        <pg>").append(fila.getPg()).append("</pg>\n");
             xml.append("        <pe>").append(fila.getPe()).append("</pe>\n");

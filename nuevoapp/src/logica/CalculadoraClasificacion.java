@@ -102,7 +102,7 @@ public class CalculadoraClasificacion {
             }
             
             // 4º Criterio: Orden alfabético (desempate final)
-            return a.getNombre().compareTo(b.getNombre());
+            return a.getEquipo().compareTo(b.getEquipo());
         });
     }
     

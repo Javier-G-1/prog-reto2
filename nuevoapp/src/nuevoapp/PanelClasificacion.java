@@ -37,36 +37,62 @@ public class PanelClasificacion extends JPanel {
     private JList<Integer> listGC;
     private JList<Integer> listDIF;
     private JList<Integer> listPTS;
+    private JComboBox<String> comboTemporadasClasificacion;
+    private gestion.DatosFederacion datosFederacion;
 
-    public PanelClasificacion() {
+    public PanelClasificacion(gestion.DatosFederacion datos) {
 
+    	this.datosFederacion = datos;
         setLayout(new BorderLayout());
         setBackground(new Color(20, 24, 31));
+        
+        // ===== PANEL SUPERIOR
+        JPanel panelHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
+        panelHeader.setBackground(new Color(128, 128, 128));
 
         // ===== TITULO =====
-        JPanel panelTitulo = new JPanel();
-        panelTitulo.setBackground(new Color(128, 128, 128));
-
+        JPanel panelTituloSuperior = new JPanel();
+        panelTituloSuperior.setBackground(new Color(128, 128, 128));
+        
         JLabel lblTitulo = new JLabel("Clasificación");
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 18));
         lblTitulo.setForeground(Color.WHITE);
+        panelHeader.add(lblTitulo);
+        
+        JLabel lblTemp = new JLabel("Seleccionar Temporada:");
+        lblTemp.setForeground(Color.WHITE);
+        panelHeader.add(lblTemp);
 
-        panelTitulo.add(lblTitulo);
-        add(panelTitulo, BorderLayout.NORTH);
+        comboTemporadasClasificacion = new JComboBox<>();
 
+        for (gestion.Temporada t : datosFederacion.getListaTemporadas()) {
+            comboTemporadasClasificacion.addItem(t.getNombre());
+        }
+        
+        comboTemporadasClasificacion.addActionListener(e -> {
+            String nombreT = (String) comboTemporadasClasificacion.getSelectedItem();
+            gestion.Temporada t = datosFederacion.buscarTemporadaPorNombre(nombreT);
+            cargarClasificacion(t);
+        });
+        
+        panelHeader.add(comboTemporadasClasificacion);
+        add(panelHeader, BorderLayout.NORTH);
+        
+        
         // ===== CUERPO =====
-        JPanel panelBody = new JPanel(new GridLayout(0, 8, 0, 0));
+        JPanel panelBody = new JPanel(new GridLayout(1, 10, 0, 0)); 
         add(panelBody, BorderLayout.CENTER);
 
         panelBody.add(crearColumna("Pos", listPosicion = new JList<>(dlmPosicion)));
         panelBody.add(crearColumna("Equipo", listEquipo = new JList<>(dlmEquipo)));
         panelBody.add(crearColumna("PJ", listPJ = new JList<>(dlmPJ)));
-		panelBody.add(crearColumna("PE", listPE= new JList<>(dlmPE)));
+        panelBody.add(crearColumna("PG", listPG = new JList<>(dlmPG)));
+        panelBody.add(crearColumna("PE", listPE = new JList<>(dlmPE)));
         panelBody.add(crearColumna("PP", listPP = new JList<>(dlmPP)));
         panelBody.add(crearColumna("GF", listGF = new JList<>(dlmGF)));
         panelBody.add(crearColumna("GC", listGC = new JList<>(dlmGC)));
         panelBody.add(crearColumna("Dif", listDIF = new JList<>(dlmDIF)));
-		panelBody.add(crearColumna("PTS", listPTS = new JList<>(dlmPTS)));
+        panelBody.add(crearColumna("PTS", listPTS = new JList<>(dlmPTS)));
     }
 
     // ===== CREA UNA COLUMNA =====
@@ -74,16 +100,19 @@ public class PanelClasificacion extends JPanel {
 
         JPanel panel = new JPanel(new BorderLayout());
 
+        panel.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, new Color(100, 100, 100)));
+
         JPanel panelTitulo = new JPanel();
         panelTitulo.setBackground(new Color(180, 180, 180));
 
         JLabel lbl = new JLabel(titulo);
         lbl.setFont(new Font("Arial", Font.BOLD, 12));
-
         panelTitulo.add(lbl);
 
         lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         lista.setFont(new Font("Arial", Font.PLAIN, 12));
+        // جعل خلفية القائمة متناسقة مع التصميم الداكن
+        lista.setBackground(new Color(240, 240, 240)); 
 
         JScrollPane scroll = new JScrollPane(lista);
         scroll.setBorder(null);
@@ -108,7 +137,7 @@ public class PanelClasificacion extends JPanel {
 
         if (temporada == null) return;
 
-        List<FilaClasificacion> filas = CalculadoraClasificacion.calcular(temporada);
+        List<FilaClasificacion> filas = (List<FilaClasificacion>) CalculadoraClasificacion.calcular(temporada);
 
         int pos = 1;
         for (FilaClasificacion f : filas) {
@@ -120,7 +149,7 @@ public class PanelClasificacion extends JPanel {
             dlmGF.addElement(f.getGf());
             dlmGC.addElement(f.getGc());
             dlmDIF.addElement(f.getDf());
-           // dlmPTS.addElement(f.getPTS()); // 
+           dlmPTS.addElement(f.getPuntos());
         }
     }
 

@@ -16,6 +16,7 @@ import logica.CalculadoraClasificacion;
 import gestion.Equipo;
 import gestion.Jornada;
 import gestion.Temporada;
+import nuevoapp.PanelClasificacion;
 
 public class newVentanaPrincipal extends JFrame implements ActionListener {
 
@@ -35,6 +36,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
     private JPanel panelTarjetasEquipo;
     private JButton btnAgregarEquipo;
     private JComboBox<String> comboTemporadas;
+    private JComboBox<String> comboTemporadasClasificacion;
     private JPanel panelInicio, panelEquipos, panelJugadores, panelPartidos, panelClasificacion, panelSuperior;
 
     private JComboBox<String> comboTemporadasJugadores;
@@ -531,7 +533,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         panelClasificacion = new JPanel(new BorderLayout());
         panelClasificacion.setBackground(new Color(20, 24, 31));
         panelCards.add(panelClasificacion, "clasificacion");
-        //panelClasificacion.add(new PanelClasificacion(), BorderLayout.CENTER);////////////Metido por Maha
+        panelClasificacion.add(new PanelClasificacion(datosFederacion), BorderLayout.CENTER);//Metido por Maha
 
 
 
@@ -1812,7 +1814,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
             for (FilaClasificacion fila : ranking) {
                 Object[] datosFila = {
                     fila.getPosicion(),     
-                    fila.getNombre(),        
+                    fila.getEquipo(),        
                     fila.getPuntos(),        
                     fila.getPj(),
                     fila.getPg(),
@@ -1854,8 +1856,8 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         Object tempSelEquipos = comboTemporadas.getSelectedItem();
         Object tempSelJugadores = comboTemporadasJugadores.getSelectedItem();
         Object tempSelPartidos = comboTemporadasPartidos.getSelectedItem();
-
-        JComboBox[] combosTemp = {comboTemporadas, comboTemporadasJugadores, comboTemporadasPartidos};
+        //Object tempSelClasificacion = panelClasificacionObjeto.getCombo().getSelectedItem();
+        JComboBox[] combosTemp = {comboTemporadas, comboTemporadasJugadores, comboTemporadasPartidos,comboTemporadasClasificacion};
         for (JComboBox c : combosTemp) {
             if (c == null) continue;
             c.removeAllItems();
@@ -1867,6 +1869,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         comboTemporadas.setSelectedItem(tempSelEquipos);
         comboTemporadasJugadores.setSelectedItem(tempSelJugadores);
         comboTemporadasPartidos.setSelectedItem(tempSelPartidos);
+       // comboTemporadasClasificacion.setSelectedItem(tempSelClasificacion);
 
         actualizarComboEquipos();
     }

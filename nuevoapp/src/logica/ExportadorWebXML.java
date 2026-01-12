@@ -23,7 +23,7 @@ public class ExportadorWebXML {
                 
                 for (FilaClasificacion f : filas) {
                     writer.println("      <Fila pos=\"" + f.getPosicion() + "\">");
-                    writer.println("        <Equipo>" + f.getNombre() + "</Equipo>");
+                    writer.println("        <Equipo>" + f.getEquipo() + "</Equipo>");
                     writer.println("        <Puntos>" + f.getPuntos() + "</Puntos>");
                     writer.println("        <Estadisticas PJ=\"" + f.getPj() + "\" PG=\"" + f.getPg() + "\" PE=\"" + f.getPe() + "\" PP=\"" + f.getPp() + "\"/>");
                     writer.println("        <Goles favor=\"" + f.getGf() + "\" contra=\"" + f.getGc() + "\" dif=\"" + f.getDifFormateada() + "\"/>");
