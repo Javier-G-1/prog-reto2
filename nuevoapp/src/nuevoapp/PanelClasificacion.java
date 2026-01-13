@@ -139,7 +139,7 @@ public class PanelClasificacion extends JPanel {
         panelHeader.add(comboTemporadasClasificacion);
         
         // ✅ BOTÓN EXPORTAR PDF (dentro del panelHeader)
-        JButton btnExportarPDF = new JButton("📄 Exportar PDF");
+        JButton btnExportarPDF = new JButton("ExportarPDF");
         btnExportarPDF.addActionListener(e -> exportarClasificacionPDF());
         btnExportarPDF.setForeground(Color.WHITE);
         btnExportarPDF.setFont(new Font("Segoe UI", Font.BOLD, 14));

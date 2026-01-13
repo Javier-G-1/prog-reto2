@@ -3126,3 +3126,21 @@
 [2026-01-13 10:39:10] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
 [2026-01-13 10:39:10] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
 [2026-01-13 10:39:11] [INFO] Navegación: Clasificación
+[2026-01-13 10:43:52] [INFO] ================================================================================
+[2026-01-13 10:43:52] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-13 10:43:52] [INFO] Sistema: Windows 11 10.0
+[2026-01-13 10:43:52] [INFO] Java: 21.0.8
+[2026-01-13 10:43:52] [INFO] ================================================================================
+[2026-01-13 10:43:52] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-13 10:43:52] [INFO] Temporada creada vacía (sin temporada origen)
+[2026-01-13 10:43:52] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA | Sin equipos
+[2026-01-13 10:43:52] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-13 10:43:52] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 10:43:52] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 10:43:52] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 10:43:52] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 10:43:52] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 10:43:52] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 10:43:52] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-13 10:43:55] [INFO] Navegación: Clasificación
+[2026-01-13 10:44:00] [INFO] Navegación: Partidos
