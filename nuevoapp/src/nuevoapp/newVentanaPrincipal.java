@@ -242,11 +242,38 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         
         btnExportar = new JButton("Exportar");
         btnExportar.addActionListener(e -> {
-            // Preguntar al usuario qué quiere exportar
-            String[] opciones = {"Temporada actual", "Todas las temporadas"};
+            // Obtener todas las temporadas disponibles
+            java.util.List<Temporada> temporadas = datosFederacion.getListaTemporadas();
+            
+            if (temporadas.isEmpty()) {
+                JOptionPane.showMessageDialog(this, 
+                    "No hay temporadas disponibles para exportar", 
+                    "Sin datos", 
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            // Crear opciones dinámicas basadas en las temporadas disponibles
+            java.util.List<String> opcionesLista = new java.util.ArrayList<>();
+            
+            // Añadir opción para la temporada actual visible
+            Temporada temporadaActual = obtenerTemporadaActualVisible();
+            if (temporadaActual != null) {
+                opcionesLista.add("Temporada actual (" + temporadaActual.getNombre() + ")");
+            }
+            
+            // Añadir opción para seleccionar una temporada específica
+            opcionesLista.add("Seleccionar temporada específica...");
+            
+            // Añadir opción para exportar todas
+            opcionesLista.add("Exportar todas las temporadas");
+            
+            // ⭐ CORRECCIÓN: Convertir la lista a array
+            String[] opciones = opcionesLista.toArray(new String[0]);
+            
             int eleccion = JOptionPane.showOptionDialog(
                 this,
-                "¿Qué deseas exportar?",
+                "¿Qué deseas exportar a general.xml?",
                 "Exportar datos",
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
@@ -254,43 +281,56 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                 opciones,
                 opciones[0]
             );
-            
+
             if (eleccion == -1) return; // Usuario canceló
-            
+
             GestorLog.info("Iniciando exportación de datos");
             ExportadorXML exportador = new ExportadorXML(datosFederacion);
-            
-            if (eleccion == 0) {
-                // Exportar temporada actual (según la vista activa)
-                Temporada temporadaActual = null;
+
+            if (eleccion == 0 && temporadaActual != null) {
+                // Exportar temporada actual visible
+                exportador.exportarTemporada(temporadaActual);
                 
-                // Intentar obtener la temporada de cada combo según qué panel está visible
-                if (panelEquipos.isVisible()) {
-                    String tempNom = (String) comboTemporadas.getSelectedItem();
-                    temporadaActual = datosFederacion.buscarTemporadaPorNombre(tempNom);
-                } else if (panelJugadores.isVisible()) {
-                    String tempNom = (String) comboTemporadasJugadores.getSelectedItem();
-                    temporadaActual = datosFederacion.buscarTemporadaPorNombre(tempNom);
-                } else if (panelPartidos.isVisible()) {
-                    String tempNom = (String) comboTemporadasPartidos.getSelectedItem();
-                    temporadaActual = datosFederacion.buscarTemporadaPorNombre(tempNom);
-                } else {
-                    // Si no hay combo visible, usar la primera temporada disponible
-                    if (!datosFederacion.getListaTemporadas().isEmpty()) {
-                        temporadaActual = datosFederacion.getListaTemporadas().get(0);
+            } else if (eleccion == (temporadaActual != null ? 1 : 0)) {
+                // Seleccionar temporada específica
+                Temporada temporadaSeleccionada = mostrarDialogoSeleccionTemporada();
+                
+                if (temporadaSeleccionada != null) {
+                    exportador.exportarTemporada(temporadaSeleccionada);
+                }
+                
+            } else {
+                // Exportar todas las temporadas
+                int temporadasExportadas = 0;
+                int temporadasFallidas = 0;
+                
+                for (Temporada temp : temporadas) {
+                    boolean exito = exportador.exportarTemporada(temp);
+                    if (exito) {
+                        temporadasExportadas++;
+                    } else {
+                        temporadasFallidas++;
                     }
                 }
                 
-                if (temporadaActual != null) {
-                    exportador.exportarTemporada(temporadaActual);
-                } else {
-                    JOptionPane.showMessageDialog(this, "No hay temporada seleccionada");
-                }
-            } else {
-                // Exportar todas las temporadas
-                exportador.exportarTodo();
+                String mensaje = "✅ Exportación masiva completada\n\n" +
+                                "Temporadas exportadas: " + temporadasExportadas + "\n" +
+                                "Fallidas: " + temporadasFallidas + "\n" +
+                                "Archivo: general.xml";
+                
+                JOptionPane.showMessageDialog(this, 
+                    mensaje,
+                    "Exportación completada",
+                    JOptionPane.INFORMATION_MESSAGE);
+                
+                GestorLog.exito("Exportación masiva: " + temporadasExportadas + " exitosas, " + 
+                               temporadasFallidas + " fallidas");
             }
         });
+        
+        
+        
+        
         btnExportar.setMaximumSize(new Dimension(2147483647, 40));
         btnExportar.setForeground(Color.WHITE);
         btnExportar.setFont(new Font("Segoe UI Black", Font.ITALIC, 14));
@@ -298,7 +338,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         btnExportar.setBackground(Color.GRAY);
         btnExportar.setAlignmentX(0.5f);
         panelBotones.add(btnExportar);
-        
+ 
         verticalStrut_7 = Box.createVerticalStrut(20);
         panelBotones.add(verticalStrut_7);
         
@@ -876,6 +916,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                         
                         GestorLog.exito("Nuevo fichaje: " + nuevo.getNombre() + " | Equipo: " + equipoSel + 
                                       " | Posición: " + nuevo.getPosicion() + " | Edad: " + nuevo.getEdad() + 
+                                      " | Dorsal: " + nuevo.getDorsal() + 
                                       " | Nacionalidad: " + nuevo.getNacionalidad() + 
                                       " | Altura: " + nuevo.getAltura() + 
                                       " | Peso: " + nuevo.getPeso() + 
@@ -2344,4 +2385,60 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         btnCambiarEquipo.setVisible(estado);
        
         btnVerFoto.setVisible(estado);
+        
+    }
+    
+
+    private Temporada obtenerTemporadaActualVisible() {
+        String nombreTemporada = null;
+        
+        if (panelEquipos.isVisible() && comboTemporadas.getSelectedItem() != null) {
+            nombreTemporada = (String) comboTemporadas.getSelectedItem();
+        } else if (panelJugadores.isVisible() && comboTemporadasJugadores.getSelectedItem() != null) {
+            nombreTemporada = (String) comboTemporadasJugadores.getSelectedItem();
+        } else if (panelPartidos.isVisible() && comboTemporadasPartidos.getSelectedItem() != null) {
+            nombreTemporada = (String) comboTemporadasPartidos.getSelectedItem();
+        }
+        
+        if (nombreTemporada != null) {
+            return datosFederacion.buscarTemporadaPorNombre(nombreTemporada);
+        }
+        
+        return null;
+    }
+
+    /**
+     * Muestra un diálogo para seleccionar una temporada específica
+     */
+    private Temporada mostrarDialogoSeleccionTemporada() {
+        java.util.List<Temporada> temporadas = datosFederacion.getListaTemporadas();
+        
+        if (temporadas.isEmpty()) {
+            return null;
+        }
+        
+        // Crear array con nombres de temporadas con información de estado
+        String[] nombresTemporadas = new String[temporadas.size()];
+        for (int i = 0; i < temporadas.size(); i++) {
+            Temporada t = temporadas.get(i);
+            nombresTemporadas[i] = t.getNombre() + " [" + t.getEstado() + "]";
+        }
+        
+        String seleccion = (String) JOptionPane.showInputDialog(
+            this,
+            "Selecciona la temporada a exportar:",
+            "Seleccionar temporada",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            nombresTemporadas,
+            nombresTemporadas[0]
+        );
+        
+        if (seleccion == null) {
+            return null; // Usuario canceló
+        }
+        
+        // Extraer el nombre de la temporada (antes del corchete)
+        String nombreTemp = seleccion.split(" \\[")[0];
+        return datosFederacion.buscarTemporadaPorNombre(nombreTemp);
     }}

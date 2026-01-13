@@ -2780,3 +2780,386 @@
 [2026-01-13 14:05:52] [INFO] Navegación: Partidos
 [2026-01-13 14:05:57] [INFO] Navegación: Jugadores
 [2026-01-13 14:06:06] [WARN] Intento de agregar jugador sin equipo específico seleccionado
+[2026-01-13 17:18:32] [INFO] ================================================================================
+[2026-01-13 17:18:32] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-13 17:18:32] [INFO] Sistema: Windows 11 10.0
+[2026-01-13 17:18:32] [INFO] Java: 21.0.8
+[2026-01-13 17:18:32] [INFO] ================================================================================
+[2026-01-13 17:18:32] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-13 17:18:32] [INFO] Temporada creada vacía (sin temporada origen)
+[2026-01-13 17:18:32] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA | Sin equipos
+[2026-01-13 17:18:32] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-13 17:18:32] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 17:18:32] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 17:18:32] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 17:18:32] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 17:18:32] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 17:18:32] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 17:18:32] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-13 17:18:35] [INFO] Navegación: Clasificación
+[2026-01-13 17:18:37] [INFO] Navegación: Partidos
+[2026-01-13 17:18:47] [INFO] Navegación: Equipos
+[2026-01-13 17:18:48] [INFO] Navegación: Jugadores
+[2026-01-13 17:18:56] [WARN] Intento de agregar jugador sin equipo específico seleccionado
+[2026-01-13 17:19:24] [SUCCESS] Nuevo fichaje: hola | Equipo: Sevilla | Posición: Portero | Edad: 25 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Temporada 2025/26
+[2026-01-13 17:19:48] [SUCCESS] Jugador editado: Marina Torres
+[2026-01-13 17:20:02] [INFO] Navegación: Partidos
+[2026-01-13 17:20:06] [INFO] Iniciando generación de calendario: Temporada 2025/26 | Equipos: 6
+[2026-01-13 17:20:06] [DEBUG] Fase de IDA completada - Jornadas: 5 | Partidos: 15
+[2026-01-13 17:20:06] [SUCCESS] Calendario generado completamente: Temporada 2025/26 | Equipos: 6 | Jornadas totales: 10 | Partidos totales: 30 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-13 17:20:06] [SUCCESS] Temporada activada: Temporada 2025/26 | Equipos: 6 | Jornadas creadas: 10 | Estado: FUTURA → EN JUEGO
+[2026-01-13 17:20:09] [INFO] Iniciando creación de partido manual
+[2026-01-13 17:20:12] [SUCCESS] Función Txema ejecutada | Temporada 2025/26
+[2026-01-13 17:20:14] [SUCCESS] Temporada finalizada: Temporada 2025/26 | Estado: EN JUEGO → TERMINADA | Equipos: 6 | Jornadas: 10
+[2026-01-13 17:20:24] [INFO] Navegación: Clasificación
+[2026-01-13 17:29:29] [INFO] Navegación: Equipos
+[2026-01-13 17:29:34] [INFO] Navegación: Jugadores
+[2026-01-13 17:29:38] [INFO] Navegación: Partidos
+[2026-01-13 17:29:44] [INFO] Copiando datos desde: Temporada 2025/26
+[2026-01-13 17:29:44] [SUCCESS] Temporada creada: vasdv | Estado: FUTURA | Equipos copiados: 6 | Jugadores copiados: 26 | Origen: Temporada 2025/26
+[2026-01-13 17:29:51] [INFO] Navegación: Equipos
+[2026-01-13 17:29:55] [INFO] Navegación: Jugadores
+[2026-01-13 17:30:02] [WARN] Intento de agregar jugador sin equipo específico seleccionado
+[2026-01-13 17:42:06] [INFO] ================================================================================
+[2026-01-13 17:42:06] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-13 17:42:06] [INFO] Sistema: Windows 11 10.0
+[2026-01-13 17:42:06] [INFO] Java: 21.0.8
+[2026-01-13 17:42:06] [INFO] ================================================================================
+[2026-01-13 17:42:06] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-13 17:42:06] [INFO] Temporada creada vacía (sin temporada origen)
+[2026-01-13 17:42:06] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA | Sin equipos
+[2026-01-13 17:42:06] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-13 17:42:06] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 17:42:06] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 17:42:06] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 17:42:06] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 17:42:06] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 17:42:06] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 17:42:06] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-13 17:42:08] [INFO] Navegación: Partidos
+[2026-01-13 17:42:12] [INFO] Navegación: Equipos
+[2026-01-13 17:42:13] [INFO] Navegación: Jugadores
+[2026-01-13 17:42:39] [SUCCESS] Nuevo fichaje: Pepito | Equipo: Sevilla | Posición: Portero | Edad: 25 | Dorsal: 20 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Temporada 2025/26
+[2026-01-13 17:43:31] [INFO] ================================================================================
+[2026-01-13 17:43:31] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-13 17:43:31] [INFO] Sistema: Windows 11 10.0
+[2026-01-13 17:43:31] [INFO] Java: 21.0.8
+[2026-01-13 17:43:31] [INFO] ================================================================================
+[2026-01-13 17:43:31] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-13 17:43:31] [INFO] Temporada creada vacía (sin temporada origen)
+[2026-01-13 17:43:31] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA | Sin equipos
+[2026-01-13 17:43:31] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-13 17:43:31] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 17:43:31] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 17:43:31] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 17:43:31] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 17:43:31] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 17:43:31] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 17:43:31] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-13 17:43:33] [INFO] Navegación: Clasificación
+[2026-01-13 17:43:40] [INFO] Navegación: Partidos
+[2026-01-13 17:43:45] [INFO] Iniciando generación de calendario: Temporada 2025/26 | Equipos: 6
+[2026-01-13 17:43:45] [DEBUG] Fase de IDA completada - Jornadas: 5 | Partidos: 15
+[2026-01-13 17:43:45] [SUCCESS] Calendario generado completamente: Temporada 2025/26 | Equipos: 6 | Jornadas totales: 10 | Partidos totales: 30 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-13 17:43:45] [SUCCESS] Temporada activada: Temporada 2025/26 | Equipos: 6 | Jornadas creadas: 10 | Estado: FUTURA → EN JUEGO
+[2026-01-13 17:43:48] [INFO] Iniciando creación de partido manual
+[2026-01-13 17:43:53] [SUCCESS] Función Txema ejecutada | Temporada 2025/26
+[2026-01-13 17:43:58] [SUCCESS] Temporada finalizada: Temporada 2025/26 | Estado: EN JUEGO → TERMINADA | Equipos: 6 | Jornadas: 10
+[2026-01-13 17:44:05] [INFO] Copiando datos desde: Temporada 2025/26
+[2026-01-13 17:44:05] [SUCCESS] Temporada creada: puta | Estado: FUTURA | Equipos copiados: 6 | Jugadores copiados: 25 | Origen: Temporada 2025/26
+[2026-01-13 17:44:15] [INFO] Navegación: Equipos
+[2026-01-13 17:44:35] [SUCCESS] Nuevo equipo creado: mibombo | Temporada: puta
+[2026-01-13 17:44:50] [INFO] Navegación: Jugadores
+[2026-01-13 17:45:21] [SUCCESS] Nuevo fichaje: ALEX | Equipo: mibombo | Posición: Portero | Edad: 25 | Dorsal: 10 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: puta
+[2026-01-13 17:45:24] [INFO] Navegación: Clasificación
+[2026-01-13 17:45:33] [INFO] Navegación: Partidos
+[2026-01-13 17:45:38] [INFO] Iniciando generación de calendario: puta | Equipos: 7
+[2026-01-13 17:45:38] [DEBUG] Número impar de equipos - Se agregó equipo fantasma 'DESCANSA'
+[2026-01-13 17:45:38] [DEBUG] Fase de IDA completada - Jornadas: 7 | Partidos: 21
+[2026-01-13 17:45:38] [SUCCESS] Calendario generado completamente: puta | Equipos: 7 | Jornadas totales: 14 | Partidos totales: 42 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-13 17:45:38] [SUCCESS] Temporada activada: puta | Equipos: 7 | Jornadas creadas: 14 | Estado: FUTURA → EN JUEGO
+[2026-01-13 17:45:52] [INFO] PARTIDO FINALIZADO: Granada 10 - 0 mibombo
+[2026-01-13 17:45:53] [SUCCESS] Resultado registrado: Granada 10 - 0 mibombo | Temporada: puta
+[2026-01-13 17:45:55] [INFO] Navegación: Clasificación
+[2026-01-13 17:46:06] [INFO] Navegación: Partidos
+[2026-01-13 17:46:07] [SUCCESS] Función Txema ejecutada | puta
+[2026-01-13 17:46:10] [SUCCESS] Temporada finalizada: puta | Estado: EN JUEGO → TERMINADA | Equipos: 7 | Jornadas: 14
+[2026-01-13 17:46:15] [INFO] Navegación: Clasificación
+[2026-01-13 18:23:57] [INFO] ================================================================================
+[2026-01-13 18:23:57] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-13 18:23:57] [INFO] Sistema: Windows 11 10.0
+[2026-01-13 18:23:57] [INFO] Java: 21.0.8
+[2026-01-13 18:23:57] [INFO] ================================================================================
+[2026-01-13 18:23:57] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-13 18:23:57] [INFO] Temporada creada vacía (sin temporada origen)
+[2026-01-13 18:23:57] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA | Sin equipos
+[2026-01-13 18:23:57] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-13 18:23:57] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:23:57] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:23:57] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:23:57] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:23:57] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:23:57] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:23:57] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-13 18:24:00] [INFO] Navegación: Clasificación
+[2026-01-13 18:24:01] [INFO] Navegación: Partidos
+[2026-01-13 18:24:10] [INFO] Iniciando generación de calendario: Temporada 2025/26 | Equipos: 6
+[2026-01-13 18:24:10] [DEBUG] Fase de IDA completada - Jornadas: 5 | Partidos: 15
+[2026-01-13 18:24:10] [SUCCESS] Calendario generado completamente: Temporada 2025/26 | Equipos: 6 | Jornadas totales: 10 | Partidos totales: 30 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-13 18:24:10] [SUCCESS] Temporada activada: Temporada 2025/26 | Equipos: 6 | Jornadas creadas: 10 | Estado: FUTURA → EN JUEGO
+[2026-01-13 18:24:14] [SUCCESS] Función Txema ejecutada | Temporada 2025/26
+[2026-01-13 18:24:16] [SUCCESS] Temporada finalizada: Temporada 2025/26 | Estado: EN JUEGO → TERMINADA | Equipos: 6 | Jornadas: 10
+[2026-01-13 18:24:34] [INFO] Iniciando exportación de datos
+[2026-01-13 18:28:14] [INFO] ================================================================================
+[2026-01-13 18:28:14] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-13 18:28:14] [INFO] Sistema: Windows 11 10.0
+[2026-01-13 18:28:14] [INFO] Java: 21.0.8
+[2026-01-13 18:28:14] [INFO] ================================================================================
+[2026-01-13 18:28:14] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-13 18:28:14] [INFO] Temporada creada vacía (sin temporada origen)
+[2026-01-13 18:28:14] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA | Sin equipos
+[2026-01-13 18:28:14] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-13 18:28:14] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:28:14] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:28:14] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:28:14] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:28:14] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:28:14] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:28:14] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-13 18:28:17] [INFO] Navegación: Partidos
+[2026-01-13 18:28:23] [INFO] Iniciando generación de calendario: Temporada 2025/26 | Equipos: 6
+[2026-01-13 18:28:23] [DEBUG] Fase de IDA completada - Jornadas: 5 | Partidos: 15
+[2026-01-13 18:28:23] [SUCCESS] Calendario generado completamente: Temporada 2025/26 | Equipos: 6 | Jornadas totales: 10 | Partidos totales: 30 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-13 18:28:23] [SUCCESS] Temporada activada: Temporada 2025/26 | Equipos: 6 | Jornadas creadas: 10 | Estado: FUTURA → EN JUEGO
+[2026-01-13 18:28:27] [SUCCESS] Función Txema ejecutada | Temporada 2025/26
+[2026-01-13 18:28:29] [SUCCESS] Temporada finalizada: Temporada 2025/26 | Estado: EN JUEGO → TERMINADA | Equipos: 6 | Jornadas: 10
+[2026-01-13 18:28:35] [INFO] Iniciando exportación de datos
+[2026-01-13 18:28:35] [INFO] Carpetas de imágenes verificadas/creadas
+[2026-01-13 18:28:35] [INFO] Creando nuevo archivo general.xml
+[2026-01-13 18:28:35] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:28:35] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:28:35] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:28:35] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:28:35] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:28:35] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:28:35] [SUCCESS] Temporada 'Temporada 2025/26' exportada a general.xml
+[2026-01-13 18:29:26] [INFO] Copiando datos desde: Temporada 2025/26
+[2026-01-13 18:29:26] [SUCCESS] Temporada creada: putita | Estado: FUTURA | Equipos copiados: 6 | Jugadores copiados: 25 | Origen: Temporada 2025/26
+[2026-01-13 18:29:33] [INFO] Navegación: Equipos
+[2026-01-13 18:29:46] [SUCCESS] Nuevo equipo creado: TXURDINAGA | Temporada: putita
+[2026-01-13 18:29:49] [INFO] Navegación: Partidos
+[2026-01-13 18:29:50] [INFO] Navegación: Jugadores
+[2026-01-13 18:30:37] [SUCCESS] Nuevo fichaje: PABLO | Equipo: TXURDINAGA | Posición: Pivote | Edad: 18 | Dorsal: 40 | Nacionalidad: España | Altura: 200 cm | Peso: 90 kg | Temporada: putita
+[2026-01-13 18:30:54] [INFO] Iniciando exportación de datos
+[2026-01-13 18:30:54] [INFO] Carpetas de imágenes verificadas/creadas
+[2026-01-13 18:30:54] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:30:54] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:30:54] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:30:54] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:30:54] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:30:54] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:30:54] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:30:54] [SUCCESS] Temporada 'putita' exportada a general.xml
+[2026-01-13 18:32:13] [INFO] Navegación: Partidos
+[2026-01-13 18:32:16] [INFO] Iniciando generación de calendario: putita | Equipos: 7
+[2026-01-13 18:32:16] [DEBUG] Número impar de equipos - Se agregó equipo fantasma 'DESCANSA'
+[2026-01-13 18:32:16] [DEBUG] Fase de IDA completada - Jornadas: 7 | Partidos: 21
+[2026-01-13 18:32:16] [SUCCESS] Calendario generado completamente: putita | Equipos: 7 | Jornadas totales: 14 | Partidos totales: 42 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-13 18:32:16] [SUCCESS] Temporada activada: putita | Equipos: 7 | Jornadas creadas: 14 | Estado: FUTURA → EN JUEGO
+[2026-01-13 18:32:19] [SUCCESS] Función Txema ejecutada | putita
+[2026-01-13 18:32:20] [SUCCESS] Función Txema ejecutada | putita
+[2026-01-13 18:32:23] [SUCCESS] Temporada finalizada: putita | Estado: EN JUEGO → TERMINADA | Equipos: 7 | Jornadas: 14
+[2026-01-13 18:32:26] [INFO] Navegación: Clasificación
+[2026-01-13 18:33:04] [INFO] Iniciando exportación de datos
+[2026-01-13 18:44:26] [INFO] ================================================================================
+[2026-01-13 18:44:26] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-13 18:44:26] [INFO] Sistema: Windows 11 10.0
+[2026-01-13 18:44:26] [INFO] Java: 21.0.8
+[2026-01-13 18:44:26] [INFO] ================================================================================
+[2026-01-13 18:44:26] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-13 18:44:26] [INFO] Temporada creada vacía (sin temporada origen)
+[2026-01-13 18:44:26] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA | Sin equipos
+[2026-01-13 18:44:26] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-13 18:44:26] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:44:26] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:44:26] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:44:26] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:44:26] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:44:26] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:44:26] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-13 18:44:43] [INFO] Navegación: Partidos
+[2026-01-13 18:44:46] [INFO] Iniciando generación de calendario: Temporada 2025/26 | Equipos: 6
+[2026-01-13 18:44:46] [DEBUG] Fase de IDA completada - Jornadas: 5 | Partidos: 15
+[2026-01-13 18:44:46] [SUCCESS] Calendario generado completamente: Temporada 2025/26 | Equipos: 6 | Jornadas totales: 10 | Partidos totales: 30 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-13 18:44:46] [SUCCESS] Temporada activada: Temporada 2025/26 | Equipos: 6 | Jornadas creadas: 10 | Estado: FUTURA → EN JUEGO
+[2026-01-13 18:44:49] [SUCCESS] Función Txema ejecutada | Temporada 2025/26
+[2026-01-13 18:44:52] [SUCCESS] Temporada finalizada: Temporada 2025/26 | Estado: EN JUEGO → TERMINADA | Equipos: 6 | Jornadas: 10
+[2026-01-13 18:44:57] [INFO] Navegación: Clasificación
+[2026-01-13 18:44:58] [INFO] Navegación: Clasificación
+[2026-01-13 18:45:17] [INFO] Iniciando exportación de datos
+[2026-01-13 18:45:23] [INFO] Iniciando exportación de datos
+[2026-01-13 18:45:26] [INFO] Carpetas de imágenes verificadas/creadas
+[2026-01-13 18:45:26] [INFO] Creando nuevo archivo general.xml
+[2026-01-13 18:45:26] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:45:26] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:45:26] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:45:26] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:45:26] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:45:26] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:45:26] [SUCCESS] Temporada 'Temporada 2025/26' exportada a general.xml
+[2026-01-13 18:45:43] [INFO] Navegación: Partidos
+[2026-01-13 18:45:50] [INFO] Copiando datos desde: Temporada 2025/26
+[2026-01-13 18:45:50] [SUCCESS] Temporada creada: Lola | Estado: FUTURA | Equipos copiados: 6 | Jugadores copiados: 25 | Origen: Temporada 2025/26
+[2026-01-13 18:45:52] [INFO] Navegación: Equipos
+[2026-01-13 18:46:09] [SUCCESS] Nuevo equipo creado: PANADERO | Temporada: Lola
+[2026-01-13 18:46:16] [SUCCESS] Nuevo equipo creado: TXURDI | Temporada: Lola
+[2026-01-13 18:46:21] [INFO] Navegación: Jugadores
+[2026-01-13 18:46:30] [WARN] Intento de agregar jugador sin equipo específico seleccionado
+[2026-01-13 18:46:52] [SUCCESS] Nuevo fichaje: HOLA | Equipo: TXURDI | Posición: Portero | Edad: 25 | Dorsal: 1 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Lola
+[2026-01-13 18:46:59] [INFO] Navegación: Partidos
+[2026-01-13 18:47:02] [INFO] Navegación: Jugadores
+[2026-01-13 18:47:13] [SUCCESS] Jugador editado: HOLA
+[2026-01-13 18:47:21] [INFO] Iniciando exportación de datos
+[2026-01-13 18:47:21] [INFO] Carpetas de imágenes verificadas/creadas
+[2026-01-13 18:47:21] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:47:21] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:47:21] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:47:21] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:47:21] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:47:21] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:47:21] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:47:21] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:47:21] [SUCCESS] Temporada 'Lola' exportada a general.xml
+[2026-01-13 18:47:25] [INFO] Navegación: Partidos
+[2026-01-13 18:47:27] [INFO] Iniciando generación de calendario: Lola | Equipos: 8
+[2026-01-13 18:47:27] [DEBUG] Fase de IDA completada - Jornadas: 7 | Partidos: 28
+[2026-01-13 18:47:27] [SUCCESS] Calendario generado completamente: Lola | Equipos: 8 | Jornadas totales: 14 | Partidos totales: 56 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-13 18:47:27] [SUCCESS] Temporada activada: Lola | Equipos: 8 | Jornadas creadas: 14 | Estado: FUTURA → EN JUEGO
+[2026-01-13 18:47:31] [SUCCESS] Función Txema ejecutada | Lola
+[2026-01-13 18:47:34] [SUCCESS] Temporada finalizada: Lola | Estado: EN JUEGO → TERMINADA | Equipos: 8 | Jornadas: 14
+[2026-01-13 18:47:37] [INFO] Navegación: Clasificación
+[2026-01-13 18:47:45] [INFO] Iniciando exportación de datos
+[2026-01-13 18:47:48] [INFO] Carpetas de imágenes verificadas/creadas
+[2026-01-13 18:47:48] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:47:48] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:47:48] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:47:48] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:47:48] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:47:48] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:47:48] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:47:48] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:47:48] [SUCCESS] Temporada 'Lola' exportada a general.xml
+[2026-01-13 18:48:20] [INFO] Navegación: Clasificación
+[2026-01-13 18:48:21] [INFO] Navegación: Partidos
+[2026-01-13 18:48:23] [INFO] Navegación: Clasificación
+[2026-01-13 18:54:53] [INFO] ================================================================================
+[2026-01-13 18:54:53] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-13 18:54:53] [INFO] Sistema: Windows 11 10.0
+[2026-01-13 18:54:53] [INFO] Java: 21.0.8
+[2026-01-13 18:54:53] [INFO] ================================================================================
+[2026-01-13 18:54:53] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-13 18:54:53] [INFO] Temporada creada vacía (sin temporada origen)
+[2026-01-13 18:54:53] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA | Sin equipos
+[2026-01-13 18:54:53] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-13 18:54:53] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:54:53] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:54:53] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:54:53] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:54:53] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:54:53] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 18:54:53] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-13 18:54:56] [INFO] Navegación: Clasificación
+[2026-01-13 18:54:58] [INFO] Navegación: Partidos
+[2026-01-13 18:55:27] [INFO] Creación de temporada cancelada por el usuario
+[2026-01-13 18:55:32] [INFO] Iniciando generación de calendario: Temporada 2025/26 | Equipos: 6
+[2026-01-13 18:55:32] [DEBUG] Fase de IDA completada - Jornadas: 5 | Partidos: 15
+[2026-01-13 18:55:32] [SUCCESS] Calendario generado completamente: Temporada 2025/26 | Equipos: 6 | Jornadas totales: 10 | Partidos totales: 30 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-13 18:55:32] [SUCCESS] Temporada activada: Temporada 2025/26 | Equipos: 6 | Jornadas creadas: 10 | Estado: FUTURA → EN JUEGO
+[2026-01-13 18:55:36] [SUCCESS] Función Txema ejecutada | Temporada 2025/26
+[2026-01-13 18:55:38] [SUCCESS] Temporada finalizada: Temporada 2025/26 | Estado: EN JUEGO → TERMINADA | Equipos: 6 | Jornadas: 10
+[2026-01-13 18:55:47] [INFO] Iniciando exportación de datos
+[2026-01-13 18:55:47] [INFO] Carpetas de imágenes verificadas/creadas
+[2026-01-13 18:55:47] [INFO] Creando nuevo archivo general.xml
+[2026-01-13 18:55:47] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:55:47] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:55:47] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:55:47] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:55:47] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:55:47] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:55:47] [SUCCESS] Temporada 'Temporada 2025/26' exportada a general.xml
+[2026-01-13 18:55:59] [INFO] Copiando datos desde: Temporada 2025/26
+[2026-01-13 18:55:59] [SUCCESS] Temporada creada: TXURDINAGA | Estado: FUTURA | Equipos copiados: 6 | Jugadores copiados: 25 | Origen: Temporada 2025/26
+[2026-01-13 18:56:05] [INFO] Navegación: Equipos
+[2026-01-13 18:56:09] [INFO] Iniciando proceso de inscripción de equipo
+[2026-01-13 18:56:30] [SUCCESS] Nuevo equipo creado: 3DWA | Temporada: TXURDINAGA
+[2026-01-13 18:56:38] [SUCCESS] Nuevo equipo creado: ASIR | Temporada: TXURDINAGA
+[2026-01-13 18:56:40] [INFO] Navegación: Jugadores
+[2026-01-13 18:56:53] [SUCCESS] Nuevo fichaje: TXEMA | Equipo: 3DWA | Posición: Portero | Edad: 25 | Dorsal: 1 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: TXURDINAGA
+[2026-01-13 18:57:05] [SUCCESS] Nuevo fichaje: MANOLO | Equipo: 3DWA | Posición: Portero | Edad: 25 | Dorsal: 1 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: TXURDINAGA
+[2026-01-13 18:57:22] [SUCCESS] Nuevo fichaje: ZURIÑE | Equipo: ASIR | Posición: Portero | Edad: 25 | Dorsal: 1 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: TXURDINAGA
+[2026-01-13 18:57:26] [SUCCESS] Nuevo fichaje: MAHA | Equipo: ASIR | Posición: Portero | Edad: 25 | Dorsal: 1 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: TXURDINAGA
+[2026-01-13 18:57:36] [INFO] Navegación: Equipos
+[2026-01-13 18:58:06] [SUCCESS] Escudo actualizado: Barcelona | Ruta: C:\Users\1809499A\Downloads\mibombo
+[2026-01-13 18:59:26] [SUCCESS] Escudo actualizado: Barcelona | Ruta: C:\Users\1809499A\Pictures\INGLES.png
+[2026-01-13 18:59:30] [INFO] Navegación: Partidos
+[2026-01-13 18:59:32] [INFO] Iniciando generación de calendario: TXURDINAGA | Equipos: 8
+[2026-01-13 18:59:32] [DEBUG] Fase de IDA completada - Jornadas: 7 | Partidos: 28
+[2026-01-13 18:59:32] [SUCCESS] Calendario generado completamente: TXURDINAGA | Equipos: 8 | Jornadas totales: 14 | Partidos totales: 56 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-13 18:59:32] [SUCCESS] Temporada activada: TXURDINAGA | Equipos: 8 | Jornadas creadas: 14 | Estado: FUTURA → EN JUEGO
+[2026-01-13 18:59:34] [SUCCESS] Función Txema ejecutada | TXURDINAGA
+[2026-01-13 18:59:37] [SUCCESS] Temporada finalizada: TXURDINAGA | Estado: EN JUEGO → TERMINADA | Equipos: 8 | Jornadas: 14
+[2026-01-13 18:59:42] [INFO] Iniciando exportación de datos
+[2026-01-13 18:59:42] [INFO] Carpetas de imágenes verificadas/creadas
+[2026-01-13 18:59:42] [INFO] Escudo copiado: Barcelona → BARCELONA.png
+[2026-01-13 18:59:42] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:59:42] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:59:42] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:59:42] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:59:42] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:59:42] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:59:42] [WARN] Escudo no encontrado: img/default_escudo.png
+[2026-01-13 18:59:42] [SUCCESS] Temporada 'TXURDINAGA' exportada a general.xml
+[2026-01-13 19:23:27] [INFO] ================================================================================
+[2026-01-13 19:23:27] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-13 19:23:27] [INFO] Sistema: Windows 11 10.0
+[2026-01-13 19:23:27] [INFO] Java: 21.0.8
+[2026-01-13 19:23:27] [INFO] ================================================================================
+[2026-01-13 19:23:27] [INFO] === PREPARANDO ESCENARIO INICIAL ===
+[2026-01-13 19:23:27] [INFO] Temporada creada vacía (sin temporada origen)
+[2026-01-13 19:23:27] [SUCCESS] Temporada creada: Temporada 2024/25 | Estado: FUTURA | Sin equipos
+[2026-01-13 19:23:27] [INFO] Temporada de prueba configurada como TERMINADA: Temporada 2024/25
+[2026-01-13 19:23:27] [WARN] Intento de inscribir equipo 'Barcelona' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 19:23:27] [WARN] Intento de inscribir equipo 'Granada' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 19:23:27] [WARN] Intento de inscribir equipo 'Sevilla' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 19:23:27] [WARN] Intento de inscribir equipo 'Zaragoza' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 19:23:27] [WARN] Intento de inscribir equipo 'Valencia' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 19:23:27] [WARN] Intento de inscribir equipo 'Athletic Club' en temporada TERMINADA: Temporada 2024/25
+[2026-01-13 19:23:27] [SUCCESS] Escenario inicial preparado - Temporada: Temporada 2024/25 | Equipos: 6 | Jugadores: 0
+[2026-01-13 19:23:31] [INFO] Navegación: Clasificación
+[2026-01-13 19:23:32] [INFO] Navegación: Partidos
+[2026-01-13 19:23:36] [INFO] Iniciando generación de calendario: Temporada 2025/26 | Equipos: 6
+[2026-01-13 19:23:36] [DEBUG] Fase de IDA completada - Jornadas: 5 | Partidos: 15
+[2026-01-13 19:23:36] [SUCCESS] Calendario generado completamente: Temporada 2025/26 | Equipos: 6 | Jornadas totales: 10 | Partidos totales: 30 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-13 19:23:36] [SUCCESS] Temporada activada: Temporada 2025/26 | Equipos: 6 | Jornadas creadas: 10 | Estado: FUTURA → EN JUEGO
+[2026-01-13 19:23:53] [SUCCESS] Función Txema ejecutada | Temporada 2025/26
+[2026-01-13 19:24:02] [SUCCESS] Temporada finalizada: Temporada 2025/26 | Estado: EN JUEGO → TERMINADA | Equipos: 6 | Jornadas: 10
+[2026-01-13 19:24:04] [INFO] Navegación: Clasificación
+[2026-01-13 19:24:22] [INFO] Navegación: Clasificación
+[2026-01-13 19:24:23] [INFO] Navegación: Partidos
+[2026-01-13 19:24:39] [INFO] Copiando datos desde: Temporada 2025/26
+[2026-01-13 19:24:39] [SUCCESS] Temporada creada: rosa | Estado: FUTURA | Equipos copiados: 6 | Jugadores copiados: 24 | Origen: Temporada 2025/26
+[2026-01-13 19:24:43] [INFO] Navegación: Equipos
+[2026-01-13 19:24:51] [SUCCESS] Nuevo equipo creado: gael | Temporada: rosa
+[2026-01-13 19:25:04] [SUCCESS] Escudo actualizado: gael | Ruta: C:\Users\1809499A\Downloads\logolmsg.png
+[2026-01-13 19:25:20] [INFO] Navegación: Jugadores
+[2026-01-13 19:26:13] [SUCCESS] Nuevo fichaje: MABEL | Equipo: gael | Posición: Extremo Izquierdo | Edad: 39 | Dorsal: 21 | Nacionalidad: PARAGUAYA | Altura: 165 cm | Peso: 65 kg | Temporada: rosa
+[2026-01-13 19:26:22] [INFO] Navegación: Partidos
+[2026-01-13 19:26:28] [INFO] Iniciando generación de calendario: rosa | Equipos: 7
+[2026-01-13 19:26:28] [DEBUG] Número impar de equipos - Se agregó equipo fantasma 'DESCANSA'
+[2026-01-13 19:26:28] [DEBUG] Fase de IDA completada - Jornadas: 7 | Partidos: 21
+[2026-01-13 19:26:28] [SUCCESS] Calendario generado completamente: rosa | Equipos: 7 | Jornadas totales: 14 | Partidos totales: 42 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-13 19:26:28] [SUCCESS] Temporada activada: rosa | Equipos: 7 | Jornadas creadas: 14 | Estado: FUTURA → EN JUEGO
+[2026-01-13 19:26:42] [INFO] PARTIDO FINALIZADO: Granada 4 - 5 gael
+[2026-01-13 19:26:42] [SUCCESS] Resultado registrado: Granada 4 - 5 gael | Temporada: rosa
+[2026-01-13 19:26:46] [SUCCESS] Función Txema ejecutada | rosa
+[2026-01-13 19:26:48] [INFO] Navegación: Clasificación

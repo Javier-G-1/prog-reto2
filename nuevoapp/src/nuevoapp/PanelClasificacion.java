@@ -9,6 +9,7 @@ import logica.Clasificacion;
 import logica.FilaClasificacion;
 import gestion.Temporada;
 import gestion.DatosFederacion;
+import logica.ExportarPDF;
 
 public class PanelClasificacion extends JPanel {
 
@@ -125,7 +126,14 @@ public class PanelClasificacion extends JPanel {
         panelHeader.add(comboTemporadasClasificacion);
         add(panelHeader, BorderLayout.NORTH);
         
-        JButton btnExportarPDF = new JButton("ExportarPDF");
+        // ===== BOTÓN EXPORTAR PDF =====
+        JButton btnExportarPDF = new JButton("Exportar PDF");
+        btnExportarPDF.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnExportarPDF.setBackground(new Color(0, 153, 76));
+        btnExportarPDF.setForeground(Color.WHITE);
+        btnExportarPDF.setFocusPainted(false);
+        btnExportarPDF.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnExportarPDF.addActionListener(e -> exportarPDF());
         panelHeader.add(btnExportarPDF);
         
         // ===== CUERPO (TABLA) =====
@@ -201,7 +209,7 @@ public class PanelClasificacion extends JPanel {
             dlmEquipo.addElement(f.getEquipo());
             dlmPJ.addElement(f.getPj());
             dlmPG.addElement(f.getPg());
-            dlmPE.addElement(f.getPe()); // ✅ Corregido: faltaba PE
+            dlmPE.addElement(f.getPe());
             dlmPP.addElement(f.getPp());
             dlmGF.addElement(f.getGf());
             dlmGC.addElement(f.getGc());
@@ -209,5 +217,85 @@ public class PanelClasificacion extends JPanel {
             dlmPTS.addElement(f.getPuntos());
         }
     }
+    
+    // ============================================
+    // ✅ MÉTODO PARA EXPORTAR A PDF
+    // ============================================
+    private void exportarPDF() {
+        // Verificar que hay una temporada seleccionada
+        String nombreTemporada = (String) comboTemporadasClasificacion.getSelectedItem();
+        if (nombreTemporada == null || nombreTemporada.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "No hay ninguna temporada seleccionada.",
+                "Error",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        Temporada temporada = datosFederacion.buscarTemporadaPorNombre(nombreTemporada);
+        if (temporada == null) {
+            JOptionPane.showMessageDialog(this,
+                "No se pudo encontrar la temporada seleccionada.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Verificar que hay datos en la clasificación
+        if (dlmEquipo.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "No hay datos de clasificación para exportar.",
+                "Error",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Diálogo para seleccionar ubicación del archivo
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Guardar clasificación como PDF");
+        fileChooser.setSelectedFile(new java.io.File("Clasificacion_" + nombreTemporada + ".pdf"));
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Archivos PDF", "pdf"));
+        
+        int resultado = fileChooser.showSaveDialog(this);
+        
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            String rutaArchivo = fileChooser.getSelectedFile().getAbsolutePath();
+            
+            // Asegurar que tiene extensión .pdf
+            if (!rutaArchivo.toLowerCase().endsWith(".pdf")) {
+                rutaArchivo += ".pdf";
+            }
+            
+            // Calcular clasificación
+            Clasificacion clasificacion = CalculadoraClasificacion.calcular(temporada);
+            List<FilaClasificacion> filas = clasificacion.getFilas();
+            
+            // Exportar
+            boolean exito = ExportarPDF.exportarClasificacion(temporada, filas, rutaArchivo);
+            
+            if (exito) {
+                int opcion = JOptionPane.showConfirmDialog(this,
+                    "PDF exportado correctamente en:\n" + rutaArchivo + "\n\n¿Deseas abrir el archivo?",
+                    "Éxito",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE);
+                
+                if (opcion == JOptionPane.YES_OPTION) {
+                    try {
+                        java.awt.Desktop.getDesktop().open(new java.io.File(rutaArchivo));
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this,
+                            "No se pudo abrir el PDF automáticamente.\nÁbrelo manualmente desde:\n" + rutaArchivo,
+                            "Información",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(this,
+                    "Error al exportar el PDF. Verifica los permisos de escritura.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
 }
-

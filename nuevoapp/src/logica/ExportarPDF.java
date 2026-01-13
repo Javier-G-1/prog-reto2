@@ -2,85 +2,128 @@ package logica;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
-import gestion.Temporada;
-import javax.swing.*;
 import java.io.FileOutputStream;
 import java.util.List;
 
+import logica.FilaClasificacion;
+import gestion.Temporada;
+
 public class ExportarPDF {
-    
-    public static void exportarClasificacion(Temporada temporada) {
-        if (temporada == null) {
-            JOptionPane.showMessageDialog(null, "No hay temporada seleccionada", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+
+    /**
+     * Exporta la clasificación de una temporada a un archivo PDF
+     * @param temporada La temporada a exportar
+     * @param filas Las filas de clasificación ordenadas
+     * @param rutaArchivo Ruta donde guardar el PDF
+     * @return true si se exportó correctamente, false en caso contrario
+     */
+    public static boolean exportarClasificacion(Temporada temporada, List<FilaClasificacion> filas, String rutaArchivo) {
+        Document documento = new Document(PageSize.A4);
         
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Guardar clasificación como PDF");
-        fileChooser.setSelectedFile(new java.io.File("Clasificacion_" + temporada.getNombre() + ".pdf"));
-        
-        if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-            String ruta = fileChooser.getSelectedFile().getAbsolutePath();
-            if (!ruta.toLowerCase().endsWith(".pdf")) ruta += ".pdf";
+        try {
+            PdfWriter.getInstance(documento, new FileOutputStream(rutaArchivo));
+            documento.open();
             
-            try {
-                generarPDF(ruta, temporada);
-                JOptionPane.showMessageDialog(null, "PDF generado con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
+            // ===== TÍTULO =====
+            Font fuenteTitulo = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD, BaseColor.DARK_GRAY);
+            Paragraph titulo = new Paragraph("Clasificación - " + temporada.getNombre(), fuenteTitulo);
+            titulo.setAlignment(Element.ALIGN_CENTER);
+            titulo.setSpacingAfter(20);
+            documento.add(titulo);
+            
+            // ===== INFORMACIÓN DE LA TEMPORADA =====
+            Font fuenteInfo = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL, BaseColor.GRAY);
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm");
+            Paragraph info = new Paragraph("Generado el: " + sdf.format(new java.util.Date()), fuenteInfo);
+            info.setAlignment(Element.ALIGN_CENTER);
+            info.setSpacingAfter(20);
+            documento.add(info);
+            
+            // ===== CREAR TABLA =====
+            PdfPTable tabla = new PdfPTable(10); // 10 columnas
+            tabla.setWidthPercentage(100);
+            tabla.setSpacingBefore(10f);
+            
+            // Establecer anchos relativos de columnas
+            float[] anchos = {1f, 3f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1.2f};
+            tabla.setWidths(anchos);
+            
+            // ===== ENCABEZADOS =====
+            Font fuenteHeader = new Font(Font.FontFamily.HELVETICA, 11, Font.BOLD, BaseColor.WHITE);
+            String[] headers = {"Pos", "Equipo", "PJ", "PG", "PE", "PP", "GF", "GC", "Dif", "PTS"};
+            
+            for (String header : headers) {
+                PdfPCell celda = new PdfPCell(new Phrase(header, fuenteHeader));
+                celda.setBackgroundColor(new BaseColor(45, 55, 140));
+                celda.setHorizontalAlignment(Element.ALIGN_CENTER);
+                celda.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                celda.setPadding(8);
+                tabla.addCell(celda);
             }
+            
+            // ===== DATOS =====
+            Font fuenteDatos = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL);
+            int posicion = 1;
+            
+            for (FilaClasificacion fila : filas) {
+                // Color alternado para filas
+                BaseColor colorFondo = (posicion % 2 == 0) ? 
+                    new BaseColor(240, 240, 240) : BaseColor.WHITE;
+                
+                agregarCelda(tabla, String.valueOf(posicion), fuenteDatos, colorFondo, Element.ALIGN_CENTER);
+                agregarCelda(tabla, fila.getEquipo(), fuenteDatos, colorFondo, Element.ALIGN_LEFT);
+                agregarCelda(tabla, String.valueOf(fila.getPj()), fuenteDatos, colorFondo, Element.ALIGN_CENTER);
+                agregarCelda(tabla, String.valueOf(fila.getPg()), fuenteDatos, colorFondo, Element.ALIGN_CENTER);
+                agregarCelda(tabla, String.valueOf(fila.getPe()), fuenteDatos, colorFondo, Element.ALIGN_CENTER);
+                agregarCelda(tabla, String.valueOf(fila.getPp()), fuenteDatos, colorFondo, Element.ALIGN_CENTER);
+                agregarCelda(tabla, String.valueOf(fila.getGf()), fuenteDatos, colorFondo, Element.ALIGN_CENTER);
+                agregarCelda(tabla, String.valueOf(fila.getGc()), fuenteDatos, colorFondo, Element.ALIGN_CENTER);
+                agregarCelda(tabla, String.valueOf(fila.getDf()), fuenteDatos, colorFondo, Element.ALIGN_CENTER);
+                
+                // Puntos en negrita
+                Font fuentePuntos = new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD);
+                agregarCelda(tabla, String.valueOf(fila.getPuntos()), fuentePuntos, colorFondo, Element.ALIGN_CENTER);
+                
+                posicion++;
+            }
+            
+            documento.add(tabla);
+            
+            // ===== PIE DE PÁGINA =====
+            Paragraph pie = new Paragraph("\nPJ: Partidos Jugados | PG: Partidos Ganados | PE: Partidos Empatados | PP: Partidos Perdidos", 
+                new Font(Font.FontFamily.HELVETICA, 8, Font.ITALIC, BaseColor.GRAY));
+            pie.setAlignment(Element.ALIGN_CENTER);
+            pie.setSpacingBefore(15);
+            documento.add(pie);
+            
+            Paragraph pie2 = new Paragraph("GF: Goles a Favor | GC: Goles en Contra | Dif: Diferencia de Goles | PTS: Puntos", 
+                new Font(Font.FontFamily.HELVETICA, 8, Font.ITALIC, BaseColor.GRAY));
+            pie2.setAlignment(Element.ALIGN_CENTER);
+            documento.add(pie2);
+            
+            documento.close();
+            return true;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (documento.isOpen()) {
+                documento.close();
+            }
+            return false;
         }
     }
-
-    private static void generarPDF(String ruta, Temporada temporada) throws Exception {
-        Document document = new Document(PageSize.A4);
-        PdfWriter.getInstance(document, new FileOutputStream(ruta));
-        document.open();
-        
-        // Usamos la fuente explícita de iText para evitar errores
-        Font tituloFont = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);
-        Paragraph titulo = new Paragraph("Clasificación: " + temporada.getNombre(), tituloFont);
-        titulo.setAlignment(Element.ALIGN_CENTER);
-        titulo.setSpacingAfter(20);
-        document.add(titulo);
-        
-        Clasificacion clasificacion = CalculadoraClasificacion.calcular(temporada);
-        List<FilaClasificacion> filas = clasificacion.getFilas();
-        
-        PdfPTable tabla = new PdfPTable(10);
-        tabla.setWidthPercentage(100);
-        tabla.setWidths(new float[]{8f, 25f, 8f, 8f, 8f, 8f, 8f, 8f, 8f, 10f});
-        
-        // Encabezados
-        Font headerFont = new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE);
-        String[] headers = {"Pos", "Equipo", "PJ", "PG", "PE", "PP", "GF", "GC", "Dif", "PTS"};
-        for (String h : headers) {
-            PdfPCell cell = new PdfPCell(new Phrase(h, headerFont));
-            cell.setBackgroundColor(new BaseColor(45, 55, 140));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell.setPadding(5);
-            tabla.addCell(cell);
-        }
-        
-        // Datos
-        Font dataFont = new Font(Font.FontFamily.HELVETICA, 9);
-        int pos = 1;
-        for (FilaClasificacion f : filas) {
-            tabla.addCell(new Phrase(String.valueOf(pos++), dataFont));
-            tabla.addCell(new Phrase(f.getEquipo(), dataFont));
-            tabla.addCell(new Phrase(String.valueOf(f.getPj()), dataFont));
-            tabla.addCell(new Phrase(String.valueOf(f.getPg()), dataFont));
-            tabla.addCell(new Phrase(String.valueOf(f.getPe()), dataFont));
-            tabla.addCell(new Phrase(String.valueOf(f.getPp()), dataFont));
-            tabla.addCell(new Phrase(String.valueOf(f.getGf()), dataFont));
-            tabla.addCell(new Phrase(String.valueOf(f.getGc()), dataFont));
-            tabla.addCell(new Phrase(String.valueOf(f.getDf()), dataFont));
-            tabla.addCell(new Phrase(String.valueOf(f.getPuntos()), 
-                    new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD)));
-        }
-        
-        document.add(tabla);
-        document.close();
+    
+    /**
+     * Método auxiliar para agregar celdas a la tabla
+     */
+    private static void agregarCelda(PdfPTable tabla, String texto, Font fuente, BaseColor colorFondo, int alineacion) {
+        PdfPCell celda = new PdfPCell(new Phrase(texto, fuente));
+        celda.setBackgroundColor(colorFondo);
+        celda.setHorizontalAlignment(alineacion);
+        celda.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        celda.setPadding(6);
+        celda.setBorder(Rectangle.BOTTOM);
+        celda.setBorderColor(new BaseColor(200, 200, 200));
+        tabla.addCell(celda);
     }
 }

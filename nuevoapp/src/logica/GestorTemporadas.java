@@ -6,6 +6,7 @@ public class GestorTemporadas {
 
     /**
      * Finaliza la temporada actual y activa la siguiente.
+     * ⭐ ACTUALIZADO: Ahora exporta solo la temporada finalizada a general.xml
      */
     public void finalizarTemporada(Temporada actual, Temporada siguiente, DatosFederacion datos) {
         if (actual == null || siguiente == null || datos == null) {
@@ -38,11 +39,16 @@ public class GestorTemporadas {
         // 3. Sincronización web
         SincronizadorWeb.actualizarActivosServidor(datos, siguiente.getNombre());
 
-        // 4. Exportación XML
+        // 4. Exportación XML - ⭐ ACTUALIZADO: Exporta solo la temporada finalizada a general.xml
         ExportadorXML exportador = new ExportadorXML(datos);
-        exportador.exportarTodo();
-        GestorLog.exito("Cierre de temporada completado - " + actual.getNombre() + 
-                       " finalizada, " + siguiente.getNombre() + " activa");
+        boolean exportacionExitosa = exportador.exportarTemporada(actual);
+        
+        if (exportacionExitosa) {
+            GestorLog.exito("Cierre de temporada completado - " + actual.getNombre() + 
+                           " finalizada y exportada a general.xml | " + siguiente.getNombre() + " activa");
+        } else {
+            GestorLog.advertencia("Cierre de temporada completado pero hubo un problema con la exportación");
+        }
     }
 
     /**
@@ -251,7 +257,7 @@ public class GestorTemporadas {
 
         // 1. CREAR TEMPORADA PASADA (sin origen porque es la primera)
         String nombreT1 = "Temporada 2024/25";
-        crearTemporadaFutura(nombreT1, datos, null); // ⭐ AÑADIR null como tercer parámetro
+        crearTemporadaFutura(nombreT1, datos, null);
         Temporada t1 = datos.buscarTemporadaPorNombre(nombreT1);
 
         if (t1 != null) {
