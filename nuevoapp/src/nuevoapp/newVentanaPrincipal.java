@@ -15,12 +15,14 @@ import logica.*;
 import logica.CalculadoraClasificacion;
 import gestion.Equipo;
 import gestion.Jornada;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import gestion.Temporada;
 import nuevoapp.PanelClasificacion;
 import logica.ExportadorXML;
 
-public class newVentanaPrincipal extends JFrame implements ActionListener {
 
+public class newVentanaPrincipal extends JFrame implements ActionListener, WindowListener {
     private static final long serialVersionUID = 1L;
     private PanelClasificacion panelClasificacionObjeto; 
     private DatosFederacion datosFederacion;
@@ -38,6 +40,8 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
     private JPanel panelTarjetasEquipo;
     private JButton btnAgregarEquipo;
     private JComboBox<String> comboTemporadas;
+    
+    private PanelGestionUsuarios panelUsuarios;
     
     private JComboBox<String> comboTemporadasClasificacion;
     private JPanel panelInicio, panelEquipos, panelJugadores, panelPartidos, panelClasificacion, panelSuperior;
@@ -59,7 +63,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
     
     private JButton  btnNuevaJor, btnNuevoPart;
     private JButton btnNuevaTemp_1;
-
+    private javax.swing.Timer autoSaveTimer;
 
  
 
@@ -96,14 +100,16 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
       
     }
 
-    public newVentanaPrincipal() {
-        this.datosFederacion = new DatosFederacion(); 
+
+    public newVentanaPrincipal(DatosFederacion datosFederacion) {
+        this.datosFederacion = datosFederacion;
+        limpiarTemporadasDuplicadas();
         
         // Registrar inicio de sesión
         GestorLog.iniciarSesion("Admin");
         
-        new GestorTemporadas().prepararEscenarioInicial(this.datosFederacion); 
-        
+        new GestorTemporadas().prepararEscenarioInicial(this.datosFederacion);
+         
    
         btnNuevaJor = new JButton("+ Jornada");
         btnInscribirEquipo = new JButton("Inscribir Equipo");
@@ -113,7 +119,8 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         ImageIcon icono = new ImageIcon(getClass().getResource("/assets/icono.png"));
         setIconImage(icono.getImage());
         setTitle("Federación de Balonmano");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(this);
         setBounds(100, 100, 1685, 846);
 
         contentPane = new JPanel();
@@ -343,6 +350,16 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         panelBotones.add(verticalStrut_7);
         
         btnGestionUsuario = new JButton("Gestión de Usuarios");
+        btnGestionUsuario.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(panelCards, "usuarios");
+                GestorLog.info("Navegación: Gestión de Usuarios");
+                
+                // Refrescar la vista
+                panelUsuarios.cargarUsuarios();
+            }
+        });  
+       
         btnGestionUsuario.setMaximumSize(new Dimension(2147483647, 40));
         btnGestionUsuario.setForeground(Color.WHITE);
         btnGestionUsuario.setFont(new Font("Segoe UI Black", Font.ITALIC, 14));
@@ -387,7 +404,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         lblTemp.setFont(new Font("Segoe UI", Font.BOLD, 14));
         panelSuperior.add(lblTemp);
 
-        comboTemporadas = new JComboBox<>(new String[] {"Temporada 2025/26", "Temporada 2024/25"});
+        comboTemporadas = new JComboBox<>();
         comboTemporadas.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         panelSuperior.add(comboTemporadas);
 
@@ -509,27 +526,6 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
     
         panelJugadores.add(panelBotonesJugadores, BorderLayout.SOUTH);
 
-        Temporada temporada2025_26 = new Temporada("Temporada 2025/26", Temporada.FUTURA);
-        datosFederacion.add(temporada2025_26);
-        
-        String[][] equiposConJugadores = {
-            {"Barcelona","Álvaro Mena","Carla Ríos","Ignacio Vela","Sofía Llorente","Mateo Cruz"},
-            {"Granada","Carlos Muñoz","Marta Domínguez","Andrés Cortés","Lucía Palacios"},
-            {"Sevilla","Marina Torres","Fernando Vázquez","Ana Beltrán","Rubén Márquez"},
-            {"Zaragoza","Miguel Ortega","Claudia Rivas","Javier Torres","Isabel Salinas"},
-            {"Valencia","Raúl Pérez","Andrea Delgado","Luis Navarro","Marta Ramírez"},
-            {"Athletic Club","Pablo Martínez","Alicia Gómez","Daniel Reyes","Elena López"}
-        };
-        
-
-        for (String[] equipoData : equiposConJugadores) {
-            Equipo eq = new Equipo(equipoData[0], null);
-            for (int i = 1; i < equipoData.length; i++) {
-                Jugador j = new Jugador(equipoData[i], "Posición", 25, null);
-                eq.ficharJugador(j);
-            }
-            temporada2025_26.inscribirEquipo(eq);
-        }
 
         comboTemporadas.addActionListener(e -> {
             actualizarVistaEquipos();
@@ -648,6 +644,9 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         panelClasificacionObjeto = new PanelClasificacion(datosFederacion);
         panelClasificacion.add(panelClasificacionObjeto, BorderLayout.CENTER);
        // panelClasificacion.add(new PanelClasificacion(datosFederacion), BorderLayout.CENTER);//Metido por Maha
+        
+        panelUsuarios = new PanelGestionUsuarios(datosFederacion);
+        panelCards.add(panelUsuarios, "usuarios");
 
 
 
@@ -676,9 +675,33 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         }
         
         actualizarVistaPartidos();
+        iniciarAutoGuardado();
     }
     
-    /**
+    private void limpiarTemporadasDuplicadas() {
+        java.util.List<Temporada> temporadas = datosFederacion.getListaTemporadas();
+        java.util.Set<String> nombresVistos = new java.util.HashSet<>();
+        java.util.List<Temporada> temporadasUnicas = new java.util.ArrayList<>();
+        
+        for (Temporada t : temporadas) {
+            if (!nombresVistos.contains(t.getNombre())) {
+                nombresVistos.add(t.getNombre());
+                temporadasUnicas.add(t);
+            } else {
+                GestorLog.advertencia("Temporada duplicada eliminada: " + t.getNombre());
+            }
+        }
+        
+        if (temporadasUnicas.size() < temporadas.size()) {
+            temporadas.clear();
+            temporadas.addAll(temporadasUnicas);
+            GestorLog.exito("Limpieza: " + temporadasUnicas.size() + " temporadas únicas");
+            GestorArchivos.guardarTodo(datosFederacion);
+        }
+    }
+
+
+	/**
      * Actualiza el estado de los botones de jugadores según el estado de la temporada
      */
     private void actualizarEstadoBotonesJugadores() {
@@ -767,6 +790,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
             if (rolUsuario != Rol.ADMINISTRADOR && rolUsuario != Rol.MANAGER) {
                 JOptionPane.showMessageDialog(this, "No tienes permisos para realizar esta acción.");
                 return;
+                
             }
 
             if (jugadorSeleccionado == null) {
@@ -2268,6 +2292,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         switch (rol) {
             case ADMINISTRADOR:
                 mostrarTodo(true);
+                btnCambiarFoto.setVisible(true); 
                 break;
 
             case ARBITRO:
@@ -2276,6 +2301,8 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                 btnNuevaJor.setVisible(true);
                 btnNuevoPart.setVisible(true);
                 btnCambiarFoto.setVisible(false);
+                btnExportar.setVisible(false);
+                btnGestionUsuario.setVisible(false);
                 // El árbitro no crea temporadas, solo gestiona las existentes
                 btnNuevaTemp_1.setVisible(false); 
                 break;
@@ -2288,7 +2315,8 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                 btnCambiarFoto.setVisible(true); // Cambiar escudo/foto
                 btnAgregarJugador.setVisible(true);
                 btnCambiarEquipo.setVisible(true);
-                
+                btnExportar.setVisible(false);
+                btnGestionUsuario.setVisible(false);
                 btnInscribirEquipo.setVisible(true);
                 break;
 
@@ -2299,11 +2327,12 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                 panelAdminPartidos_1.setVisible(true); // El invitado solo puede ver
                 btnCambiarFoto.setVisible(false);
                 btnInscribirEquipo.setVisible(false);
+                btnExportar.setVisible(false);
+                btnGestionUsuario.setVisible(false);
                 break;
         }
     }
-    private void cerrarSesion() {
-        // 1. Preguntar al usuario para evitar cierres accidentales
+	private void cerrarSesion() {
         int respuesta = JOptionPane.showConfirmDialog(this, 
                 "¿Estás seguro de que quieres cerrar la sesión?", 
                 "Cerrar Sesión", 
@@ -2311,18 +2340,24 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
                 JOptionPane.QUESTION_MESSAGE);
 
         if (respuesta == JOptionPane.YES_OPTION) {
-            // 2. Limpiar el rol por seguridad
-            this.rolUsuario = null; 
+            // ⭐ Detener el auto-guardado
+            if (autoSaveTimer != null && autoSaveTimer.isRunning()) {
+                autoSaveTimer.stop();
+                GestorLog.info("Auto-guardado detenido");
+            }
             
-            // 3. Cerrar la ventana principal actual
-            this.dispose(); 
+            // Guardar los datos antes de cerrar sesión
+            GestorLog.info("Guardando datos antes de cerrar sesión...");
+            GestorArchivos.guardarTodo(datosFederacion);
+            GestorLog.info("Datos guardados correctamente");
             
-            // 4. Crear y mostrar una nueva instancia del Login
+            this.rolUsuario = null;
+            this.dispose();
+            
             Login ventanaLogin = new Login();
             ventanaLogin.setVisible(true);
             
-            // Log de éxito (opcional)
-            System.out.println("Sesión cerrada correctamente.");
+            GestorLog.info("Sesión cerrada correctamente");
         }
     }
     /**
@@ -2441,4 +2476,104 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         // Extraer el nombre de la temporada (antes del corchete)
         String nombreTemp = seleccion.split(" \\[")[0];
         return datosFederacion.buscarTemporadaPorNombre(nombreTemp);
-    }}
+    }
+    private void iniciarAutoGuardado() {
+        // Autoguardado cada 5 minutos (300000 ms = 5 minutos)
+        // Cambia este valor si quieres que se guarde más o menos frecuentemente
+        autoSaveTimer = new javax.swing.Timer(300000, e -> {
+            GestorLog.info(" Auto-guardado iniciado...");
+            GestorArchivos.guardarTodo(datosFederacion);
+            GestorLog.exito(" Auto-guardado completado");
+        });
+        autoSaveTimer.start();
+        GestorLog.info(" Sistema de auto-guardado activado (cada 5 minutos)");
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        int respuesta = JOptionPane.showConfirmDialog(
+            this,
+            "¿Deseas guardar los cambios antes de salir?",
+            "Confirmar Salida",
+            JOptionPane.YES_NO_CANCEL_OPTION,
+            JOptionPane.QUESTION_MESSAGE
+        );
+        
+        if (respuesta == JOptionPane.YES_OPTION) {
+            // Detener el auto-guardado
+            if (autoSaveTimer != null && autoSaveTimer.isRunning()) {
+                autoSaveTimer.stop();
+            }
+            
+            // Guardar y salir
+            GestorLog.info("💾 Guardando datos antes de cerrar aplicación...");
+            GestorArchivos.guardarTodo(datosFederacion);
+            GestorLog.exito(" Datos guardados correctamente");
+            
+            JOptionPane.showMessageDialog(
+                this,
+                "Datos guardados con éxito.\n¡Hasta pronto!",
+                "Guardado exitoso",
+                JOptionPane.INFORMATION_MESSAGE
+            );
+            
+            GestorLog.info(" Aplicación cerrada por el usuario");
+            System.exit(0);
+            
+        } else if (respuesta == JOptionPane.NO_OPTION) {
+            // Salir sin guardar (con confirmación adicional)
+            int confirmarSinGuardar = JOptionPane.showConfirmDialog(
+                this,
+                "⚠️ Se perderán todos los cambios no guardados.\n¿Estás seguro?",
+                "Confirmar salida sin guardar",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+            );
+            
+            if (confirmarSinGuardar == JOptionPane.YES_OPTION) {
+                // Detener el auto-guardado
+                if (autoSaveTimer != null && autoSaveTimer.isRunning()) {
+                    autoSaveTimer.stop();
+                }
+                
+                GestorLog.advertencia(" Aplicación cerrada sin guardar cambios");
+                System.exit(0);
+            }
+        
+        
+        
+       }
+        
+        // Si respuesta == CANCEL_OPTION, no hace nada (ventana permanece abierta)
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+        GestorLog.info(" Ventana principal abierta");
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        GestorLog.info(" Ventana principal cerrada");
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+        GestorLog.info("➖ Ventana minimizada");
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+        GestorLog.info("⬆️ Ventana restaurada");
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+        // No hacer nada para evitar logs excesivos
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+        // No hacer nada para evitar logs excesivos
+    }
+    }

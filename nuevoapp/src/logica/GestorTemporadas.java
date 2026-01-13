@@ -248,42 +248,41 @@ public class GestorTemporadas {
      * Crea el escenario inicial con temporadas y equipos de prueba
      */
     public void prepararEscenarioInicial(DatosFederacion datos) {
-        if (datos == null) {
-            GestorLog.error("DatosFederacion es nulo en prepararEscenarioInicial");
-            return;
-        }
-
-        GestorLog.info("=== PREPARANDO ESCENARIO INICIAL ===");
-
-        // 1. CREAR TEMPORADA PASADA (sin origen porque es la primera)
-        String nombreT1 = "Temporada 2024/25";
-        crearTemporadaFutura(nombreT1, datos, null);
-        Temporada t1 = datos.buscarTemporadaPorNombre(nombreT1);
-
-        if (t1 != null) {
-            t1.setEstado(Temporada.TERMINADA);
-            GestorLog.info("Temporada de prueba configurada como TERMINADA: " + nombreT1);
-
-            String[] nombres = {"Barcelona", "Granada", "Sevilla", "Zaragoza", "Valencia", "Athletic Club"};
-            
-            int equiposInscritos = 0;
-            int jugadoresCreados = 0;
-
-            for (String nombreE : nombres) {
-                inscribirEquipoEnTemporada(nombreT1, nombreE, datos);
-                equiposInscritos++;
-
-                // Añadir jugadores de prueba
-                Equipo eq = t1.buscarEquipoPorNombre(nombreE);
-                if (eq != null) {
-                    eq.ficharJugador(new Jugador("Capitán " + nombreE, "Cierre", 28, null));
-                    eq.ficharJugador(new Jugador("Portero " + nombreE, "Portero", 24, null));
-                    jugadoresCreados += 2;
-                }
-            }
-            
-            GestorLog.exito("Escenario inicial preparado - Temporada: " + nombreT1 + 
-                          " | Equipos: " + equiposInscritos + " | Jugadores: " + jugadoresCreados);
-        }
-    }
+    	 if (!datos.getListaTemporadas().isEmpty()) {
+    	        GestorLog.info("Datos ya cargados desde archivo. No se crea escenario inicial.");
+    	        return;
+    	    }
+    	    
+    	    // Solo crear escenario si NO hay temporadas (primera ejecución)
+    	    GestorLog.info("Primera ejecución detectada. Creando escenario inicial...");
+    	    
+    	    // Crear UNA SOLA temporada inicial
+    	    Temporada temporada2025_26 = new Temporada("Temporada 2025/26", Temporada.FUTURA);
+    	    
+    	    // Equipos de ejemplo
+    	    String[][] equiposConJugadores = {
+    	        {"Barcelona","Álvaro Mena","Carla Ríos","Ignacio Vela","Sofía Llorente","Mateo Cruz"},
+    	        {"Granada","Carlos Muñoz","Marta Domínguez","Andrés Cortés","Lucía Palacios"},
+    	        {"Sevilla","Marina Torres","Fernando Vázquez","Ana Beltrán","Rubén Márquez"},
+    	        {"Zaragoza","Miguel Ortega","Claudia Rivas","Javier Torres","Isabel Salinas"},
+    	        {"Valencia","Raúl Pérez","Andrea Delgado","Luis Navarro","Marta Ramírez"},
+    	        {"Athletic Club","Pablo Martínez","Alicia Gómez","Daniel Reyes","Elena López"}
+    	    };
+    	    
+    	    // Crear equipos con jugadores
+    	    for (String[] equipoData : equiposConJugadores) {
+    	        Equipo eq = new Equipo(equipoData[0], null);
+    	        for (int i = 1; i < equipoData.length; i++) {
+    	            Jugador j = new Jugador(equipoData[i], "Posición", 25, null);
+    	            eq.ficharJugador(j);
+    	        }
+    	        temporada2025_26.inscribirEquipo(eq);
+    	    }
+    	    
+    	    // Agregar la temporada a los datos
+    	    datos.add(temporada2025_26);
+    	    
+    	    GestorLog.exito("Escenario inicial creado: Temporada 2025/26 con " + 
+    	                   equiposConJugadores.length + " equipos");
+    	}
 }

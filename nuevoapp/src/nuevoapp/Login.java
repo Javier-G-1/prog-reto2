@@ -1,12 +1,15 @@
-package nuevoapp; 
+package nuevoapp;
 
-import java.awt.*; 
-import javax.swing.*; 
-import javax.swing.border.*; 
-import java.awt.event.*; 
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.*;
+import java.awt.event.*;
 import java.util.Arrays;
-// IMPORTANTE: Asegúrate de importar tu Enum si está en otro paquete
-import gestion.Rol; 
+import gestion.Rol;
+import gestion.DatosFederacion;
+import gestion.Usuario;
+import logica.GestorArchivos;
+import logica.GestorLog;
 
 public class Login extends JFrame implements ActionListener, FocusListener {
 
@@ -21,22 +24,9 @@ public class Login extends JFrame implements ActionListener, FocusListener {
     private JPanel logoPanel, panelSesion, panelUsuario, panelContra, panelBotones;
     
     private static newVentanaPrincipal newVentanaPrincipal;
-
-    // --- MATRIZ DE USUARIOS ---
-    private String usuarios[][] = {
-        {"admin", "123"},   
-        {"arbitro", "123"}, 
-        {"usuario", "123"}, 
-        {"manager", "123"}  
-    };  
     
-    // CAMBIO AQUÍ: Ahora usamos los valores de tu Enum Rol en el mismo orden que la matriz
-    private Rol roles[] = {
-        Rol.ADMINISTRADOR, 
-        Rol.ARBITRO, 
-        Rol.INVITADO, 
-        Rol.MANAGER
-    }; 
+    // ⭐ CAMBIO IMPORTANTE: Ahora cargamos los datos reales del sistema
+    private DatosFederacion datosFederacion;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -50,6 +40,12 @@ public class Login extends JFrame implements ActionListener, FocusListener {
     }
 
     public Login() {
+        // ⭐ Cargar datos del sistema
+        this.datosFederacion = GestorArchivos.cargarTodo();
+        
+        // Inicializar usuarios predeterminados si es primera ejecución
+        inicializarUsuariosPredeterminados();
+        
         setResizable(false);
         ImageIcon icono = new ImageIcon(getClass().getResource("/assets/icono.png"));
         setIconImage(icono.getImage());
@@ -128,48 +124,119 @@ public class Login extends JFrame implements ActionListener, FocusListener {
         panelBotones.add(btnInvitado);
         panelSesion.add(panelBotones);
     }
+    
+    /**
+     * ⭐ NUEVO: Inicializa los 4 usuarios predeterminados si no existen
+     */
+    private void inicializarUsuariosPredeterminados() {
+        // Admin
+        if (datosFederacion.buscarUsuario("admin") == null) {
+            datosFederacion.getListaUsuarios().add(
+                new Usuario("Administrador", "admin", "123", Rol.ADMINISTRADOR)
+            );
+        }
+        
+        // Invitado
+        if (datosFederacion.buscarUsuario("invitado") == null) {
+            datosFederacion.getListaUsuarios().add(
+                new Usuario("Usuario Invitado", "invitado", "123", Rol.INVITADO)
+            );
+        }
+        
+        // Árbitro
+        if (datosFederacion.buscarUsuario("arbitro") == null) {
+            datosFederacion.getListaUsuarios().add(
+                new Usuario("Árbitro Principal", "arbitro", "123", Rol.ARBITRO)
+            );
+        }
+        
+        // Manager
+        if (datosFederacion.buscarUsuario("manager") == null) {
+            datosFederacion.getListaUsuarios().add(
+                new Usuario("Manager Principal", "manager", "123", Rol.MANAGER)
+            );
+        }
+        
+        // Guardar los cambios
+        GestorArchivos.guardarTodo(datosFederacion);
+    }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
         Object obj = ae.getSource();
 
         if (obj == btnInvitado) {
-            // CAMBIO AQUÍ: Usamos Rol.INVITADO directamente
-            ejecutarLogin(Rol.INVITADO, "Invitado"); 
+            Usuario usuarioInvitado = datosFederacion.buscarUsuario("invitado");
+            if (usuarioInvitado != null) {
+                ejecutarLogin(usuarioInvitado);
+            }
         } else if (obj == btnIniciarSesion || obj == pwdContra) {
             validarAcceso(); 
         }
     }
 
+    /**
+     * ⭐ ACTUALIZADO: Validación contra la base de datos real
+     */
     private void validarAcceso() {
-        String userText = txtUsuario.getText();
-        char[] passText = pwdContra.getPassword(); 
-        boolean loginCorrecto = false;
-
-        for (int i = 0; i < usuarios.length; i++) {
-            if (userText.equals(usuarios[i][0])) {
-                if (Arrays.equals(passText, usuarios[i][1].toCharArray())) {
-                    loginCorrecto = true;
-                    // CAMBIO AQUÍ: Pasamos el objeto Rol de nuestro array de roles
-                    ejecutarLogin(roles[i], userText); 
-                    break;
-                }
+        String userText = txtUsuario.getText().trim();
+        char[] passText = pwdContra.getPassword();
+        
+        if (userText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "El nombre de usuario no puede estar vacío", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (passText.length == 0) {
+            JOptionPane.showMessageDialog(this, 
+                "La contraseña no puede estar vacía", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Buscar usuario en la base de datos
+        Usuario usuario = datosFederacion.buscarUsuario(userText);
+        
+        if (usuario != null) {
+            // Verificar contraseña
+            String passwordIngresada = new String(passText);
+            
+            if (usuario.getContrasena().equals(passwordIngresada)) {
+                // Login exitoso
+                GestorLog.info("Login exitoso: " + usuario.getNombreUsuario() + " | Rol: " + usuario.getRol().getNombreLegible());
+                ejecutarLogin(usuario);
+                return;
             }
         }
-
-        if (!loginCorrecto) {
-            JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrecta", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        
+        // Login fallido
+        GestorLog.advertencia("Intento de login fallido: " + userText);
+        JOptionPane.showMessageDialog(this, 
+            "Usuario o contraseña incorrecta", 
+            "Error de Autenticación", 
+            JOptionPane.ERROR_MESSAGE);
+        
+        // Limpiar campos
+        pwdContra.setText("");
+        txtUsuario.requestFocus();
     }
 
-    // CAMBIO AQUÍ: El primer parámetro ahora es de tipo Rol
-    private void ejecutarLogin(Rol rol, String nombre) {
+    /**
+     * ⭐ ACTUALIZADO: Recibe el objeto Usuario completo
+     */
+    private void ejecutarLogin(Usuario usuario) {
         this.dispose(); 
+        
         if (newVentanaPrincipal == null) {
-            newVentanaPrincipal = new newVentanaPrincipal();
+            newVentanaPrincipal = new newVentanaPrincipal(datosFederacion);
         }
-        // Pasamos el objeto Enum a la ventana principal
-        newVentanaPrincipal.despuesDelLogin(rol, nombre);
+        
+        // Pasar los datos del usuario a la ventana principal
+        newVentanaPrincipal.despuesDelLogin(usuario.getRol(), usuario.getNombreReal());
         newVentanaPrincipal.setVisible(true);
     }
 
@@ -177,8 +244,11 @@ public class Login extends JFrame implements ActionListener, FocusListener {
     public void focusGained(FocusEvent e) {
         if (e.getSource() instanceof JTextField) {
             ((JTextField) e.getSource()).selectAll();
+        } else if (e.getSource() instanceof JPasswordField) {
+            ((JPasswordField) e.getSource()).selectAll();
         }
     }
 
-    @Override public void focusLost(FocusEvent e) {}
+    @Override
+    public void focusLost(FocusEvent e) {}
 }
