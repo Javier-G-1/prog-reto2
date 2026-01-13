@@ -125,6 +125,9 @@ public class PanelClasificacion extends JPanel {
         panelHeader.add(comboTemporadasClasificacion);
         add(panelHeader, BorderLayout.NORTH);
         
+        JButton btnExportarPDF = new JButton("ExportarPDF");
+        panelHeader.add(btnExportarPDF);
+        
         // ===== CUERPO (TABLA) =====
         JPanel panelBody = new JPanel(new GridLayout(1, 10, 0, 0)); 
         add(panelBody, BorderLayout.CENTER);
