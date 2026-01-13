@@ -39,8 +39,8 @@ public class GestorTemporadas {
         SincronizadorWeb.actualizarActivosServidor(datos, siguiente.getNombre());
 
         // 4. Exportación XML
-        ExportadorXML exportador = new ExportadorXML(datos);
-        exportador.exportarTodo();
+        ExportadorWebXML.generarXMLParaWeb(datos, "sincronizacion_web.xml");
+
         GestorLog.exito("Cierre de temporada completado - " + actual.getNombre() + 
                        " finalizada, " + siguiente.getNombre() + " activa");
     }

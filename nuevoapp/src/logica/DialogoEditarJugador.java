@@ -1,270 +1,169 @@
 package logica;
 
+import gestion.Jugador;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import gestion.Jugador;
 
+/**
+ * Diálogo para editar todos los datos de un jugador incluyendo
+ * dorsal, nacionalidad, altura y peso para exportación completa.
+ */
 public class DialogoEditarJugador extends JDialog {
-    private static final long serialVersionUID = 1L;
+    
+    private Jugador jugador;
+    private boolean aceptado = false;
     
     private JTextField txtNombre;
-    private JComboBox<String> comboPosicion;
-    private JSpinner spinnerEdad;
+    private JTextField txtPosicion;
+    private JSpinner spnEdad;
+    private JSpinner spnDorsal;
     private JTextField txtNacionalidad;
-    private JSpinner spinnerAltura;
-    private JSpinner spinnerPeso;
-    private JSpinner spinnerDorsal;
-    
-    private boolean aceptado = false;
-    private Jugador jugador;
-    
-    // Posiciones válidas de balonmano
-    private static final String[] POSICIONES = {
-        "Portero",
-        "Extremo Izquierdo",
-        "Extremo Derecho",
-        "Lateral Izquierdo",
-        "Lateral Derecho",
-        "Central",
-        "Pivote"
-    };
+    private JTextField txtAltura;
+    private JTextField txtPeso;
+    private JTextField txtFotoURL;
     
     public DialogoEditarJugador(Frame parent, Jugador jugador) {
         super(parent, "Editar Jugador - " + jugador.getNombre(), true);
-        
         this.jugador = jugador;
         
-        setLayout(new BorderLayout(10, 10));
-        setSize(450, 450);
+        setSize(450, 500);
         setLocationRelativeTo(parent);
+        setLayout(new BorderLayout(10, 10));
         
-        // Panel principal con los campos
-        JPanel panelCampos = new JPanel(new GridLayout(7, 2, 10, 15));
-        panelCampos.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
-        panelCampos.setBackground(new Color(30, 34, 41));
+        // Panel principal con todos los campos
+        JPanel panelCampos = new JPanel(new GridLayout(0, 2, 10, 15));
+        panelCampos.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
-        // ===== NOMBRE =====
-        JLabel lblNombre = crearLabel("Nombre:");
+        // Nombre
+        panelCampos.add(new JLabel("Nombre:"));
         txtNombre = new JTextField(jugador.getNombre());
-        estilizarCampoTexto(txtNombre);
-        panelCampos.add(lblNombre);
         panelCampos.add(txtNombre);
         
-        // ===== POSICIÓN =====
-        JLabel lblPosicion = crearLabel("Posición:");
-        comboPosicion = new JComboBox<>(POSICIONES);
-        comboPosicion.setSelectedItem(jugador.getPosicion());
-        comboPosicion.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        comboPosicion.setBackground(Color.WHITE);
-        panelCampos.add(lblPosicion);
-        panelCampos.add(comboPosicion);
+        // Posición
+        panelCampos.add(new JLabel("Posición:"));
+        txtPosicion = new JTextField(jugador.getPosicion());
+        panelCampos.add(txtPosicion);
         
-        // ===== DORSAL =====
-        JLabel lblDorsal = crearLabel("Dorsal:");
-        SpinnerNumberModel modeloDorsal = new SpinnerNumberModel(
-            jugador.getDorsal() > 0 ? jugador.getDorsal() : 1, 
-            0, 99, 1
-        );
-        spinnerDorsal = new JSpinner(modeloDorsal);
-        estilizarSpinner(spinnerDorsal);
-        panelCampos.add(lblDorsal);
-        panelCampos.add(spinnerDorsal);
+        // Edad
+        panelCampos.add(new JLabel("Edad:"));
+        spnEdad = new JSpinner(new SpinnerNumberModel(jugador.getEdad(), 15, 50, 1));
+        panelCampos.add(spnEdad);
         
-        // ===== EDAD =====
-        JLabel lblEdad = crearLabel("Edad:");
-        SpinnerNumberModel modeloEdad = new SpinnerNumberModel(jugador.getEdad(), 16, 50, 1);
-        spinnerEdad = new JSpinner(modeloEdad);
-        estilizarSpinner(spinnerEdad);
-        panelCampos.add(lblEdad);
-        panelCampos.add(spinnerEdad);
+        // Dorsal
+        panelCampos.add(new JLabel("Dorsal:"));
+        spnDorsal = new JSpinner(new SpinnerNumberModel(jugador.getDorsal(), 0, 99, 1));
+        panelCampos.add(spnDorsal);
         
-        // ===== NACIONALIDAD =====
-        JLabel lblNacionalidad = crearLabel("Nacionalidad:");
-        txtNacionalidad = new JTextField(
-            jugador.getNacionalidad() != null ? jugador.getNacionalidad() : "España"
-        );
-        estilizarCampoTexto(txtNacionalidad);
-        panelCampos.add(lblNacionalidad);
+        // Nacionalidad
+        panelCampos.add(new JLabel("Nacionalidad:"));
+        txtNacionalidad = new JTextField(jugador.getNacionalidad());
         panelCampos.add(txtNacionalidad);
         
-        // ===== ALTURA =====
-        JLabel lblAltura = crearLabel("Altura (cm):");
-        int alturaActual = extraerNumero(jugador.getAltura(), 180);
-        SpinnerNumberModel modeloAltura = new SpinnerNumberModel(alturaActual, 150, 220, 1);
-        spinnerAltura = new JSpinner(modeloAltura);
-        estilizarSpinner(spinnerAltura);
-        panelCampos.add(lblAltura);
-        panelCampos.add(spinnerAltura);
+        // Altura
+        panelCampos.add(new JLabel("Altura (ej: 175cm):"));
+        txtAltura = new JTextField(jugador.getAltura());
+        panelCampos.add(txtAltura);
         
-        // ===== PESO =====
-        JLabel lblPeso = crearLabel("Peso (kg):");
-        int pesoActual = extraerNumero(jugador.getPeso(), 80);
-        SpinnerNumberModel modeloPeso = new SpinnerNumberModel(pesoActual, 50, 150, 1);
-        spinnerPeso = new JSpinner(modeloPeso);
-        estilizarSpinner(spinnerPeso);
-        panelCampos.add(lblPeso);
-        panelCampos.add(spinnerPeso);
+        // Peso
+        panelCampos.add(new JLabel("Peso (ej: 73kg):"));
+        txtPeso = new JTextField(jugador.getPeso());
+        panelCampos.add(txtPeso);
+        
+        // Foto URL
+        panelCampos.add(new JLabel("URL Foto:"));
+        JPanel panelFoto = new JPanel(new BorderLayout(5, 0));
+        txtFotoURL = new JTextField(jugador.getFotoURL() != null ? jugador.getFotoURL() : "");
+        JButton btnSeleccionar = new JButton("...");
+        btnSeleccionar.setPreferredSize(new Dimension(30, 25));
+        btnSeleccionar.addActionListener(e -> seleccionarFoto());
+        panelFoto.add(txtFotoURL, BorderLayout.CENTER);
+        panelFoto.add(btnSeleccionar, BorderLayout.EAST);
+        panelCampos.add(panelFoto);
         
         add(panelCampos, BorderLayout.CENTER);
         
-        // ===== PANEL DE BOTONES =====
+        // Panel de botones
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
-        panelBotones.setBackground(new Color(30, 34, 41));
         
-        JButton btnCancelar = new JButton("Cancelar");
-        btnCancelar.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        btnCancelar.setBackground(new Color(140, 45, 45));
-        btnCancelar.setForeground(Color.WHITE);
-        btnCancelar.setFocusPainted(false);
-        btnCancelar.setBorderPainted(false);
-        btnCancelar.setPreferredSize(new Dimension(100, 35));
-        btnCancelar.addActionListener(e -> {
-            aceptado = false;
-            dispose();
-        });
-        
-        JButton btnGuardar = new JButton("Guardar Cambios");
-        btnGuardar.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnGuardar.setBackground(new Color(45, 55, 140));
+        JButton btnGuardar = new JButton("Guardar");
+        btnGuardar.setBackground(new Color(46, 204, 113));
         btnGuardar.setForeground(Color.WHITE);
         btnGuardar.setFocusPainted(false);
-        btnGuardar.setBorderPainted(false);
-        btnGuardar.setPreferredSize(new Dimension(150, 35));
-        btnGuardar.addActionListener(e -> guardarCambios());
+        btnGuardar.addActionListener(e -> guardar());
         
-        panelBotones.add(btnCancelar);
+        JButton btnCancelar = new JButton("Cancelar");
+        btnCancelar.setBackground(new Color(231, 76, 60));
+        btnCancelar.setForeground(Color.WHITE);
+        btnCancelar.setFocusPainted(false);
+        btnCancelar.addActionListener(e -> dispose());
+        
         panelBotones.add(btnGuardar);
+        panelBotones.add(btnCancelar);
         
         add(panelBotones, BorderLayout.SOUTH);
+    }
+    
+    private void seleccionarFoto() {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
+            "Imágenes", "jpg", "jpeg", "png", "gif"));
         
-        // Cerrar con ESC
-        getRootPane().registerKeyboardAction(
-            e -> {
-                aceptado = false;
-                dispose();
-            },
-            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-            JComponent.WHEN_IN_FOCUSED_WINDOW
-        );
-        
-        // Aceptar con ENTER
-        getRootPane().setDefaultButton(btnGuardar);
-        
-        getContentPane().setBackground(new Color(30, 34, 41));
-    }
-    
-    private JLabel crearLabel(String texto) {
-        JLabel label = new JLabel(texto);
-        label.setForeground(Color.WHITE);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        return label;
-    }
-    
-    private void estilizarCampoTexto(JTextField campo) {
-        campo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        campo.setPreferredSize(new Dimension(200, 30));
-    }
-    
-    private void estilizarSpinner(JSpinner spinner) {
-        spinner.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        ((JSpinner.DefaultEditor) spinner.getEditor()).getTextField().setHorizontalAlignment(JTextField.CENTER);
-    }
-    
-    /**
-     * Extrae el número de una cadena como "180 cm" o "80 kg"
-     */
-    private int extraerNumero(String texto, int valorPorDefecto) {
-        if (texto == null || texto.trim().isEmpty()) {
-            return valorPorDefecto;
+        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            txtFotoURL.setText(chooser.getSelectedFile().getAbsolutePath());
         }
+    }
+    
+    private void guardar() {
         try {
-            // Extraer solo los dígitos
-            String numeros = texto.replaceAll("[^0-9]", "");
-            if (!numeros.isEmpty()) {
-                return Integer.parseInt(numeros);
+            // Validar campos obligatorios
+            if (txtNombre.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, 
+                    "El nombre no puede estar vacío", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+                return;
             }
-        } catch (NumberFormatException e) {
-            // Si falla, devolver valor por defecto
-        }
-        return valorPorDefecto;
-    }
-    
-    private void guardarCambios() {
-        // Validación del nombre
-        String nombre = txtNombre.getText().trim();
-        if (nombre.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                "El nombre no puede estar vacío",
-                "Error de validación",
+            
+            if (txtPosicion.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, 
+                    "La posición no puede estar vacía", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Actualizar jugador
+            jugador.setNombre(txtNombre.getText().trim());
+            jugador.setPosicion(txtPosicion.getText().trim());
+            jugador.setEdad((Integer) spnEdad.getValue());
+            jugador.setDorsal((Integer) spnDorsal.getValue());
+            jugador.setNacionalidad(txtNacionalidad.getText().trim());
+            
+            // Validar formato de altura
+            String altura = txtAltura.getText().trim();
+            if (!altura.isEmpty() && !altura.matches("\\d+cm")) {
+                altura = altura.replaceAll("[^0-9]", "") + "cm";
+            }
+            jugador.setAltura(altura.isEmpty() ? "175cm" : altura);
+            
+            // Validar formato de peso
+            String peso = txtPeso.getText().trim();
+            if (!peso.isEmpty() && !peso.matches("\\d+kg")) {
+                peso = peso.replaceAll("[^0-9]", "") + "kg";
+            }
+            jugador.setPeso(peso.isEmpty() ? "75kg" : peso);
+            
+            jugador.setFotoURL(txtFotoURL.getText().trim());
+            
+            aceptado = true;
+            dispose();
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "Error al guardar los datos: " + e.getMessage(), 
+                "Error", 
                 JOptionPane.ERROR_MESSAGE);
-            txtNombre.requestFocus();
-            return;
         }
-        
-        if (nombre.length() < 3) {
-            JOptionPane.showMessageDialog(this,
-                "El nombre debe tener al menos 3 caracteres",
-                "Error de validación",
-                JOptionPane.ERROR_MESSAGE);
-            txtNombre.requestFocus();
-            return;
-        }
-        
-        // Validación de la nacionalidad
-        String nacionalidad = txtNacionalidad.getText().trim();
-        if (nacionalidad.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                "La nacionalidad no puede estar vacía",
-                "Error de validación",
-                JOptionPane.ERROR_MESSAGE);
-            txtNacionalidad.requestFocus();
-            return;
-        }
-        
-        // Obtener valores
-        String posicion = (String) comboPosicion.getSelectedItem();
-        int dorsal = (Integer) spinnerDorsal.getValue();
-        int edad = (Integer) spinnerEdad.getValue();
-        int altura = (Integer) spinnerAltura.getValue();
-        int peso = (Integer) spinnerPeso.getValue();
-        
-        // Validación lógica adicional
-        if (edad < 16) {
-            JOptionPane.showMessageDialog(this,
-                "La edad mínima permitida es 16 años",
-                "Error de validación",
-                JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        if (altura < 150 || altura > 220) {
-            JOptionPane.showMessageDialog(this,
-                "La altura debe estar entre 150 cm y 220 cm",
-                "Error de validación",
-                JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        if (peso < 50 || peso > 150) {
-            JOptionPane.showMessageDialog(this,
-                "El peso debe estar entre 50 kg y 150 kg",
-                "Error de validación",
-                JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        // Aplicar cambios al jugador
-        jugador.setNombre(nombre);
-        jugador.setPosicion(posicion);
-        jugador.setDorsal(dorsal);
-        jugador.setEdad(edad);
-        jugador.setNacionalidad(nacionalidad);
-        jugador.setAltura(altura + " cm");
-        jugador.setPeso(peso + " kg");
-        
-        aceptado = true;
-        dispose();
     }
     
     public boolean isAceptado() {
