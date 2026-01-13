@@ -1,6 +1,18 @@
 package nuevoapp;
 
 import javax.swing.*;
+
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+
+import java.io.FileOutputStream;
 import java.awt.*;
 import java.util.List;
 
@@ -105,6 +117,8 @@ public class PanelClasificacion extends JPanel {
         lblTemp.setFont(new Font("Segoe UI", Font.BOLD, 14));
         lblTemp.setForeground(Color.WHITE);
         panelHeader.add(lblTemp);
+        
+        
 
         // ===== COMBO DE TEMPORADAS =====
         comboTemporadasClasificacion = new JComboBox<>();
@@ -123,6 +137,17 @@ public class PanelClasificacion extends JPanel {
         });
         
         panelHeader.add(comboTemporadasClasificacion);
+        
+        // ✅ BOTÓN EXPORTAR PDF (dentro del panelHeader)
+        JButton btnExportarPDF = new JButton("📄 Exportar PDF");
+        btnExportarPDF.addActionListener(e -> exportarClasificacionPDF());
+        btnExportarPDF.setForeground(Color.WHITE);
+        btnExportarPDF.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnExportarPDF.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
+        btnExportarPDF.setBackground(new Color(220, 53, 69));
+        btnExportarPDF.setFocusPainted(false);
+        panelHeader.add(btnExportarPDF);
+        
         add(panelHeader, BorderLayout.NORTH);
         
         // ===== CUERPO (TABLA) =====
@@ -198,7 +223,7 @@ public class PanelClasificacion extends JPanel {
             dlmEquipo.addElement(f.getEquipo());
             dlmPJ.addElement(f.getPj());
             dlmPG.addElement(f.getPg());
-            dlmPE.addElement(f.getPe()); // ✅ Corregido: faltaba PE
+            dlmPE.addElement(f.getPe());
             dlmPP.addElement(f.getPp());
             dlmGF.addElement(f.getGf());
             dlmGC.addElement(f.getGc());
@@ -206,5 +231,86 @@ public class PanelClasificacion extends JPanel {
             dlmPTS.addElement(f.getPuntos());
         }
     }
-}
+    
+    // ===== EXPORTAR PDF =====
+    public void exportarClasificacionPDF() {
+        // 1. Elegir ubicación del archivo
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Guardar Clasificación");
+        fileChooser.setSelectedFile(new java.io.File("Clasificacion_" + comboTemporadasClasificacion.getSelectedItem() + ".pdf"));
+        
+        int seleccion = fileChooser.showSaveDialog(this);
+        if (seleccion != JFileChooser.APPROVE_OPTION) return;
 
+        Document doc = new Document(PageSize.A4.rotate()); // Horizontal para que quepan las 10 columnas mejor
+        try {
+            PdfWriter.getInstance(doc, new FileOutputStream(fileChooser.getSelectedFile()));
+            doc.open();
+
+            // --- FUENTES (Usando nombres completos para evitar conflictos con java.awt.Font) ---
+            com.itextpdf.text.Font fontTitulo = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 18, com.itextpdf.text.Font.BOLD);
+            com.itextpdf.text.Font fontCabecera = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 10, com.itextpdf.text.Font.BOLD, BaseColor.WHITE);
+            com.itextpdf.text.Font fontCelda = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 10, com.itextpdf.text.Font.NORMAL);
+
+            // --- TÍTULO ---
+            String nombreTemp = (String) comboTemporadasClasificacion.getSelectedItem();
+            Paragraph titulo = new Paragraph("CLASIFICACIÓN - TEMPORADA: " + nombreTemp, fontTitulo);
+            titulo.setAlignment(Element.ALIGN_CENTER);
+            titulo.setSpacingAfter(20);
+            doc.add(titulo);
+
+            // --- TABLA ---
+            // Definimos 10 columnas y sus anchos proporcionales (Equipo es más ancho)
+            float[] columnWidths = {3f, 15f, 3f, 3f, 3f, 3f, 3f, 3f, 3f, 4f};
+            PdfPTable tabla = new PdfPTable(columnWidths);
+            tabla.setWidthPercentage(100);
+
+            // Cabeceras
+            String[] headers = {"Pos", "Equipo", "PJ", "PG", "PE", "PP", "GF", "GC", "Dif", "PTS"};
+            for (String h : headers) {
+                PdfPCell cell = new PdfPCell(new Phrase(h, fontCabecera));
+                cell.setBackgroundColor(new BaseColor(45, 55, 140));
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell.setPadding(5);
+                tabla.addCell(cell);
+            }
+
+            // --- CARGAR DATOS DESDE LOS MODELOS (DLM) ---
+            int totalFilas = dlmEquipo.size();
+            for (int i = 0; i < totalFilas; i++) {
+                BaseColor bgFila = (i % 2 == 0) ? new BaseColor(245, 245, 245) : BaseColor.WHITE;
+
+                // Añadimos cada celda extrayendo el dato del modelo correspondiente por el índice i
+                tabla.addCell(crearCeldaPDF(dlmPosicion.get(i).toString(), fontCelda, bgFila, Element.ALIGN_CENTER));
+                tabla.addCell(crearCeldaPDF(dlmEquipo.get(i), fontCelda, bgFila, Element.ALIGN_LEFT));
+                tabla.addCell(crearCeldaPDF(dlmPJ.get(i).toString(), fontCelda, bgFila, Element.ALIGN_CENTER));
+                tabla.addCell(crearCeldaPDF(dlmPG.get(i).toString(), fontCelda, bgFila, Element.ALIGN_CENTER));
+                tabla.addCell(crearCeldaPDF(dlmPE.get(i).toString(), fontCelda, bgFila, Element.ALIGN_CENTER));
+                tabla.addCell(crearCeldaPDF(dlmPP.get(i).toString(), fontCelda, bgFila, Element.ALIGN_CENTER));
+                tabla.addCell(crearCeldaPDF(dlmGF.get(i).toString(), fontCelda, bgFila, Element.ALIGN_CENTER));
+                tabla.addCell(crearCeldaPDF(dlmGC.get(i).toString(), fontCelda, bgFila, Element.ALIGN_CENTER));
+                tabla.addCell(crearCeldaPDF(dlmDIF.get(i).toString(), fontCelda, bgFila, Element.ALIGN_CENTER));
+                tabla.addCell(crearCeldaPDF(dlmPTS.get(i).toString(), fontCelda, bgFila, Element.ALIGN_CENTER));
+            }
+
+            doc.add(tabla);
+            doc.close();
+
+            JOptionPane.showMessageDialog(this, "PDF generado con éxito en:\n" + fileChooser.getSelectedFile().getAbsolutePath());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al generar PDF: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Método auxiliar para crear celdas con estilo rápidamente
+    private PdfPCell crearCeldaPDF(String contenido, com.itextpdf.text.Font fuente, BaseColor colorFondo, int alineacion) {
+        PdfPCell cell = new PdfPCell(new Phrase(contenido, fuente));
+        cell.setBackgroundColor(colorFondo);
+        cell.setHorizontalAlignment(alineacion);
+        cell.setPadding(5);
+        cell.setBorderColor(new BaseColor(200, 200, 200));
+        return cell;
+    }
+}

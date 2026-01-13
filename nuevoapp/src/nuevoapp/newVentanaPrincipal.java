@@ -607,10 +607,10 @@ public class newVentanaPrincipal extends JFrame implements ActionListener {
         panelCards.add(panelClasificacion, "clasificacion");
         panelClasificacionObjeto = new PanelClasificacion(datosFederacion);
         panelClasificacion.add(panelClasificacionObjeto, BorderLayout.CENTER);
-       // panelClasificacion.add(new PanelClasificacion(datosFederacion), BorderLayout.CENTER);//Metido por Maha
 
-
-
+        
+        
+        
         comboTemporadasClasificacion = new JComboBox<>();
         JLabel lblInicioTitulo = new JLabel("Bienvenido a la Federación de Balonmano");
         lblInicioTitulo.setFont(new Font("Segoe UI", Font.BOLD, 28));
