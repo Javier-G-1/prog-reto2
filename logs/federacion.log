@@ -208,3 +208,314 @@
 [2026-01-13 21:37:26] [INFO] 💾 Guardando datos antes de cerrar aplicación...
 [2026-01-13 21:37:26] [SUCCESS]  Datos guardados correctamente
 [2026-01-13 21:37:28] [INFO]  Aplicación cerrada por el usuario
+[2026-01-13 23:18:23] [INFO] Primera ejecución - Creando sistema nuevo
+[2026-01-13 23:18:23] [SUCCESS] Usuarios predeterminados creados
+[2026-01-13 23:18:23] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-13 23:18:53] [INFO] Login exitoso: admin | Rol: Administrador
+[2026-01-13 23:18:53] [INFO] ================================================================================
+[2026-01-13 23:18:53] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-13 23:18:53] [INFO] Sistema: Windows 11 10.0
+[2026-01-13 23:18:53] [INFO] Java: 21.0.8
+[2026-01-13 23:18:53] [INFO] ================================================================================
+[2026-01-13 23:18:53] [INFO] Primera ejecución detectada. Creando escenario inicial...
+[2026-01-13 23:18:53] [SUCCESS] Escenario inicial creado: Temporada 2025/26 con 6 equipos
+[2026-01-13 23:18:53] [INFO] Usuarios cargados en tabla: 4
+[2026-01-13 23:18:53] [INFO]  Sistema de auto-guardado activado (cada 5 minutos)
+[2026-01-13 23:18:54] [INFO]  Ventana principal abierta
+[2026-01-13 23:18:55] [INFO] ➖ Ventana minimizada
+[2026-01-13 23:19:14] [INFO] ⬆️ Ventana restaurada
+[2026-01-13 23:19:31] [INFO] Navegación: Equipos
+[2026-01-13 23:19:37] [INFO] Navegación: Partidos
+[2026-01-13 23:19:42] [INFO] Iniciando generación de calendario: Temporada 2025/26 | Equipos: 6
+[2026-01-13 23:19:42] [DEBUG] Fase de IDA completada - Jornadas: 5 | Partidos: 15
+[2026-01-13 23:19:42] [SUCCESS] Calendario generado completamente: Temporada 2025/26 | Equipos: 6 | Jornadas totales: 10 | Partidos totales: 30 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-13 23:19:42] [SUCCESS] Temporada activada: Temporada 2025/26 | Equipos: 6 | Jornadas creadas: 10 | Estado: FUTURA → EN JUEGO
+[2026-01-13 23:19:46] [SUCCESS] Función Txema ejecutada | Temporada 2025/26
+[2026-01-13 23:19:48] [SUCCESS] Función Txema ejecutada | Temporada 2025/26
+[2026-01-13 23:19:51] [SUCCESS] Temporada finalizada: Temporada 2025/26 | Estado: EN JUEGO → TERMINADA | Equipos: 6 | Jornadas: 10
+[2026-01-13 23:19:57] [INFO] Navegación: Clasificación
+[2026-01-13 23:20:09] [INFO] Navegación: Partidos
+[2026-01-13 23:20:17] [INFO] Copiando datos desde: Temporada 2025/26
+[2026-01-13 23:20:17] [SUCCESS] Temporada creada: Pepito | Estado: FUTURA | Equipos copiados: 6 | Jugadores copiados: 25 | Origen: Temporada 2025/26
+[2026-01-13 23:20:20] [INFO] Navegación: Equipos
+[2026-01-13 23:20:44] [SUCCESS] Escudo actualizado: Barcelona | Ruta: C:\Users\1809499A\Downloads\equipo01.png
+[2026-01-13 23:20:54] [SUCCESS] Escudo actualizado: Granada | Ruta: C:\Users\1809499A\Downloads\equipo02.png
+[2026-01-13 23:21:07] [SUCCESS] Escudo actualizado: Sevilla | Ruta: C:\Users\1809499A\Downloads\equipo03.png
+[2026-01-13 23:21:33] [SUCCESS] Escudo actualizado: Zaragoza | Ruta: C:\Users\1809499A\Downloads\equipo04.png
+[2026-01-13 23:23:53] [INFO]  Auto-guardado iniciado...
+[2026-01-13 23:23:53] [INFO] Backup automático creado: backup_20260113_232353.dat
+[2026-01-13 23:23:54] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-13 23:23:54] [SUCCESS]  Auto-guardado completado
+[2026-01-13 23:25:49] [SUCCESS] Escudo actualizado: Valencia | Ruta: C:\Users\1809499A\Downloads\equipo5.png
+[2026-01-13 23:26:00] [SUCCESS] Escudo actualizado: Athletic Club | Ruta: C:\Users\1809499A\Downloads\equipo6.png
+[2026-01-13 23:26:06] [INFO] Navegación: Jugadores
+[2026-01-13 23:26:12] [INFO] Navegación: Partidos
+[2026-01-13 23:26:15] [INFO] Navegación: Partidos
+[2026-01-13 23:26:16] [INFO] Navegación: Jugadores
+[2026-01-13 23:28:53] [INFO]  Auto-guardado iniciado...
+[2026-01-13 23:28:53] [INFO] Backup automático creado: backup_20260113_232853.dat
+[2026-01-13 23:28:53] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-13 23:28:53] [SUCCESS]  Auto-guardado completado
+[2026-01-13 23:33:53] [INFO]  Auto-guardado iniciado...
+[2026-01-13 23:33:53] [INFO] Backup automático creado: backup_20260113_233353.dat
+[2026-01-13 23:33:53] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-13 23:33:53] [SUCCESS]  Auto-guardado completado
+[2026-01-13 23:38:53] [INFO]  Auto-guardado iniciado...
+[2026-01-13 23:38:53] [INFO] Backup automático creado: backup_20260113_233853.dat
+[2026-01-13 23:38:53] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-13 23:38:53] [SUCCESS]  Auto-guardado completado
+[2026-01-13 23:43:53] [INFO]  Auto-guardado iniciado...
+[2026-01-13 23:43:53] [INFO] Backup automático creado: backup_20260113_234353.dat
+[2026-01-13 23:43:53] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-13 23:43:54] [SUCCESS]  Auto-guardado completado
+[2026-01-13 23:46:54] [SUCCESS] Jugador editado: Álvaro Mena
+[2026-01-13 23:47:09] [SUCCESS] Jugador editado: Carla Ríos
+[2026-01-13 23:47:23] [SUCCESS] Jugador editado: Ignacio Vela
+[2026-01-13 23:47:32] [SUCCESS] Jugador editado: Sofía Llorente
+[2026-01-13 23:47:41] [SUCCESS] Jugador editado: Mateo Cruz
+[2026-01-13 23:47:56] [SUCCESS] Nuevo fichaje: Eder | Equipo: Barcelona | Posición: Central | Edad: 25 | Dorsal: 1 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:48:11] [SUCCESS] Nuevo fichaje: Zuriñe | Equipo: Barcelona | Posición: Portero | Edad: 25 | Dorsal: 1 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:48:28] [SUCCESS] Jugador editado: Mateo Cruz
+[2026-01-13 23:48:35] [SUCCESS] Jugador editado: Eder
+[2026-01-13 23:48:43] [SUCCESS] Jugador editado: Zuriñe
+[2026-01-13 23:48:53] [INFO]  Auto-guardado iniciado...
+[2026-01-13 23:48:53] [INFO] Backup automático creado: backup_20260113_234853.dat
+[2026-01-13 23:48:53] [DEBUG] Backup antiguo eliminado: backup_20260113_232353.dat
+[2026-01-13 23:48:53] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-13 23:48:53] [SUCCESS]  Auto-guardado completado
+[2026-01-13 23:48:59] [SUCCESS] Nuevo fichaje: Maha | Equipo: Barcelona | Posición: Portero | Edad: 25 | Dorsal: 8 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:49:21] [SUCCESS] Nuevo fichaje: Javier | Equipo: Barcelona | Posición: Extremo Izquierdo | Edad: 25 | Dorsal: 8 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:49:34] [SUCCESS] Nuevo fichaje: Txema | Equipo: Barcelona | Posición: Portero | Edad: 25 | Dorsal: 9 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:49:46] [SUCCESS] Jugador editado: Txema
+[2026-01-13 23:49:53] [SUCCESS] Jugador editado: Maha
+[2026-01-13 23:50:07] [SUCCESS] Jugador editado: Carlos Muñoz
+[2026-01-13 23:50:16] [SUCCESS] Jugador editado: Marta Domínguez
+[2026-01-13 23:50:24] [SUCCESS] Jugador editado: Andrés Cortés
+[2026-01-13 23:50:37] [SUCCESS] Jugador editado: Lucía Palacios
+[2026-01-13 23:50:53] [SUCCESS] Nuevo fichaje: Igor | Equipo: Granada | Posición: Lateral Derecho | Edad: 25 | Dorsal: 5 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:51:06] [SUCCESS] Nuevo fichaje: Alex | Equipo: Granada | Posición: Central | Edad: 25 | Dorsal: 1 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:51:30] [SUCCESS] Nuevo fichaje: Erik | Equipo: Granada | Posición: Portero | Edad: 25 | Dorsal: 6 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:52:08] [SUCCESS] Nuevo fichaje: Alejandro | Equipo: Granada | Posición: Pivote | Edad: 25 | Dorsal: 7 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:52:20] [SUCCESS] Jugador editado: Alex
+[2026-01-13 23:52:37] [SUCCESS] Nuevo fichaje: Aritz | Equipo: Granada | Posición: Extremo Derecho | Edad: 25 | Dorsal: 9 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:53:05] [SUCCESS] Jugador editado: Marina Torres
+[2026-01-13 23:53:13] [SUCCESS] Jugador editado: Fernando Vázquez
+[2026-01-13 23:53:23] [SUCCESS] Jugador editado: Ana Beltrán
+[2026-01-13 23:53:32] [SUCCESS] Jugador editado: Rubén Márquez
+[2026-01-13 23:53:53] [INFO]  Auto-guardado iniciado...
+[2026-01-13 23:53:53] [INFO] Backup automático creado: backup_20260113_235353.dat
+[2026-01-13 23:53:53] [DEBUG] Backup antiguo eliminado: backup_20260113_232853.dat
+[2026-01-13 23:53:53] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-13 23:53:53] [SUCCESS]  Auto-guardado completado
+[2026-01-13 23:53:57] [SUCCESS] Nuevo fichaje: Yulian | Equipo: Sevilla | Posición: Lateral Derecho | Edad: 25 | Dorsal: 5 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:54:20] [SUCCESS] Nuevo fichaje: Unai | Equipo: Sevilla | Posición: Lateral Derecho | Edad: 25 | Dorsal: 6 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:54:42] [SUCCESS] Nuevo fichaje: Adrian | Equipo: Sevilla | Posición: Lateral Derecho | Edad: 25 | Dorsal: 7 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:55:00] [SUCCESS] Nuevo fichaje: Endika | Equipo: Sevilla | Posición: Pivote | Edad: 25 | Dorsal: 9 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:55:14] [SUCCESS] Jugador editado: Miguel Ortega
+[2026-01-13 23:55:24] [SUCCESS] Jugador editado: Claudia Rivas
+[2026-01-13 23:55:31] [SUCCESS] Jugador editado: Javier Torres
+[2026-01-13 23:55:42] [SUCCESS] Jugador editado: Isabel Salinas
+[2026-01-13 23:55:55] [SUCCESS] Nuevo fichaje: Jaciel | Equipo: Zaragoza | Posición: Lateral Izquierdo | Edad: 25 | Dorsal: 5 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:56:11] [SUCCESS] Nuevo fichaje: Asier | Equipo: Zaragoza | Posición: Lateral Derecho | Edad: 25 | Dorsal: 6 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:56:28] [SUCCESS] Nuevo fichaje: Jose | Equipo: Zaragoza | Posición: Pivote | Edad: 25 | Dorsal: 7 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:56:49] [SUCCESS] Nuevo fichaje: Eduardo | Equipo: Zaragoza | Posición: Pivote | Edad: 25 | Dorsal: 8 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:57:15] [SUCCESS] Nuevo fichaje: Eli | Equipo: Zaragoza | Posición: Central | Edad: 25 | Dorsal: 9 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:57:25] [SUCCESS] Jugador editado: Raúl Pérez
+[2026-01-13 23:57:32] [SUCCESS] Jugador editado: Andrea Delgado
+[2026-01-13 23:57:41] [SUCCESS] Jugador editado: Luis Navarro
+[2026-01-13 23:57:48] [SUCCESS] Jugador editado: Andrea Delgado
+[2026-01-13 23:57:57] [SUCCESS] Jugador editado: Marta Ramírez
+[2026-01-13 23:58:15] [SUCCESS] Nuevo fichaje: Itxaso | Equipo: Valencia | Posición: Lateral Derecho | Edad: 25 | Dorsal: 5 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:58:41] [SUCCESS] Nuevo fichaje: Kethia | Equipo: Valencia | Posición: Central | Edad: 25 | Dorsal: 6 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:58:53] [INFO]  Auto-guardado iniciado...
+[2026-01-13 23:58:53] [INFO] Backup automático creado: backup_20260113_235853.dat
+[2026-01-13 23:58:53] [DEBUG] Backup antiguo eliminado: backup_20260113_233353.dat
+[2026-01-13 23:58:53] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-13 23:58:53] [SUCCESS]  Auto-guardado completado
+[2026-01-13 23:58:58] [SUCCESS] Nuevo fichaje: Euken | Equipo: Valencia | Posición: Pivote | Edad: 25 | Dorsal: 8 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:59:19] [SUCCESS] Nuevo fichaje: Hugo | Equipo: Valencia | Posición: Extremo Izquierdo | Edad: 25 | Dorsal: 9 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-13 23:59:32] [SUCCESS] Jugador editado: Pablo Martínez
+[2026-01-13 23:59:39] [SUCCESS] Jugador editado: Alicia Gómez
+[2026-01-13 23:59:48] [SUCCESS] Jugador editado: Daniel Reyes
+[2026-01-13 23:59:57] [SUCCESS] Jugador editado: Elena López
+[2026-01-14 00:00:13] [SUCCESS] Nuevo fichaje: Laida | Equipo: Athletic Club | Posición: Lateral Derecho | Edad: 25 | Dorsal: 5 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-14 00:00:30] [SUCCESS] Nuevo fichaje: Igor | Equipo: Athletic Club | Posición: Central | Edad: 25 | Dorsal: 6 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-14 00:00:46] [SUCCESS] Nuevo fichaje: Maitane | Equipo: Athletic Club | Posición: Pivote | Edad: 25 | Dorsal: 7 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-14 00:01:07] [SUCCESS] Nuevo fichaje: Tetiana | Equipo: Athletic Club | Posición: Extremo Derecho | Edad: 25 | Dorsal: 9 | Nacionalidad: España | Altura: 180 cm | Peso: 80 kg | Temporada: Pepito
+[2026-01-14 00:01:28] [SUCCESS] Foto actualizada para: Ignacio Vela
+[2026-01-14 00:01:44] [SUCCESS] Foto actualizada para: Sofía Llorente
+[2026-01-14 00:01:59] [SUCCESS] Foto actualizada para: Mateo Cruz
+[2026-01-14 00:02:12] [SUCCESS] Foto actualizada para: Eder
+[2026-01-14 00:02:25] [SUCCESS] Foto actualizada para: Zuriñe
+[2026-01-14 00:02:42] [SUCCESS] Foto actualizada para: Zuriñe
+[2026-01-14 00:02:53] [SUCCESS] Foto actualizada para: Maha
+[2026-01-14 00:03:53] [INFO]  Auto-guardado iniciado...
+[2026-01-14 00:03:53] [INFO] Backup automático creado: backup_20260114_000353.dat
+[2026-01-14 00:03:53] [DEBUG] Backup antiguo eliminado: backup_20260113_233853.dat
+[2026-01-14 00:03:53] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 00:03:53] [SUCCESS]  Auto-guardado completado
+[2026-01-14 00:05:25] [SUCCESS] Foto actualizada para: Javier
+[2026-01-14 00:05:40] [SUCCESS] Foto actualizada para: Txema
+[2026-01-14 00:05:54] [SUCCESS] Foto actualizada para: Carlos Muñoz
+[2026-01-14 00:06:12] [SUCCESS] Foto actualizada para: Marta Domínguez
+[2026-01-14 00:06:25] [SUCCESS] Foto actualizada para: Andrés Cortés
+[2026-01-14 00:06:39] [SUCCESS] Foto actualizada para: Lucía Palacios
+[2026-01-14 00:07:04] [SUCCESS] Foto actualizada para: Igor
+[2026-01-14 00:07:19] [SUCCESS] Foto actualizada para: Alex
+[2026-01-14 00:07:32] [SUCCESS] Foto actualizada para: Alex
+[2026-01-14 00:07:43] [SUCCESS] Foto actualizada para: Igor
+[2026-01-14 00:07:55] [SUCCESS] Foto actualizada para: Igor
+[2026-01-14 00:08:19] [SUCCESS] Foto actualizada para: Igor
+[2026-01-14 00:08:35] [SUCCESS] Foto actualizada para: Erik
+[2026-01-14 00:08:52] [SUCCESS] Foto actualizada para: Alejandro
+[2026-01-14 00:08:53] [INFO]  Auto-guardado iniciado...
+[2026-01-14 00:08:53] [INFO] Backup automático creado: backup_20260114_000853.dat
+[2026-01-14 00:08:53] [DEBUG] Backup antiguo eliminado: backup_20260113_234353.dat
+[2026-01-14 00:08:53] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 00:08:53] [SUCCESS]  Auto-guardado completado
+[2026-01-14 00:09:06] [SUCCESS] Foto actualizada para: Aritz
+[2026-01-14 00:09:35] [SUCCESS] Foto actualizada para: Aritz
+[2026-01-14 00:09:48] [SUCCESS] Foto actualizada para: Marina Torres
+[2026-01-14 00:10:06] [SUCCESS] Foto actualizada para: Fernando Vázquez
+[2026-01-14 00:10:16] [SUCCESS] Foto actualizada para: Fernando Vázquez
+[2026-01-14 00:10:33] [SUCCESS] Foto actualizada para: Ana Beltrán
+[2026-01-14 00:10:51] [SUCCESS] Foto actualizada para: Rubén Márquez
+[2026-01-14 00:11:08] [SUCCESS] Foto actualizada para: Yulian
+[2026-01-14 00:11:20] [SUCCESS] Foto actualizada para: Unai
+[2026-01-14 00:11:33] [SUCCESS] Foto actualizada para: Unai
+[2026-01-14 00:11:54] [SUCCESS] Foto actualizada para: Adrian
+[2026-01-14 00:12:12] [SUCCESS] Foto actualizada para: Endika
+[2026-01-14 00:12:24] [SUCCESS] Foto actualizada para: Miguel Ortega
+[2026-01-14 00:12:41] [SUCCESS] Foto actualizada para: Claudia Rivas
+[2026-01-14 00:12:55] [SUCCESS] Foto actualizada para: Javier Torres
+[2026-01-14 00:13:12] [SUCCESS] Foto actualizada para: Isabel Salinas
+[2026-01-14 00:13:34] [SUCCESS] Foto actualizada para: Jaciel
+[2026-01-14 00:13:53] [INFO]  Auto-guardado iniciado...
+[2026-01-14 00:13:53] [INFO] Backup automático creado: backup_20260114_001353.dat
+[2026-01-14 00:13:53] [DEBUG] Backup antiguo eliminado: backup_20260113_234853.dat
+[2026-01-14 00:13:53] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 00:13:53] [SUCCESS]  Auto-guardado completado
+[2026-01-14 00:13:58] [SUCCESS] Foto actualizada para: Asier
+[2026-01-14 00:14:27] [SUCCESS] Foto actualizada para: Jose
+[2026-01-14 00:14:49] [SUCCESS] Foto actualizada para: Eduardo
+[2026-01-14 00:15:21] [SUCCESS] Foto actualizada para: Eli
+[2026-01-14 00:15:32] [SUCCESS] Foto actualizada para: Raúl Pérez
+[2026-01-14 00:15:44] [SUCCESS] Foto actualizada para: Andrea Delgado
+[2026-01-14 00:15:55] [SUCCESS] Foto actualizada para: Luis Navarro
+[2026-01-14 00:16:11] [SUCCESS] Foto actualizada para: Marta Ramírez
+[2026-01-14 00:16:50] [SUCCESS] Foto actualizada para: Itxaso
+[2026-01-14 00:17:06] [SUCCESS] Foto actualizada para: Kethia
+[2026-01-14 00:17:23] [SUCCESS] Foto actualizada para: Kethia
+[2026-01-14 00:17:47] [SUCCESS] Foto actualizada para: Euken
+[2026-01-14 00:18:06] [SUCCESS] Foto actualizada para: Hugo
+[2026-01-14 00:18:53] [INFO]  Auto-guardado iniciado...
+[2026-01-14 00:18:53] [INFO] Backup automático creado: backup_20260114_001853.dat
+[2026-01-14 00:18:53] [DEBUG] Backup antiguo eliminado: backup_20260113_235353.dat
+[2026-01-14 00:18:53] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 00:18:53] [SUCCESS]  Auto-guardado completado
+[2026-01-14 00:22:16] [SUCCESS] Foto actualizada para: Hugo
+[2026-01-14 00:22:31] [SUCCESS] Foto actualizada para: Pablo Martínez
+[2026-01-14 00:22:48] [SUCCESS] Foto actualizada para: Alicia Gómez
+[2026-01-14 00:23:04] [SUCCESS] Foto actualizada para: Daniel Reyes
+[2026-01-14 00:23:27] [SUCCESS] Foto actualizada para: Elena López
+[2026-01-14 00:23:53] [INFO]  Auto-guardado iniciado...
+[2026-01-14 00:23:53] [INFO] Backup automático creado: backup_20260114_002353.dat
+[2026-01-14 00:23:53] [DEBUG] Backup antiguo eliminado: backup_20260113_235853.dat
+[2026-01-14 00:23:53] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 00:23:54] [SUCCESS]  Auto-guardado completado
+[2026-01-14 00:24:25] [SUCCESS] Foto actualizada para: Laida
+[2026-01-14 00:24:49] [SUCCESS] Foto actualizada para: Igor
+[2026-01-14 00:25:08] [SUCCESS] Foto actualizada para: Maitane
+[2026-01-14 00:25:26] [SUCCESS] Foto actualizada para: Tetiana
+[2026-01-14 00:25:31] [INFO] Navegación: Jugadores
+[2026-01-14 00:25:34] [INFO] Navegación: Equipos
+[2026-01-14 00:25:37] [INFO] Navegación: Partidos
+[2026-01-14 00:25:38] [INFO] Navegación: Jugadores
+[2026-01-14 00:25:43] [INFO] Navegación: Partidos
+[2026-01-14 00:25:46] [INFO] Iniciando generación de calendario: Pepito | Equipos: 6
+[2026-01-14 00:25:46] [DEBUG] Fase de IDA completada - Jornadas: 5 | Partidos: 15
+[2026-01-14 00:25:46] [SUCCESS] Calendario generado completamente: Pepito | Equipos: 6 | Jornadas totales: 10 | Partidos totales: 30 | Sistema: Round-Robin (Ida y Vuelta)
+[2026-01-14 00:25:47] [SUCCESS] Temporada activada: Pepito | Equipos: 6 | Jornadas creadas: 10 | Estado: FUTURA → EN JUEGO
+[2026-01-14 00:25:51] [INFO] Navegación: Gestión de Usuarios
+[2026-01-14 00:25:51] [INFO] Usuarios cargados en tabla: 4
+[2026-01-14 00:27:17] [INFO] Usuarios cargados en tabla: 5
+[2026-01-14 00:27:17] [SUCCESS] Usuario creado: Javier | Rol: Árbitro
+[2026-01-14 00:27:22] [INFO] Navegación: Partidos
+[2026-01-14 00:27:24] [SUCCESS] Función Txema ejecutada | Pepito
+[2026-01-14 00:27:27] [SUCCESS] Temporada finalizada: Pepito | Estado: EN JUEGO → TERMINADA | Equipos: 6 | Jornadas: 10
+[2026-01-14 00:27:33] [INFO] Navegación: Clasificación
+[2026-01-14 00:28:13] [INFO] Iniciando exportación de datos
+[2026-01-14 00:28:16] [INFO] Carpetas de imágenes verificadas/creadas
+[2026-01-14 00:28:16] [INFO] Foto copiada: Ignacio Vela → IGNACIO_VELA_BARCELONA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Sofía Llorente → SOF_A_LLORENTE_BARCELONA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Mateo Cruz → MATEO_CRUZ_BARCELONA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Eder → EDER_BARCELONA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Zuriñe → ZURI_E_BARCELONA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Maha → MAHA_BARCELONA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Javier → JAVIER_BARCELONA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Txema → TXEMA_BARCELONA.png
+[2026-01-14 00:28:16] [INFO] Escudo copiado: Barcelona → BARCELONA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Carlos Muñoz → CARLOS_MU_OZ_GRANADA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Marta Domínguez → MARTA_DOM_NGUEZ_GRANADA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Andrés Cortés → ANDR_S_CORT_S_GRANADA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Lucía Palacios → LUC_A_PALACIOS_GRANADA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Igor → IGOR_GRANADA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Alex → ALEX_GRANADA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Erik → ERIK_GRANADA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Alejandro → ALEJANDRO_GRANADA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Aritz → ARITZ_GRANADA.png
+[2026-01-14 00:28:16] [INFO] Escudo copiado: Granada → GRANADA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Marina Torres → MARINA_TORRES_SEVILLA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Fernando Vázquez → FERNANDO_V_ZQUEZ_SEVILLA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Ana Beltrán → ANA_BELTR_N_SEVILLA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Rubén Márquez → RUB_N_M_RQUEZ_SEVILLA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Yulian → YULIAN_SEVILLA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Unai → UNAI_SEVILLA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Adrian → ADRIAN_SEVILLA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Endika → ENDIKA_SEVILLA.png
+[2026-01-14 00:28:16] [INFO] Escudo copiado: Sevilla → SEVILLA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Miguel Ortega → MIGUEL_ORTEGA_ZARAGOZA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Claudia Rivas → CLAUDIA_RIVAS_ZARAGOZA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Javier Torres → JAVIER_TORRES_ZARAGOZA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Isabel Salinas → ISABEL_SALINAS_ZARAGOZA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Jaciel → JACIEL_ZARAGOZA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Asier → ASIER_ZARAGOZA.jpg
+[2026-01-14 00:28:16] [INFO] Foto copiada: Jose → JOSE_ZARAGOZA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Eduardo → EDUARDO_ZARAGOZA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Eli → ELI_ZARAGOZA.png
+[2026-01-14 00:28:16] [INFO] Escudo copiado: Zaragoza → ZARAGOZA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Raúl Pérez → RA_L_P_REZ_VALENCIA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Andrea Delgado → ANDREA_DELGADO_VALENCIA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Luis Navarro → LUIS_NAVARRO_VALENCIA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Marta Ramírez → MARTA_RAM_REZ_VALENCIA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Itxaso → ITXASO_VALENCIA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Kethia → KETHIA_VALENCIA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Euken → EUKEN_VALENCIA.jpg
+[2026-01-14 00:28:16] [INFO] Foto copiada: Hugo → HUGO_VALENCIA.png
+[2026-01-14 00:28:16] [INFO] Escudo copiado: Valencia → VALENCIA.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Pablo Martínez → PABLO_MART_NEZ_ATHLETIC_CLUB.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Alicia Gómez → ALICIA_G_MEZ_ATHLETIC_CLUB.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Daniel Reyes → DANIEL_REYES_ATHLETIC_CLUB.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Elena López → ELENA_L_PEZ_ATHLETIC_CLUB.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Laida → LAIDA_ATHLETIC_CLUB.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Igor → IGOR_ATHLETIC_CLUB.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Maitane → MAITANE_ATHLETIC_CLUB.png
+[2026-01-14 00:28:16] [INFO] Foto copiada: Tetiana → TETIANA_ATHLETIC_CLUB.png
+[2026-01-14 00:28:16] [INFO] Escudo copiado: Athletic Club → ATHLETIC_CLUB.png
+[2026-01-14 00:28:16] [SUCCESS] Temporada 'Pepito' exportada a general.xml
+[2026-01-14 00:28:28] [INFO] Auto-guardado detenido
+[2026-01-14 00:28:28] [INFO] Guardando datos antes de cerrar sesión...
+[2026-01-14 00:28:28] [INFO] Backup automático creado: backup_20260114_002828.dat
+[2026-01-14 00:28:28] [DEBUG] Backup antiguo eliminado: backup_20260114_000353.dat
+[2026-01-14 00:28:28] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 00:28:28] [INFO] Datos guardados correctamente
+[2026-01-14 00:28:28] [INFO] Datos cargados desde datos_federacion.dat
+[2026-01-14 00:28:28] [INFO] Datos validados correctamente
+[2026-01-14 00:28:28] [INFO] Backup automático creado: backup_20260114_002828.dat
+[2026-01-14 00:28:28] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 00:28:28] [INFO] Sesión cerrada correctamente
+[2026-01-14 00:28:28] [INFO]  Ventana principal cerrada
+[2026-01-14 00:28:34] [INFO] Login exitoso: admin | Rol: Administrador
+[2026-01-14 00:28:36] [INFO] Navegación: Equipos
+[2026-01-14 00:28:37] [INFO] Navegación: Jugadores
+[2026-01-14 00:32:24] [INFO] ➖ Ventana minimizada
