@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import gestion.Jugador;
 
-public class DialogoEditarJugador extends JDialog {
+public class DialogoAgregarJugador extends JDialog {
     private static final long serialVersionUID = 1L;
     
     private JTextField txtNombre;
@@ -14,10 +14,9 @@ public class DialogoEditarJugador extends JDialog {
     private JTextField txtNacionalidad;
     private JSpinner spinnerAltura;
     private JSpinner spinnerPeso;
-    private JSpinner spinnerDorsal;
     
     private boolean aceptado = false;
-    private Jugador jugador;
+    private Jugador jugadorCreado = null;
     
     // Posiciones válidas de balonmano
     private static final String[] POSICIONES = {
@@ -30,23 +29,22 @@ public class DialogoEditarJugador extends JDialog {
         "Pivote"
     };
     
-    public DialogoEditarJugador(Frame parent, Jugador jugador) {
-        super(parent, "Editar Jugador - " + jugador.getNombre(), true);
-        
-        this.jugador = jugador;
+    // ⭐ CORREGIDO: Era DialogoEditarJugador, ahora es DialogoAgregarJugador
+    public DialogoAgregarJugador(Frame parent) {
+        super(parent, "Agregar Nuevo Jugador", true);
         
         setLayout(new BorderLayout(10, 10));
-        setSize(450, 450);
+        setSize(450, 400);
         setLocationRelativeTo(parent);
         
         // Panel principal con los campos
-        JPanel panelCampos = new JPanel(new GridLayout(7, 2, 10, 15));
+        JPanel panelCampos = new JPanel(new GridLayout(6, 2, 10, 15));
         panelCampos.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
         panelCampos.setBackground(new Color(30, 34, 41));
         
         // ===== NOMBRE =====
         JLabel lblNombre = crearLabel("Nombre:");
-        txtNombre = new JTextField(jugador.getNombre());
+        txtNombre = new JTextField();
         estilizarCampoTexto(txtNombre);
         panelCampos.add(lblNombre);
         panelCampos.add(txtNombre);
@@ -54,26 +52,14 @@ public class DialogoEditarJugador extends JDialog {
         // ===== POSICIÓN =====
         JLabel lblPosicion = crearLabel("Posición:");
         comboPosicion = new JComboBox<>(POSICIONES);
-        comboPosicion.setSelectedItem(jugador.getPosicion());
         comboPosicion.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         comboPosicion.setBackground(Color.WHITE);
         panelCampos.add(lblPosicion);
         panelCampos.add(comboPosicion);
         
-        // ===== DORSAL =====
-        JLabel lblDorsal = crearLabel("Dorsal:");
-        SpinnerNumberModel modeloDorsal = new SpinnerNumberModel(
-            jugador.getDorsal() > 0 ? jugador.getDorsal() : 1, 
-            0, 99, 1
-        );
-        spinnerDorsal = new JSpinner(modeloDorsal);
-        estilizarSpinner(spinnerDorsal);
-        panelCampos.add(lblDorsal);
-        panelCampos.add(spinnerDorsal);
-        
         // ===== EDAD =====
         JLabel lblEdad = crearLabel("Edad:");
-        SpinnerNumberModel modeloEdad = new SpinnerNumberModel(jugador.getEdad(), 16, 50, 1);
+        SpinnerNumberModel modeloEdad = new SpinnerNumberModel(25, 16, 50, 1);
         spinnerEdad = new JSpinner(modeloEdad);
         estilizarSpinner(spinnerEdad);
         panelCampos.add(lblEdad);
@@ -81,17 +67,14 @@ public class DialogoEditarJugador extends JDialog {
         
         // ===== NACIONALIDAD =====
         JLabel lblNacionalidad = crearLabel("Nacionalidad:");
-        txtNacionalidad = new JTextField(
-            jugador.getNacionalidad() != null ? jugador.getNacionalidad() : "España"
-        );
+        txtNacionalidad = new JTextField("España");
         estilizarCampoTexto(txtNacionalidad);
         panelCampos.add(lblNacionalidad);
         panelCampos.add(txtNacionalidad);
         
         // ===== ALTURA =====
         JLabel lblAltura = crearLabel("Altura (cm):");
-        int alturaActual = extraerNumero(jugador.getAltura(), 180);
-        SpinnerNumberModel modeloAltura = new SpinnerNumberModel(alturaActual, 150, 220, 1);
+        SpinnerNumberModel modeloAltura = new SpinnerNumberModel(180, 150, 220, 1);
         spinnerAltura = new JSpinner(modeloAltura);
         estilizarSpinner(spinnerAltura);
         panelCampos.add(lblAltura);
@@ -99,8 +82,7 @@ public class DialogoEditarJugador extends JDialog {
         
         // ===== PESO =====
         JLabel lblPeso = crearLabel("Peso (kg):");
-        int pesoActual = extraerNumero(jugador.getPeso(), 80);
-        SpinnerNumberModel modeloPeso = new SpinnerNumberModel(pesoActual, 50, 150, 1);
+        SpinnerNumberModel modeloPeso = new SpinnerNumberModel(80, 50, 150, 1);
         spinnerPeso = new JSpinner(modeloPeso);
         estilizarSpinner(spinnerPeso);
         panelCampos.add(lblPeso);
@@ -124,17 +106,17 @@ public class DialogoEditarJugador extends JDialog {
             dispose();
         });
         
-        JButton btnGuardar = new JButton("Guardar Cambios");
-        btnGuardar.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnGuardar.setBackground(new Color(45, 55, 140));
-        btnGuardar.setForeground(Color.WHITE);
-        btnGuardar.setFocusPainted(false);
-        btnGuardar.setBorderPainted(false);
-        btnGuardar.setPreferredSize(new Dimension(150, 35));
-        btnGuardar.addActionListener(e -> guardarCambios());
+        JButton btnAceptar = new JButton("Crear Jugador");
+        btnAceptar.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnAceptar.setBackground(new Color(45, 55, 140));
+        btnAceptar.setForeground(Color.WHITE);
+        btnAceptar.setFocusPainted(false);
+        btnAceptar.setBorderPainted(false);
+        btnAceptar.setPreferredSize(new Dimension(130, 35));
+        btnAceptar.addActionListener(e -> crearJugador());
         
         panelBotones.add(btnCancelar);
-        panelBotones.add(btnGuardar);
+        panelBotones.add(btnAceptar);
         
         add(panelBotones, BorderLayout.SOUTH);
         
@@ -149,7 +131,7 @@ public class DialogoEditarJugador extends JDialog {
         );
         
         // Aceptar con ENTER
-        getRootPane().setDefaultButton(btnGuardar);
+        getRootPane().setDefaultButton(btnAceptar);
         
         getContentPane().setBackground(new Color(30, 34, 41));
     }
@@ -171,26 +153,7 @@ public class DialogoEditarJugador extends JDialog {
         ((JSpinner.DefaultEditor) spinner.getEditor()).getTextField().setHorizontalAlignment(JTextField.CENTER);
     }
     
-    /**
-     * Extrae el número de una cadena como "180 cm" o "80 kg"
-     */
-    private int extraerNumero(String texto, int valorPorDefecto) {
-        if (texto == null || texto.trim().isEmpty()) {
-            return valorPorDefecto;
-        }
-        try {
-            // Extraer solo los dígitos
-            String numeros = texto.replaceAll("[^0-9]", "");
-            if (!numeros.isEmpty()) {
-                return Integer.parseInt(numeros);
-            }
-        } catch (NumberFormatException e) {
-            // Si falla, devolver valor por defecto
-        }
-        return valorPorDefecto;
-    }
-    
-    private void guardarCambios() {
+    private void crearJugador() {
         // Validación del nombre
         String nombre = txtNombre.getText().trim();
         if (nombre.isEmpty()) {
@@ -222,9 +185,8 @@ public class DialogoEditarJugador extends JDialog {
             return;
         }
         
-        // Obtener valores
+        // Obtener valores (ya validados por los spinners)
         String posicion = (String) comboPosicion.getSelectedItem();
-        int dorsal = (Integer) spinnerDorsal.getValue();
         int edad = (Integer) spinnerEdad.getValue();
         int altura = (Integer) spinnerAltura.getValue();
         int peso = (Integer) spinnerPeso.getValue();
@@ -254,14 +216,11 @@ public class DialogoEditarJugador extends JDialog {
             return;
         }
         
-        // Aplicar cambios al jugador
-        jugador.setNombre(nombre);
-        jugador.setPosicion(posicion);
-        jugador.setDorsal(dorsal);
-        jugador.setEdad(edad);
-        jugador.setNacionalidad(nacionalidad);
-        jugador.setAltura(altura + " cm");
-        jugador.setPeso(peso + " kg");
+        // Crear el jugador con todos los datos
+        jugadorCreado = new Jugador(nombre, posicion, edad, null);
+        jugadorCreado.setNacionalidad(nacionalidad);
+        jugadorCreado.setAltura(altura + " cm");
+        jugadorCreado.setPeso(peso + " kg");
         
         aceptado = true;
         dispose();
@@ -269,5 +228,9 @@ public class DialogoEditarJugador extends JDialog {
     
     public boolean isAceptado() {
         return aceptado;
+    }
+    
+    public Jugador getJugadorCreado() {
+        return jugadorCreado;
     }
 }
