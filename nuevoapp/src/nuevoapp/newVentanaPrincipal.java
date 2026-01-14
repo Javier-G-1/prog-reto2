@@ -1204,151 +1204,192 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
  // MÉTODOS MEJORADOS PARA newVentanaPrincipal
  // ============================================
 
- /**
-  * Crea una tarjeta mejorada de jugador con todos los datos del XML
-  */
- private JPanel crearTarjetaJugador(Jugador jugador) {
-     JPanel tarjeta = new JPanel(new BorderLayout(10, 5));
-     tarjeta.setMaximumSize(new Dimension(Integer.MAX_VALUE, 140));
-     tarjeta.setBackground(new Color(24, 25, 50));
-     tarjeta.setBorder(BorderFactory.createCompoundBorder(
-         BorderFactory.createLineBorder(new Color(60, 60, 80), 1),
-         BorderFactory.createEmptyBorder(10, 10, 10, 10)
-     ));
+    /**
+     * Crea una tarjeta mejorada de jugador con todos los datos del XML
+     */
+    private JPanel crearTarjetaJugador(Jugador jugador) {
+        JPanel tarjeta = new JPanel(new BorderLayout(10, 5));
+        tarjeta.setMaximumSize(new Dimension(Integer.MAX_VALUE, 140));
+        tarjeta.setBackground(new Color(24, 25, 50));
+        tarjeta.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(60, 60, 80), 1),
+            BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        ));
 
-     // ===== FOTO =====
-     JLabel lblFoto = new JLabel("Sin foto", SwingConstants.CENTER);
-     lblFoto.setPreferredSize(new Dimension(100, 100));
-     lblFoto.setForeground(Color.WHITE);
-   
-     lblFoto.setBackground(new Color(30, 34, 41));
-     lblFoto.setOpaque(true);
+        // ===== FOTO =====
+        JLabel lblFoto = new JLabel("Sin foto", SwingConstants.CENTER);
+        lblFoto.setPreferredSize(new Dimension(100, 100));
+        lblFoto.setForeground(Color.WHITE);
+      
+        lblFoto.setBackground(new Color(30, 34, 41));
+        lblFoto.setOpaque(true);
 
-     if (jugador.getFotoURL() != null && !jugador.getFotoURL().isEmpty()) {
-         try {
-             ImageIcon icon = new ImageIcon(
-                 new ImageIcon(jugador.getFotoURL())
-                     .getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)
-             );
-             lblFoto.setIcon(icon);
-             lblFoto.setText("");
-         } catch (Exception e) {
-             // Mantener "Sin foto" si hay error
-         }
-     }
-     tarjeta.add(lblFoto, BorderLayout.WEST);
+        if (jugador.getFotoURL() != null && !jugador.getFotoURL().isEmpty()) {
+            try {
+                ImageIcon icon = new ImageIcon(
+                    new ImageIcon(jugador.getFotoURL())
+                        .getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)
+                );
+                lblFoto.setIcon(icon);
+                lblFoto.setText("");
+            } catch (Exception e) {
+                // Mantener "Sin foto" si hay error
+            }
+        }
+        tarjeta.add(lblFoto, BorderLayout.WEST);
 
-     // ===== INFORMACIÓN PRINCIPAL =====
-     JPanel panelInfo = new JPanel();
-     panelInfo.setLayout(new BoxLayout(panelInfo, BoxLayout.Y_AXIS));
-     panelInfo.setOpaque(false);
-     panelInfo.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        // ===== INFORMACIÓN PRINCIPAL =====
+        JPanel panelInfo = new JPanel();
+        panelInfo.setLayout(new BoxLayout(panelInfo, BoxLayout.Y_AXIS));
+        panelInfo.setOpaque(false);
+        panelInfo.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-     // Nombre y Dorsal
-     JPanel panelNombreDorsal = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-     panelNombreDorsal.setOpaque(false);
-     
-     JLabel lblNombre = new JLabel(jugador.getNombre());
-     lblNombre.setForeground(Color.WHITE);
-     lblNombre.setFont(new Font("Segoe UI", Font.BOLD, 16));
-     panelNombreDorsal.add(lblNombre);
-     
-     if (jugador.getDorsal() > 0) {
-         JLabel lblDorsal = new JLabel("#" + jugador.getDorsal());
-         lblDorsal.setForeground(new Color(45, 55, 140));
-         lblDorsal.setFont(new Font("Segoe UI", Font.BOLD, 16));
-         panelNombreDorsal.add(lblDorsal);
-     }
-     panelInfo.add(panelNombreDorsal);
+        // Nombre y Dorsal
+        JPanel panelNombreDorsal = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        panelNombreDorsal.setOpaque(false);
+        
+        JLabel lblNombre = new JLabel(jugador.getNombre());
+        lblNombre.setForeground(Color.WHITE);
+        lblNombre.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        panelNombreDorsal.add(lblNombre);
+        
+        if (jugador.getDorsal() > 0) {
+            JLabel lblDorsal = new JLabel("#" + jugador.getDorsal());
+            lblDorsal.setForeground(new Color(45, 55, 140));
+            lblDorsal.setFont(new Font("Segoe UI", Font.BOLD, 16));
+            panelNombreDorsal.add(lblDorsal);
+        }
+        panelInfo.add(panelNombreDorsal);
 
-     // Posición
-     JLabel lblPos = new JLabel(" " + jugador.getPosicion());
-     lblPos.setForeground(new Color(100, 181, 246));
-     lblPos.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-     panelInfo.add(lblPos);
+        // Posición
+        JLabel lblPos = new JLabel(" " + jugador.getPosicion());
+        lblPos.setForeground(new Color(100, 181, 246));
+        lblPos.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        panelInfo.add(lblPos);
 
-     // Nacionalidad y Edad
-     JPanel panelNacEdad = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
-     panelNacEdad.setOpaque(false);
-     
-     JLabel lblNacionalidad = new JLabel(" " + jugador.getNacionalidad());
-     lblNacionalidad.setForeground(new Color(220, 220, 220));
-     lblNacionalidad.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-     panelNacEdad.add(lblNacionalidad);
-     
-     JLabel lblEdad = new JLabel(" " + jugador.getEdad() + " años");
-     lblEdad.setForeground(new Color(220, 220, 220));
-     lblEdad.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-     panelNacEdad.add(lblEdad);
-     
-     panelInfo.add(panelNacEdad);
+        // Nacionalidad y Edad
+        JPanel panelNacEdad = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
+        panelNacEdad.setOpaque(false);
+        
+        JLabel lblNacionalidad = new JLabel(" " + jugador.getNacionalidad());
+        lblNacionalidad.setForeground(new Color(220, 220, 220));
+        lblNacionalidad.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        panelNacEdad.add(lblNacionalidad);
+        
+        JLabel lblEdad = new JLabel(" " + jugador.getEdad() + " años");
+        lblEdad.setForeground(new Color(220, 220, 220));
+        lblEdad.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        panelNacEdad.add(lblEdad);
+        
+        panelInfo.add(panelNacEdad);
 
-     // Altura y Peso
-     JPanel panelFisico = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
-     panelFisico.setOpaque(false);
-     
-     JLabel lblAltura = new JLabel(" " + jugador.getAltura());
-     lblAltura.setForeground(new Color(220, 220, 220));
-     lblAltura.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-     panelFisico.add(lblAltura);
-     
-     JLabel lblPeso = new JLabel(" " + jugador.getPeso());
-     lblPeso.setForeground(new Color(220, 220, 220));
-     lblPeso.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-     panelFisico.add(lblPeso);
-     
-     panelInfo.add(panelFisico);
+        // Altura y Peso
+        JPanel panelFisico = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
+        panelFisico.setOpaque(false);
+        
+        JLabel lblAltura = new JLabel(" " + jugador.getAltura());
+        lblAltura.setForeground(new Color(220, 220, 220));
+        lblAltura.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        panelFisico.add(lblAltura);
+        
+        JLabel lblPeso = new JLabel(" " + jugador.getPeso());
+        lblPeso.setForeground(new Color(220, 220, 220));
+        lblPeso.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        panelFisico.add(lblPeso);
+        
+        panelInfo.add(panelFisico);
 
-     tarjeta.add(panelInfo, BorderLayout.CENTER);
+        tarjeta.add(panelInfo, BorderLayout.CENTER);
 
-     // ===== EVENTO DE SELECCIÓN =====
-     tarjeta.addMouseListener(new MouseAdapter() {
-         @Override
-         public void mouseClicked(MouseEvent e) {
-             jugadorSeleccionado = jugador;
+        // ===== PANEL BOTONES (DERECHA) =====
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        panelBotones.setOpaque(false);
 
-             // Desmarcar todas las tarjetas
-             for (Component c : panelTarjetasJugadores.getComponents()) {
-                 if (c instanceof JPanel) {
-                     c.setBackground(new Color(24, 25, 50));
-                     ((JPanel) c).setBorder(BorderFactory.createCompoundBorder(
-                         BorderFactory.createLineBorder(new Color(60, 60, 80), 1),
-                         BorderFactory.createEmptyBorder(10, 10, 10, 10)
-                     ));
-                 }
-             }
+        JButton btnEliminarJugador = new JButton("Eliminar");
+        btnEliminarJugador.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        btnEliminarJugador.setBackground(new Color(231, 76, 60)); // Rojo
+        btnEliminarJugador.setForeground(Color.WHITE);
+        btnEliminarJugador.setFocusPainted(false);
+        btnEliminarJugador.setBorderPainted(false);
+        btnEliminarJugador.setPreferredSize(new Dimension(90, 30));
 
-             // Marcar tarjeta seleccionada
-             tarjeta.setBackground(new Color(45, 55, 140));
-             tarjeta.setBorder(BorderFactory.createCompoundBorder(
-                 BorderFactory.createLineBorder(new Color(100, 150, 255), 2),
-                 BorderFactory.createEmptyBorder(10, 10, 10, 10)
-             ));
-         }
-         
-         @Override
-         public void mouseEntered(MouseEvent e) {
-             if (jugadorSeleccionado != jugador) {
-                 tarjeta.setBorder(BorderFactory.createCompoundBorder(
-                     BorderFactory.createLineBorder(new Color(80, 90, 140), 2),
-                     BorderFactory.createEmptyBorder(10, 10, 10, 10)
-                 ));
-             }
-         }
-         
-         @Override
-         public void mouseExited(MouseEvent e) {
-             if (jugadorSeleccionado != jugador) {
-                 tarjeta.setBorder(BorderFactory.createCompoundBorder(
-                     BorderFactory.createLineBorder(new Color(60, 60, 80), 1),
-                     BorderFactory.createEmptyBorder(10, 10, 10, 10)
-                 ));
-             }
-         }
-     });
+        // Seguridad: Solo Administrador
+        if (rolUsuario != Rol.ADMINISTRADOR) {
+            btnEliminarJugador.setVisible(false);
+        }
 
-     return tarjeta;
- }
+        btnEliminarJugador.addActionListener(e -> {
+            String tempNombre = (String) comboTemporadasJugadores.getSelectedItem();
+            Temporada temp = datosFederacion.buscarTemporadaPorNombre(tempNombre);
+            
+            if (temp != null && !temp.getEstado().equals(Temporada.FUTURA)) {
+                JOptionPane.showMessageDialog(this, "Solo se pueden eliminar jugadores en temporadas FUTURAS", "Operación no permitida", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            int confirmar = JOptionPane.showConfirmDialog(this, "¿Estás seguro de eliminar al jugador '" + jugador.getNombre() + "'?", "Confirmar", JOptionPane.YES_NO_OPTION);
+            if (confirmar == JOptionPane.YES_OPTION && temp != null) {
+                String eqNombre = (String) comboEquiposJugadores.getSelectedItem();
+                Equipo eq = temp.buscarEquipoPorNombre(eqNombre);
+                if (eq != null) {
+                    eq.getPlantilla().remove(jugador);
+                    actualizarJugadoresPorTemporada(tempNombre, eqNombre);
+                    GestorLog.exito("Jugador eliminado: " + jugador.getNombre());
+                }
+            }
+        });
+
+        panelBotones.add(btnEliminarJugador);
+        tarjeta.add(panelBotones, BorderLayout.EAST);
+
+        // ===== EVENTO DE SELECCIÓN =====
+        tarjeta.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                jugadorSeleccionado = jugador;
+
+                // Desmarcar todas las tarjetas
+                for (Component c : panelTarjetasJugadores.getComponents()) {
+                    if (c instanceof JPanel) {
+                        c.setBackground(new Color(24, 25, 50));
+                        ((JPanel) c).setBorder(BorderFactory.createCompoundBorder(
+                            BorderFactory.createLineBorder(new Color(60, 60, 80), 1),
+                            BorderFactory.createEmptyBorder(10, 10, 10, 10)
+                        ));
+                    }
+                }
+
+                // Marcar tarjeta seleccionada
+                tarjeta.setBackground(new Color(45, 55, 140));
+                tarjeta.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(new Color(100, 150, 255), 2),
+                    BorderFactory.createEmptyBorder(10, 10, 10, 10)
+                ));
+            }
+            
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (jugadorSeleccionado != jugador) {
+                    tarjeta.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(new Color(80, 90, 140), 2),
+                        BorderFactory.createEmptyBorder(10, 10, 10, 10)
+                    ));
+                }
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (jugadorSeleccionado != jugador) {
+                    tarjeta.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(new Color(60, 60, 80), 1),
+                        BorderFactory.createEmptyBorder(10, 10, 10, 10)
+                    ));
+                }
+            }
+        });
+
+        return tarjeta;
+    }
 
  /**
   * Crea una tarjeta mejorada de equipo con estadísticas
@@ -1517,7 +1558,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
      btnEliminarEquipo.setFont(new Font("Segoe UI", Font.PLAIN, 11));
      btnEliminarEquipo.setBackground(new Color(231, 76, 60)); // Rojo
      btnEliminarEquipo.setForeground(Color.WHITE);
-     btnEliminarEquipo.setFocusPainted(false);
+     btnEliminarEquipo.setFocusPainted(false);/////////////////////
      btnEliminarEquipo.setBorderPainted(false);
      btnEliminarEquipo.setPreferredSize(new Dimension(90, 30));
      
