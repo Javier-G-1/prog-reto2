@@ -1208,13 +1208,13 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
      * Crea una tarjeta mejorada de jugador con todos los datos del XML
      */
     private JPanel crearTarjetaJugador(Jugador jugador) {
-        JPanel tarjeta = new JPanel(new BorderLayout(10, 5));
-        tarjeta.setMaximumSize(new Dimension(Integer.MAX_VALUE, 140));
-        tarjeta.setBackground(new Color(24, 25, 50));
-        tarjeta.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(60, 60, 80), 1),
-            BorderFactory.createEmptyBorder(10, 10, 10, 10)
-        ));
+    	  JPanel tarjeta = new JPanel(new BorderLayout(10, 5));
+    	     tarjeta.setMaximumSize(new Dimension(Integer.MAX_VALUE, 140));
+    	     tarjeta.setBackground(new Color(24, 25, 50));
+    	     tarjeta.setBorder(BorderFactory.createCompoundBorder(
+    	         BorderFactory.createLineBorder(new Color(60, 60, 80), 1),
+    	         BorderFactory.createEmptyBorder(10, 10, 10, 10)
+    	     ));
 
         // ===== FOTO =====
         JLabel lblFoto = new JLabel("Sin foto", SwingConstants.CENTER);
@@ -1231,8 +1231,11 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
                 );
                 lblFoto.setIcon(icon);
                 lblFoto.setText("");
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                // Mantener "Sin foto" si hay error
+            }
         }
+
         tarjeta.add(lblFoto, BorderLayout.WEST);
 
         // ===== INFORMACIÓN PRINCIPAL =====
@@ -1244,10 +1247,12 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
         // Nombre y Dorsal
         JPanel panelNombreDorsal = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         panelNombreDorsal.setOpaque(false);
+        
         JLabel lblNombre = new JLabel(jugador.getNombre());
         lblNombre.setForeground(Color.WHITE);
         lblNombre.setFont(new Font("Segoe UI", Font.BOLD, 16));
         panelNombreDorsal.add(lblNombre);
+
         
         if (jugador.getDorsal() > 0) {
             JLabel lblDorsal = new JLabel("#" + jugador.getDorsal());
@@ -1257,19 +1262,47 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
         }
         panelInfo.add(panelNombreDorsal);
 
+
         // Posición, Nacionalidad, Edad, Altura, Peso (Se mantienen igual...)
         JLabel lblPos = new JLabel(" " + jugador.getPosicion());
         lblPos.setForeground(new Color(100, 181, 246));
         lblPos.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         panelInfo.add(lblPos);
 
+
         JPanel panelNacEdad = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
         panelNacEdad.setOpaque(false);
-        panelNacEdad.add(new JLabel(" " + jugador.getNacionalidad()) {{ setForeground(new Color(220, 220, 220)); }});
-        panelNacEdad.add(new JLabel(" " + jugador.getEdad() + " años") {{ setForeground(new Color(220, 220, 220)); }});
+        
+        JLabel lblNacionalidad = new JLabel(" " + jugador.getNacionalidad());
+        lblNacionalidad.setForeground(new Color(220, 220, 220));
+        lblNacionalidad.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        panelNacEdad.add(lblNacionalidad);
+        
         panelInfo.add(panelNacEdad);
 
+        JLabel lblEdad = new JLabel(" " + jugador.getEdad() + " años");
+        lblEdad.setForeground(new Color(220, 220, 220));
+        lblEdad.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        panelNacEdad.add(lblEdad);
+
+        // Altura y Peso
+        JPanel panelFisico = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
+        panelFisico.setOpaque(false);
+        
+        JLabel lblAltura = new JLabel(" " + jugador.getAltura());
+        lblAltura.setForeground(new Color(220, 220, 220));
+        lblAltura.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        panelFisico.add(lblAltura);
+        
+        JLabel lblPeso = new JLabel(" " + jugador.getPeso());
+        lblPeso.setForeground(new Color(220, 220, 220));
+        lblPeso.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        panelFisico.add(lblPeso);
+        
+        panelInfo.add(panelFisico);
+
         tarjeta.add(panelInfo, BorderLayout.CENTER);
+
 
         // ===== PANEL BOTONES (DERECHA) (Visible para admin y manager) =====
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));

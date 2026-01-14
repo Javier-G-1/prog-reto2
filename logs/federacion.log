@@ -949,3 +949,20 @@
 [2026-01-14 10:06:10] [INFO]  Ventana principal abierta
 [2026-01-14 10:06:12] [INFO] Navegación: Jugadores
 [2026-01-14 10:06:18] [INFO] ➖ Ventana minimizada
+[2026-01-14 17:00:01] [INFO] Datos cargados desde datos_federacion.dat
+[2026-01-14 17:00:01] [INFO] Datos validados correctamente
+[2026-01-14 17:00:01] [INFO] Backup automático creado: backup_20260114_170001.dat
+[2026-01-14 17:00:01] [DEBUG] Backup antiguo eliminado: backup_20260114_100252.dat
+[2026-01-14 17:00:01] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 17:00:08] [INFO] Login exitoso: admin | Rol: Administrador
+[2026-01-14 17:00:08] [INFO] ================================================================================
+[2026-01-14 17:00:08] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-14 17:00:08] [INFO] Sistema: Windows 11 10.0
+[2026-01-14 17:00:08] [INFO] Java: 21.0.8
+[2026-01-14 17:00:08] [INFO] ================================================================================
+[2026-01-14 17:00:08] [INFO] Datos ya cargados desde archivo. No se crea escenario inicial.
+[2026-01-14 17:00:08] [INFO] Usuarios cargados en tabla: 5
+[2026-01-14 17:00:08] [INFO]  Sistema de auto-guardado activado (cada 5 minutos)
+[2026-01-14 17:00:08] [INFO]  Ventana principal abierta
+[2026-01-14 17:00:10] [INFO] Navegación: Jugadores
+[2026-01-14 17:00:18] [WARN]  Aplicación cerrada sin guardar cambios
