@@ -786,13 +786,14 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
         }
 
         else if (e.getSource() == btnCambiarFoto) {
-            // --- PROTECCIÓN DE SEGURIDAD ---
-            if (rolUsuario != Rol.ADMINISTRADOR && rolUsuario != Rol.MANAGER) {
-                JOptionPane.showMessageDialog(this, "No tienes permisos para realizar esta acción.");
-                return;
-                
-            }
-
+        	 if (rolUsuario != Rol.ADMINISTRADOR && rolUsuario != Rol.MANAGER) {
+				 JOptionPane.showMessageDialog(this,
+					 "No tienes permisos para cambiar fotos de jugadores.",
+					 "Acceso denegado",
+					 JOptionPane.ERROR_MESSAGE);
+				 GestorLog.advertencia("Usuario sin permisos intentó cambiar foto: " + rolUsuario);
+				 return;
+			 }
             if (jugadorSeleccionado == null) {
                 JOptionPane.showMessageDialog(this, "Selecciona un jugador");
                 GestorLog.advertencia("Intento de cambiar foto sin jugador seleccionado");
@@ -811,14 +812,62 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
                 return;
             }
             
+            // ⭐ CONFIGURAR FILECHOOSER CON FILTRO DE IMÁGENES
             JFileChooser chooser = new JFileChooser();
+            chooser.setDialogTitle("Seleccionar foto del jugador");
+            chooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+                @Override
+                public boolean accept(java.io.File f) {
+                    if (f.isDirectory()) return true;
+                    String nombre = f.getName().toLowerCase();
+                    return nombre.endsWith(".jpg") || nombre.endsWith(".jpeg") || 
+                           nombre.endsWith(".png") || nombre.endsWith(".gif");
+                }
+                
+                @Override
+                public String getDescription() {
+                    return "Imágenes (*.jpg, *.png, *.gif)";
+                }
+            });
+            
             if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                jugadorSeleccionado.setFotoURL(chooser.getSelectedFile().getAbsolutePath());
-                actualizarJugadoresPorTemporada((String) comboTemporadasJugadores.getSelectedItem(), 
-                                               (String) comboEquiposJugadores.getSelectedItem());
-                GestorLog.exito("Foto actualizada para: " + jugadorSeleccionado.getNombre());
+                String rutaOriginal = chooser.getSelectedFile().getAbsolutePath();
+                
+                // ⭐ COPIAR FOTO A LA CARPETA DE LA APP
+                String equipoActual = obtenerEquipoDeJugador(jugadorSeleccionado);
+                String rutaRelativa = GestorArchivos.copiarFotoJugador(
+                    rutaOriginal, 
+                    jugadorSeleccionado.getNombre(),
+                    equipoActual
+                );
+                
+                if (rutaRelativa != null) {
+                    jugadorSeleccionado.setFotoURL(rutaRelativa);
+                    
+                    // Refrescar vista
+                    actualizarJugadoresPorTemporada(
+                        (String) comboTemporadasJugadores.getSelectedItem(), 
+                        (String) comboEquiposJugadores.getSelectedItem()
+                    );
+                    
+                    // ⭐ GUARDAR INMEDIATAMENTE
+                    GestorArchivos.guardarTodo(datosFederacion);
+                    
+                    GestorLog.exito("Foto actualizada para: " + jugadorSeleccionado.getNombre());
+                    
+                    JOptionPane.showMessageDialog(this,
+                        "Foto actualizada correctamente",
+                        "Éxito",
+                        JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                        "Error al copiar la foto. Revisa los logs.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
+        
 
         else if (e.getSource() == btnCambiarEquipo) {
             if (jugadorSeleccionado == null) {
@@ -917,26 +966,27 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
                 return;
             }
 
-            // ⭐ NUEVO: Mostrar diálogo mejorado para agregar jugador
-            DialogoAgregarJugador dialogo = new DialogoAgregarJugador(this);
-            dialogo.setVisible(true);
+            // ⭐ Buscar el equipo destino
+            Equipo equipoDestino = t != null ? t.buscarEquipoPorNombre(equipoSel) : null;
             
+            if (equipoDestino == null) {
+                JOptionPane.showMessageDialog(this, "No se encontró el equipo seleccionado");
+                return;
+            }
+            
+            // ⭐ Crear diálogo y pasar el equipo para validar dorsales
+            DialogoAgregarJugador dialogo = new DialogoAgregarJugador((Frame) this);
+            dialogo.setEquipoDestino(equipoDestino);
+            dialogo.setVisible(true);          
             if (dialogo.isAceptado()) {
                 Jugador nuevo = dialogo.getJugadorCreado();
                 
-                if (t != null && nuevo != null) {
-                    boolean encontrado = false;
-                    for (Equipo eq : t.getEquiposParticipantes()) {
-                        if (eq.getNombre().equals(equipoSel)) {
-                            eq.ficharJugador(nuevo);
-                            encontrado = true;
-                            break;
-                        }
-                    }
-                    
-                    if (encontrado) {
-                        actualizarJugadoresPorTemporada((String) comboTemporadasJugadores.getSelectedItem(),
-                                                       (String) comboEquiposJugadores.getSelectedItem());
+                if (nuevo != null) {
+                    try {
+                        // ⭐ La validación de dorsal único se hace automáticamente en ficharJugador
+                        equipoDestino.ficharJugador(nuevo);
+                        
+                        actualizarJugadoresPorTemporada(tempNom, equipoSel);
                         
                         GestorLog.exito("Nuevo fichaje: " + nuevo.getNombre() + " | Equipo: " + equipoSel + 
                                       " | Posición: " + nuevo.getPosicion() + " | Edad: " + nuevo.getEdad() + 
@@ -950,6 +1000,13 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
                             "Jugador " + nuevo.getNombre() + " fichado con éxito en " + equipoSel,
                             "Fichaje exitoso",
                             JOptionPane.INFORMATION_MESSAGE);
+                            
+                    } catch (IllegalArgumentException ex) {
+                        JOptionPane.showMessageDialog(this,
+                            ex.getMessage(),
+                            "Error al fichar jugador",
+                            JOptionPane.ERROR_MESSAGE);
+                        GestorLog.advertencia("Error al fichar: " + ex.getMessage());
                     }
                 }
             }
@@ -1451,17 +1508,63 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
             Temporada temporadaActual = datosFederacion.buscarTemporadaPorNombre(nombreTemporada);
             
             if (temporadaActual != null && !temporadaActual.getEstado().equals(Temporada.FUTURA)) {
-                JOptionPane.showMessageDialog(this, "Solo se pueden cambiar escudos en temporadas FUTURAS", "Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, 
+                    "Solo se pueden cambiar escudos en temporadas FUTURAS", 
+                    "Error", 
+                    JOptionPane.WARNING_MESSAGE);
                 return;
             }
             
+            // ⭐ CONFIGURAR FILECHOOSER
             JFileChooser chooser = new JFileChooser();
+            chooser.setDialogTitle("Seleccionar escudo del equipo");
+            chooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+                @Override
+                public boolean accept(java.io.File f) {
+                    if (f.isDirectory()) return true;
+                    String nombre = f.getName().toLowerCase();
+                    return nombre.endsWith(".jpg") || nombre.endsWith(".jpeg") || 
+                           nombre.endsWith(".png") || nombre.endsWith(".gif");
+                }
+                
+                @Override
+                public String getDescription() {
+                    return "Imágenes (*.jpg, *.png, *.gif)";
+                }
+            });
+            
             if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                String rutaEscudo = chooser.getSelectedFile().getAbsolutePath();
-                if (equipo != null) equipo.setRutaEscudo(rutaEscudo);
-                lblEscudo.setIcon(new ImageIcon(new ImageIcon(rutaEscudo).getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH)));
-                lblEscudo.setText("");
-                GestorLog.exito("Escudo actualizado: " + nombreEquipo);
+                String rutaOriginal = chooser.getSelectedFile().getAbsolutePath();
+                
+                // ⭐ COPIAR ESCUDO A LA CARPETA DE LA APP
+                String rutaRelativa = GestorArchivos.copiarEscudo(rutaOriginal, nombreEquipo);
+                
+                if (rutaRelativa != null && equipo != null) {
+                    equipo.setRutaEscudo(rutaRelativa);
+                    
+                    // Actualizar imagen en la interfaz
+                    ImageIcon iconoNuevo = new ImageIcon(
+                        new ImageIcon(rutaRelativa).getImage()
+                            .getScaledInstance(90, 90, Image.SCALE_SMOOTH)
+                    );
+                    lblEscudo.setIcon(iconoNuevo);
+                    lblEscudo.setText("");
+                    
+                    // ⭐ GUARDAR INMEDIATAMENTE
+                    GestorArchivos.guardarTodo(datosFederacion);
+                    
+                    GestorLog.exito("Escudo actualizado: " + nombreEquipo);
+                    
+                    JOptionPane.showMessageDialog(this,
+                        "Escudo actualizado correctamente",
+                        "Éxito",
+                        JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                        "Error al copiar el escudo. Revisa los logs.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
         panelBotones.add(btnCambiarEscudo);
@@ -1560,11 +1663,16 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
     private JPanel crearTarjetaPartido(Partido p) {
         JPanel card = new JPanel(new BorderLayout(20, 0));
         card.setBackground(new Color(24, 25, 50));
-        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+        card.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(60, 60, 80), 1),
+            BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        ));
        
         JPanel panelIzquierda = new JPanel(new BorderLayout(10, 0));
         panelIzquierda.setOpaque(false);
         
+        // Indicador de estado del partido
         JLabel lblEstadoPartido = new JLabel("●");
         lblEstadoPartido.setFont(new Font("Segoe UI", Font.BOLD, 24));
         if (p.isFinalizado()) {
@@ -1576,18 +1684,44 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
         }
         panelIzquierda.add(lblEstadoPartido, BorderLayout.WEST);
 
-        String textoPartido = p.getEquipoLocal().getNombre() + " vs " + p.getEquipoVisitante().getNombre();
-        if (p.isFinalizado()) {
-            textoPartido += "  (" + p.getGolesLocal() + " - " + p.getGolesVisitante() + ")";
-        }
+        // ⭐ PANEL DE EQUIPOS CON COLORES DIFERENCIADOS
+        JPanel panelEquipos = new JPanel(new GridLayout(1, 3, 5, 0));
+        panelEquipos.setOpaque(false);
         
-        JLabel lblEquipos = new JLabel(textoPartido);
-        lblEquipos.setForeground(Color.WHITE);
-        lblEquipos.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        panelIzquierda.add(lblEquipos, BorderLayout.CENTER);
-
+        // Equipo Local
+        JLabel lblLocal = new JLabel(p.getEquipoLocal().getNombre());
+        lblLocal.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblLocal.setForeground(new Color(100, 181, 246)); // Azul claro
+        lblLocal.setHorizontalAlignment(SwingConstants.RIGHT);
+        lblLocal.setToolTipText("Equipo Local");
+        
+        // Resultado
+        String resultado;
+        if (p.isFinalizado()) {
+            resultado = p.getGolesLocal() + " - " + p.getGolesVisitante();
+        } else {
+            resultado = "vs";
+        }
+        JLabel lblResultado = new JLabel(resultado);
+        lblResultado.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        lblResultado.setForeground(Color.WHITE);
+        lblResultado.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        // Equipo Visitante
+        JLabel lblVisitante = new JLabel(p.getEquipoVisitante().getNombre());
+        lblVisitante.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblVisitante.setForeground(new Color(255, 183, 77)); // Naranja claro
+        lblVisitante.setHorizontalAlignment(SwingConstants.LEFT);
+        lblVisitante.setToolTipText("Equipo Visitante");
+        
+        panelEquipos.add(lblLocal);
+        panelEquipos.add(lblResultado);
+        panelEquipos.add(lblVisitante);
+        
+        panelIzquierda.add(panelEquipos, BorderLayout.CENTER);
         card.add(panelIzquierda, BorderLayout.CENTER);
 
+        // Botón de resultado
         JButton btnGoles = new JButton(p.isFinalizado() ? "Editar Resultado" : "Anotar Goles");
         btnGoles.setFocusPainted(false);
         btnGoles.setBackground(p.isFinalizado() ? new Color(70, 70, 70) : new Color(45, 55, 140));
@@ -1618,7 +1752,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
                               p.getEquipoVisitante().getNombre() + " | Temporada: " + tempNom);
                 
                 actualizarVistaPartidos();
-                actualizarIndicadorEstadoPartidos(); // ← AÑADIR ESTA LÍNEA
+                actualizarIndicadorEstadoPartidos();
                 
                 if (panelClasificacion.isVisible()) {
                     actualizarTablaClasificacionGrafica();
@@ -1630,7 +1764,6 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
         
         return card;
     }
-
  
     private void actualizarIndicadorEstadoTemporada() {
         JLabel lblEstadoTemp = null;
@@ -2227,39 +2360,42 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
     	}
 	}
 
-	public void despuesDelLogin(Rol rol, String nombre) {
-        this.rolUsuario = rol; // Guardamos el rol para validaciones en tarjetas
+    public void despuesDelLogin(Rol rol, String nombre) {
+        this.rolUsuario = rol;
         this.lblBienvenido.setText("Bienvenido, " + nombre);
         this.lblUsuario.setText("Rol: " + rol.getNombreLegible());
         
-        // 1. Limpieza de seguridad
+        // ⭐ PANTALLA COMPLETA
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        
+        // Limpieza de seguridad
         ocultarTodosLosControles();
 
-        // 2. Aplicación de permisos específicos
+        // Aplicación de permisos específicos
         switch (rol) {
             case ADMINISTRADOR:
                 mostrarTodo(true);
-                btnCambiarFoto.setVisible(true); 
+                btnCambiarFoto.setVisible(true);
+                btnExportar.setVisible(true);
+                btnGestionUsuario.setVisible(true);
                 break;
 
             case ARBITRO:
                 habilitarNavegacionBasica();
-                panelAdminPartidos_1.setVisible(true); 
+                panelAdminPartidos_1.setVisible(true);
                 btnNuevaJor.setVisible(true);
                 btnNuevoPart.setVisible(true);
                 btnCambiarFoto.setVisible(false);
                 btnExportar.setVisible(false);
                 btnGestionUsuario.setVisible(false);
-                // El árbitro no crea temporadas, solo gestiona las existentes
-                btnNuevaTemp_1.setVisible(false); 
+                btnNuevaTemp_1.setVisible(false);
                 break;
 
             case MANAGER:
                 habilitarNavegacionBasica();
-                // El Manager se centra en la gestión de la plantilla y el club
                 btnJugadores.setVisible(true);
                 btnVerFoto.setVisible(true);
-                btnCambiarFoto.setVisible(true); // Cambiar escudo/foto
+                btnCambiarFoto.setVisible(true);
                 btnAgregarJugador.setVisible(true);
                 btnCambiarEquipo.setVisible(true);
                 btnExportar.setVisible(false);
@@ -2270,16 +2406,22 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
             case INVITADO:
             default:
                 habilitarNavegacionBasica();
-                btnVerFoto.setVisible(true); 
-                panelAdminPartidos_1.setVisible(true); // El invitado solo puede ver
+                btnVerFoto.setVisible(true);
+                panelAdminPartidos_1.setVisible(true);
                 btnCambiarFoto.setVisible(false);
                 btnInscribirEquipo.setVisible(false);
                 btnExportar.setVisible(false);
                 btnGestionUsuario.setVisible(false);
                 break;
         }
+        
+        // ⭐ FORZAR ACTUALIZACIÓN VISUAL
+        revalidate();
+        repaint();
+        
+        GestorLog.info("Sesión iniciada - Usuario: " + nombre + " | Rol: " + rol.getNombreLegible());
     }
-	private void cerrarSesion() {
+    private void cerrarSesion() {
         int respuesta = JOptionPane.showConfirmDialog(this, 
                 "¿Estás seguro de que quieres cerrar la sesión?", 
                 "Cerrar Sesión", 
@@ -2287,7 +2429,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
                 JOptionPane.QUESTION_MESSAGE);
 
         if (respuesta == JOptionPane.YES_OPTION) {
-            // ⭐ Detener el auto-guardado
+            // Detener el auto-guardado
             if (autoSaveTimer != null && autoSaveTimer.isRunning()) {
                 autoSaveTimer.stop();
                 GestorLog.info("Auto-guardado detenido");
@@ -2298,7 +2440,9 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
             GestorArchivos.guardarTodo(datosFederacion);
             GestorLog.info("Datos guardados correctamente");
             
-            this.rolUsuario = null;
+            // ⭐ NO limpiar rolUsuario - preservar estado
+            // this.rolUsuario = null; ← ELIMINADO
+            
             this.dispose();
             
             Login ventanaLogin = new Login();
@@ -2424,6 +2568,23 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
         String nombreTemp = seleccion.split(" \\[")[0];
         return datosFederacion.buscarTemporadaPorNombre(nombreTemp);
     }
+    private String obtenerEquipoDeJugador(Jugador jugador) {
+        if (jugador == null) return "SIN_EQUIPO";
+        
+        String tempNom = (String) comboTemporadasJugadores.getSelectedItem();
+        if (tempNom == null) return "SIN_EQUIPO";
+        
+        Temporada temp = datosFederacion.buscarTemporadaPorNombre(tempNom);
+        if (temp == null) return "SIN_EQUIPO";
+        
+        for (Equipo eq : temp.getEquiposParticipantes()) {
+            if (eq.getPlantilla().contains(jugador)) {
+                return eq.getNombre();
+            }
+        }
+        
+        return "SIN_EQUIPO";
+    }
     private void iniciarAutoGuardado() {
         // Autoguardado cada 5 minutos (300000 ms = 5 minutos)
         // Cambia este valor si quieres que se guarde más o menos frecuentemente
@@ -2455,7 +2616,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
             // Guardar y salir
             GestorLog.info("💾 Guardando datos antes de cerrar aplicación...");
             GestorArchivos.guardarTodo(datosFederacion);
-            GestorLog.exito(" Datos guardados correctamente");
+            GestorLog.exito("✅ Datos guardados correctamente");
             
             JOptionPane.showMessageDialog(
                 this,
@@ -2464,7 +2625,7 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
                 JOptionPane.INFORMATION_MESSAGE
             );
             
-            GestorLog.info(" Aplicación cerrada por el usuario");
+            GestorLog.info("🚪 Aplicación cerrada por el usuario");
             System.exit(0);
             
         } else if (respuesta == JOptionPane.NO_OPTION) {
@@ -2483,17 +2644,13 @@ public class newVentanaPrincipal extends JFrame implements ActionListener, Windo
                     autoSaveTimer.stop();
                 }
                 
-                GestorLog.advertencia(" Aplicación cerrada sin guardar cambios");
+                GestorLog.advertencia("⚠️ Aplicación cerrada sin guardar cambios");
                 System.exit(0);
             }
-        
-        
-        
-       }
+        }
         
         // Si respuesta == CANCEL_OPTION, no hace nada (ventana permanece abierta)
     }
-
     @Override
     public void windowOpened(WindowEvent e) {
         GestorLog.info(" Ventana principal abierta");

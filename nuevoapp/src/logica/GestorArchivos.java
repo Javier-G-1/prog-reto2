@@ -7,66 +7,43 @@ import gestion.*;
 
 /**
  * GESTOR CENTRALIZADO DE PERSISTENCIA Y ARCHIVOS
- * 
- * Funcionalidades:
- * - Guardado/carga del archivo principal .dat
- * - Sistema de backups automáticos
- * - Exportación a XML (general.xml)
- * - Exportación de clasificaciones a PDF
- * - Gestión de imágenes (escudos y jugadores)
- * - Validación de integridad de datos
+ * ⭐ MEJORADO: Rutas relativas unificadas con formato "./imagenes/..."
  */
 public class GestorArchivos {
     
-    // ==================== CONSTANTES DE CONFIGURACIÓN ====================
-    
-    // Archivo principal
     private static final String ARCHIVO_DATOS = "datos_federacion.dat";
-    
-    // Carpetas del sistema
     private static final String CARPETA_BACKUPS = "backups";
     private static final String CARPETA_EXPORTACIONES = "exportaciones";
     private static final String CARPETA_LOGS = "logs";
     private static final String CARPETA_IMAGENES = "imagenes";
-    private static final String CARPETA_LOGOS = "imagenes/imagenes_Logos";
-    private static final String CARPETA_JUGADORES = "imagenes/imagenes_Jugadores";
     
-    // Archivos de exportación
+    // ⭐ RUTAS RELATIVAS UNIFICADAS (con ./ al inicio)
+    private static final String CARPETA_LOGOS = "./imagenes/imagenes_Logos";
+    private static final String CARPETA_JUGADORES = "./imagenes/imagenes_Jugadores";
     private static final String ARCHIVO_XML_GENERAL = "exportaciones/general.xml";
     
-    // ==================== INICIALIZACIÓN DEL SISTEMA ====================
-    
     static {
-        // Crear todas las carpetas necesarias al cargar la clase
         crearEstructuraCarpetas();
     }
     
-    /**
-     * Crea la estructura completa de carpetas del sistema
-     */
     private static void crearEstructuraCarpetas() {
         try {
+            // Crear carpetas sin el "./" (el sistema operativo no necesita eso)
             Files.createDirectories(Paths.get(CARPETA_BACKUPS));
             Files.createDirectories(Paths.get(CARPETA_EXPORTACIONES));
             Files.createDirectories(Paths.get(CARPETA_LOGS));
             Files.createDirectories(Paths.get(CARPETA_IMAGENES));
-            Files.createDirectories(Paths.get(CARPETA_LOGOS));
-            Files.createDirectories(Paths.get(CARPETA_JUGADORES));
+            Files.createDirectories(Paths.get("imagenes/imagenes_Logos"));
+            Files.createDirectories(Paths.get("imagenes/imagenes_Jugadores"));
             
             System.out.println("✓ Estructura de carpetas verificada/creada");
         } catch (IOException e) {
-            System.err.println(" Error al crear estructura de carpetas: " + e.getMessage());
+            System.err.println("❌ Error al crear estructura de carpetas: " + e.getMessage());
         }
     }
     
-    // ==================== PERSISTENCIA PRINCIPAL (.DAT) ====================
-    
     /**
-     * Guarda todos los datos del sistema en el archivo .dat principal.
-     * Crea un backup automático antes de sobrescribir.
-     * 
-     * @param datos Los datos de la federación a guardar
-     * @return true si se guardó correctamente, false en caso contrario
+     * ⭐ MEJORADO: Guarda datos y normaliza URLs de imágenes
      */
     public static boolean guardarTodo(DatosFederacion datos) {
         if (datos == null) {
@@ -75,20 +52,23 @@ public class GestorArchivos {
         }
         
         try {
-            // Crear backup del archivo actual si existe
+            // ⭐ PASO 1: Normalizar todas las URLs de imágenes ANTES de guardar
+            normalizarURLsImagenes(datos);
+            
+            // PASO 2: Crear backup del archivo actual si existe
             crearBackupAutomatico();
             
-            // Guardar datos
+            // PASO 3: Guardar datos
             try (ObjectOutputStream oos = new ObjectOutputStream(
                     new FileOutputStream(ARCHIVO_DATOS))) {
                 oos.writeObject(datos);
-                System.out.println(" SISTEMA: Datos guardados correctamente en " + ARCHIVO_DATOS);
+                System.out.println("💾 SISTEMA: Datos guardados correctamente en " + ARCHIVO_DATOS);
                 GestorLog.info("Datos guardados en " + ARCHIVO_DATOS);
                 return true;
             }
             
         } catch (IOException e) {
-            System.err.println(" ERROR al guardar los datos: " + e.getMessage());
+            System.err.println("❌ ERROR al guardar los datos: " + e.getMessage());
             GestorLog.error("Error al guardar datos", e);
             e.printStackTrace();
             return false;
@@ -96,10 +76,97 @@ public class GestorArchivos {
     }
     
     /**
-     * Carga todos los datos desde el archivo .dat.
-     * Si no existe o está corrupto, retorna una instancia nueva.
-     * 
-     * @return Los datos de la federación cargados
+     * ⭐ MEJORADO: Normaliza todas las URLs con formato "./imagenes/..."
+     */
+    private static void normalizarURLsImagenes(DatosFederacion datos) {
+        if (datos == null) return;
+        
+        int escudosNormalizados = 0;
+        int fotosNormalizadas = 0;
+        
+        // Normalizar escudos de equipos
+        for (Temporada temp : datos.getListaTemporadas()) {
+            for (Equipo equipo : temp.getEquiposParticipantes()) {
+                String rutaOriginal = equipo.getRutaEscudo();
+                
+                if (rutaOriginal != null && !rutaOriginal.isEmpty()) {
+                    String rutaNormalizada = normalizarRutaImagen(rutaOriginal, true);
+                    
+                    if (!rutaNormalizada.equals(rutaOriginal)) {
+                        equipo.setRutaEscudo(rutaNormalizada);
+                        escudosNormalizados++;
+                    }
+                }
+            }
+        }
+        
+        // Normalizar fotos de jugadores
+        for (Temporada temp : datos.getListaTemporadas()) {
+            for (Equipo equipo : temp.getEquiposParticipantes()) {
+                for (Jugador jugador : equipo.getPlantilla()) {
+                    String rutaOriginal = jugador.getFotoURL();
+                    
+                    if (rutaOriginal != null && !rutaOriginal.isEmpty()) {
+                        String rutaNormalizada = normalizarRutaImagen(rutaOriginal, false);
+                        
+                        if (!rutaNormalizada.equals(rutaOriginal)) {
+                            jugador.setFotoURL(rutaNormalizada);
+                            fotosNormalizadas++;
+                        }
+                    }
+                }
+            }
+        }
+        
+        if (escudosNormalizados > 0 || fotosNormalizadas > 0) {
+            System.out.println("🔄 URLs normalizadas: " + escudosNormalizados + 
+                             " escudos, " + fotosNormalizadas + " fotos");
+        }
+    }
+    
+    /**
+     * ⭐ NUEVO: Normaliza una ruta de imagen al formato estándar "./imagenes/..."
+     * @param rutaOriginal La ruta original (puede ser absoluta o relativa)
+     * @param esEscudo true para escudos, false para fotos de jugadores
+     * @return Ruta normalizada en formato "./imagenes/imagenes_Logos/ARCHIVO.ext"
+     */
+    private static String normalizarRutaImagen(String rutaOriginal, boolean esEscudo) {
+        if (rutaOriginal == null || rutaOriginal.isEmpty()) {
+            return "";
+        }
+        
+        // Si ya está en el formato correcto, devolverla sin cambios
+        if (rutaOriginal.startsWith("./imagenes/")) {
+            return rutaOriginal;
+        }
+        
+        File archivo = new File(rutaOriginal);
+        
+        // Verificar que el archivo existe
+        if (!archivo.exists()) {
+            // Si no existe, intentar con rutas relativas
+            archivo = new File("imagenes/imagenes_Logos/" + archivo.getName());
+            if (!archivo.exists()) {
+                archivo = new File("imagenes/imagenes_Jugadores/" + archivo.getName());
+                if (!archivo.exists()) {
+                    System.err.println("⚠️ Archivo no encontrado: " + rutaOriginal);
+                    return ""; // Archivo no existe
+                }
+            }
+        }
+        
+        String nombreArchivo = archivo.getName();
+        
+        // Construir ruta normalizada
+        if (esEscudo) {
+            return "./imagenes/imagenes_Logos/" + nombreArchivo;
+        } else {
+            return "./imagenes/imagenes_Jugadores/" + nombreArchivo;
+        }
+    }
+    
+    /**
+     * ⭐ MEJORADO: Carga datos y sincroniza contador de IDs
      */
     public static DatosFederacion cargarTodo() {
         File archivo = new File(ARCHIVO_DATOS);
@@ -116,6 +183,13 @@ public class GestorArchivos {
             DatosFederacion datos = (DatosFederacion) ois.readObject();
             System.out.println("✓ Datos cargados correctamente desde " + ARCHIVO_DATOS);
             GestorLog.info("Datos cargados desde " + ARCHIVO_DATOS);
+            
+            // ⭐ SINCRONIZAR CONTADOR DE IDs DE JUGADORES
+            sincronizarContadorJugadores(datos);
+            
+            // ⭐ NORMALIZAR RUTAS AL CARGAR (por si vienen en formato antiguo)
+            normalizarURLsImagenes(datos);
+            
             return validarYCorregirDatos(datos);
             
         } catch (IOException | ClassNotFoundException e) {
@@ -125,16 +199,43 @@ public class GestorArchivos {
             
             DatosFederacion backup = restaurarUltimoBackup();
             if (backup != null) {
+                sincronizarContadorJugadores(backup);
+                normalizarURLsImagenes(backup);
                 return backup;
             }
             
-            System.out.println(" No hay backups disponibles. Iniciando sistema limpio.");
+            System.out.println("⚠ No hay backups disponibles. Iniciando sistema limpio.");
             GestorLog.advertencia("Sistema iniciado sin datos (archivo corrupto y sin backups)");
             return inicializarDatosPorDefecto();
         }
     }
     
-    // ==================== SISTEMA DE BACKUPS ====================
+    /**
+     * ⭐ NUEVO: Sincroniza el contador global de IDs de jugadores
+     */
+    private static void sincronizarContadorJugadores(DatosFederacion datos) {
+        if (datos == null) return;
+        
+        // Recopilar TODOS los jugadores del sistema
+        java.util.List<Jugador> todosLosJugadores = new java.util.ArrayList<>();
+        
+        // De las temporadas
+        for (Temporada temp : datos.getListaTemporadas()) {
+            for (Equipo equipo : temp.getEquiposParticipantes()) {
+                todosLosJugadores.addAll(equipo.getPlantilla());
+            }
+        }
+        
+        // De la lista maestra (si existe)
+        if (datos.getTodosLosJugadores() != null) {
+            todosLosJugadores.addAll(datos.getTodosLosJugadores());
+        }
+        
+        // Sincronizar el contador estático
+        Jugador.sincronizarContadorGlobal(todosLosJugadores);
+        
+        GestorLog.info("Contador de jugadores sincronizado - Total jugadores: " + todosLosJugadores.size());
+    }
     
     /**
      * Crea un backup automático del archivo actual con timestamp
@@ -144,24 +245,21 @@ public class GestorArchivos {
         if (!archivoActual.exists()) return;
         
         try {
-            // Nombre del backup con timestamp
             String timestamp = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss")
                     .format(new java.util.Date());
             String nombreBackup = "backup_" + timestamp + ".dat";
             Path rutaBackup = Paths.get(CARPETA_BACKUPS, nombreBackup);
             
-            // Copiar archivo
             Files.copy(archivoActual.toPath(), rutaBackup, 
                     StandardCopyOption.REPLACE_EXISTING);
             
-            System.out.println("   Backup creado: " + nombreBackup);
+            System.out.println("💾 Backup creado: " + nombreBackup);
             GestorLog.info("Backup automático creado: " + nombreBackup);
             
-            // Limpiar backups antiguos (mantener solo los últimos 5)
             limpiarBackupsAntiguos();
             
         } catch (IOException e) {
-            System.err.println(" Advertencia: No se pudo crear backup: " + e.getMessage());
+            System.err.println("⚠ Advertencia: No se pudo crear backup: " + e.getMessage());
             GestorLog.advertencia("Fallo al crear backup: " + e.getMessage());
         }
     }
@@ -174,18 +272,16 @@ public class GestorArchivos {
             File carpeta = new File(CARPETA_BACKUPS);
             if (!carpeta.exists()) return null;
             
-            // Buscar el backup más reciente
             File[] backups = carpeta.listFiles(
                     (dir, name) -> name.startsWith("backup_") && name.endsWith(".dat"));
             
             if (backups == null || backups.length == 0) return null;
             
-            // Ordenar por fecha (más reciente primero)
             java.util.Arrays.sort(backups, (a, b) -> 
                     Long.compare(b.lastModified(), a.lastModified()));
             
             File backupMasReciente = backups[0];
-            System.out.println("  → Restaurando desde: " + backupMasReciente.getName());
+            System.out.println("📂 → Restaurando desde: " + backupMasReciente.getName());
             GestorLog.info("Restaurando desde backup: " + backupMasReciente.getName());
             
             try (ObjectInputStream ois = new ObjectInputStream(
@@ -194,7 +290,7 @@ public class GestorArchivos {
             }
             
         } catch (Exception e) {
-            System.err.println(" Error al restaurar backup: " + e.getMessage());
+            System.err.println("❌ Error al restaurar backup: " + e.getMessage());
             GestorLog.error("Error al restaurar backup", e);
             return null;
         }
@@ -211,14 +307,12 @@ public class GestorArchivos {
             
             if (backups == null || backups.length <= 5) return;
             
-            // Ordenar por fecha
             java.util.Arrays.sort(backups, (a, b) -> 
                     Long.compare(b.lastModified(), a.lastModified()));
             
-            // Eliminar los más antiguos
             for (int i = 5; i < backups.length; i++) {
                 if (backups[i].delete()) {
-                    System.out.println("  → Backup antiguo eliminado: " + backups[i].getName());
+                    System.out.println("🗑️ → Backup antiguo eliminado: " + backups[i].getName());
                     GestorLog.debug("Backup antiguo eliminado: " + backups[i].getName());
                 }
             }
@@ -228,124 +322,8 @@ public class GestorArchivos {
         }
     }
     
-    // ==================== EXPORTACIÓN A XML (general.xml) ====================
-    
     /**
-     * Exporta una temporada al archivo general.xml
-     * Compatible con ExportadorXML existente
-     * 
-     * @param datos Los datos de la federación
-     * @param temporada La temporada a exportar
-     * @return true si se exportó correctamente
-     */
-    public static boolean exportarTemporadaAXML(DatosFederacion datos, Temporada temporada) {
-        if (datos == null || temporada == null) {
-            System.err.println("ERROR: Datos o temporada nulos");
-            GestorLog.error("Intento de exportar con datos/temporada nulos");
-            return false;
-        }
-        
-        try {
-            ExportadorXML exportador = new ExportadorXML(datos);
-            boolean exito = exportador.exportarTemporada(temporada);
-            
-            if (exito) {
-                GestorLog.exito("Temporada exportada a general.xml: " + temporada.getNombre());
-            } else {
-                GestorLog.error("Fallo al exportar temporada: " + temporada.getNombre());
-            }
-            
-            return exito;
-            
-        } catch (Exception e) {
-            System.err.println("✗ ERROR en exportación XML: " + e.getMessage());
-            GestorLog.error("Error al exportar temporada a XML", e);
-            return false;
-        }
-    }
-    
-    /**
-     * Exporta todas las temporadas al archivo general.xml
-     */
-    public static boolean exportarTodasLasTemporadas(DatosFederacion datos) {
-        if (datos == null) return false;
-        
-        int exitosas = 0;
-        int fallidas = 0;
-        
-        GestorLog.info("Iniciando exportación masiva de temporadas");
-        
-        for (Temporada temp : datos.getListaTemporadas()) {
-            boolean exito = exportarTemporadaAXML(datos, temp);
-            if (exito) exitosas++;
-            else fallidas++;
-        }
-        
-        GestorLog.exito("Exportación masiva completada: " + exitosas + " exitosas, " + fallidas + " fallidas");
-        
-        return fallidas == 0;
-    }
-    
-    // ==================== EXPORTACIÓN DE CLASIFICACIONES A PDF ====================
-    
-    /**
-     * Exporta la clasificación de una temporada a PDF
-     * 
-     * @param temporada La temporada
-     * @param nombreArchivo Nombre del archivo (sin ruta)
-     * @return true si se exportó correctamente
-     */
-    public static boolean exportarClasificacionPDF(Temporada temporada, String nombreArchivo) {
-        if (temporada == null) {
-            System.err.println("ERROR: Temporada nula");
-            return false;
-        }
-        
-        try {
-            // Calcular clasificación
-            Clasificacion clasificacion = CalculadoraClasificacion.calcular(temporada);
-            
-            // Asegurar que el nombre tenga extensión .pdf
-            if (!nombreArchivo.toLowerCase().endsWith(".pdf")) {
-                nombreArchivo += ".pdf";
-            }
-            
-            // Ruta completa
-            String rutaCompleta = CARPETA_EXPORTACIONES + File.separator + nombreArchivo;
-            
-            // Exportar
-            boolean exito = ExportarPDF.exportarClasificacion(
-                temporada, 
-                clasificacion.getFilas(), 
-                rutaCompleta
-            );
-            
-            if (exito) {
-                System.out.println(" EXPORTACIÓN PDF: " + nombreArchivo);
-                GestorLog.exito("Clasificación exportada a PDF: " + nombreArchivo);
-            } else {
-                System.err.println(" Error al generar PDF");
-                GestorLog.error("Fallo al generar PDF: " + nombreArchivo);
-            }
-            
-            return exito;
-            
-        } catch (Exception e) {
-            System.err.println("✗ ERROR en exportación PDF: " + e.getMessage());
-            GestorLog.error("Error al exportar clasificación a PDF", e);
-            e.printStackTrace();
-            return false;
-        }
-    }
-    
-    // ==================== GESTIÓN DE IMÁGENES ====================
-    
-    /**
-     * Copia un escudo a la carpeta de logos
-     * 
-     * @param rutaOrigen Ruta del archivo original
-     * @param nombreEquipo Nombre del equipo
-     * @return Ruta relativa del escudo copiado, o null si falla
+     * ⭐ MEJORADO: Copia un escudo con ruta relativa normalizada
      */
     public static String copiarEscudo(String rutaOrigen, String nombreEquipo) {
         if (rutaOrigen == null || rutaOrigen.isEmpty() || nombreEquipo == null) {
@@ -360,20 +338,18 @@ public class GestorArchivos {
                 return null;
             }
             
-            // Generar nombre normalizado
             String extension = obtenerExtension(archivoOrigen.getName());
             String nombreNormalizado = normalizarNombre(nombreEquipo) + extension;
             
-            // Ruta de destino
-            Path rutaDestino = Paths.get(CARPETA_LOGOS, nombreNormalizado);
+            // Ruta física sin "./" para crear el archivo
+            Path rutaDestino = Paths.get("imagenes/imagenes_Logos", nombreNormalizado);
             
-            // Copiar archivo
             Files.copy(archivoOrigen.toPath(), rutaDestino, StandardCopyOption.REPLACE_EXISTING);
             
             GestorLog.info("Escudo copiado: " + nombreEquipo + " → " + nombreNormalizado);
             
-            // Retornar ruta relativa
-            return CARPETA_LOGOS + "/" + nombreNormalizado;
+            // ⭐ Devolver ruta relativa CON "./" para compatibilidad XML
+            return "./imagenes/imagenes_Logos/" + nombreNormalizado;
             
         } catch (IOException e) {
             System.err.println("✗ Error al copiar escudo: " + e.getMessage());
@@ -383,12 +359,7 @@ public class GestorArchivos {
     }
     
     /**
-     * Copia una foto de jugador a la carpeta correspondiente
-     * 
-     * @param rutaOrigen Ruta del archivo original
-     * @param nombreJugador Nombre del jugador
-     * @param nombreEquipo Nombre del equipo
-     * @return Ruta relativa de la foto copiada, o null si falla
+     * ⭐ MEJORADO: Copia una foto de jugador con ruta relativa normalizada
      */
     public static String copiarFotoJugador(String rutaOrigen, String nombreJugador, String nombreEquipo) {
         if (rutaOrigen == null || rutaOrigen.isEmpty()) {
@@ -403,21 +374,19 @@ public class GestorArchivos {
                 return null;
             }
             
-            // Generar nombre normalizado
             String extension = obtenerExtension(archivoOrigen.getName());
             String nombreNormalizado = normalizarNombre(nombreJugador) + "_" + 
                                        normalizarNombre(nombreEquipo) + extension;
             
-            // Ruta de destino
-            Path rutaDestino = Paths.get(CARPETA_JUGADORES, nombreNormalizado);
+            // Ruta física sin "./" para crear el archivo
+            Path rutaDestino = Paths.get("imagenes/imagenes_Jugadores", nombreNormalizado);
             
-            // Copiar archivo
             Files.copy(archivoOrigen.toPath(), rutaDestino, StandardCopyOption.REPLACE_EXISTING);
             
             GestorLog.info("Foto copiada: " + nombreJugador + " → " + nombreNormalizado);
             
-            // Retornar ruta relativa
-            return CARPETA_JUGADORES + "/" + nombreNormalizado;
+            // ⭐ Devolver ruta relativa CON "./" para compatibilidad XML
+            return "./imagenes/imagenes_Jugadores/" + nombreNormalizado;
             
         } catch (IOException e) {
             System.err.println("✗ Error al copiar foto: " + e.getMessage());
@@ -426,9 +395,6 @@ public class GestorArchivos {
         }
     }
     
-    /**
-     * Normaliza un nombre para usar como nombre de archivo
-     */
     private static String normalizarNombre(String nombre) {
         if (nombre == null) return "sin_nombre";
         
@@ -437,9 +403,6 @@ public class GestorArchivos {
                     .toUpperCase();
     }
     
-    /**
-     * Obtiene la extensión de un archivo
-     */
     private static String obtenerExtension(String nombreArchivo) {
         if (nombreArchivo == null) return ".png";
         
@@ -450,11 +413,6 @@ public class GestorArchivos {
         return ".png";
     }
     
-    // ==================== VALIDACIÓN Y RECUPERACIÓN ====================
-    
-    /**
-     * Valida y corrige posibles inconsistencias en los datos cargados
-     */
     private static DatosFederacion validarYCorregirDatos(DatosFederacion datos) {
         if (datos == null) {
             GestorLog.error("Datos nulos recibidos para validación");
@@ -463,24 +421,23 @@ public class GestorArchivos {
         
         boolean huboCorrecciones = false;
         
-        // Asegurar que las listas no sean null
         if (datos.getListaUsuarios() == null) {
-            System.out.println(" Corrigiendo: lista de usuarios nula");
+            System.out.println("⚠ Corrigiendo: lista de usuarios nula");
             GestorLog.advertencia("Lista de usuarios nula - corregida");
             huboCorrecciones = true;
         }
         if (datos.getTodosLosJugadores() == null) {
-            System.out.println(" Corrigiendo: lista de jugadores nula");
+            System.out.println("⚠ Corrigiendo: lista de jugadores nula");
             GestorLog.advertencia("Lista de jugadores nula - corregida");
             huboCorrecciones = true;
         }
         if (datos.getListaEquipos() == null) {
-            System.out.println(" Corrigiendo: lista de equipos nula");
+            System.out.println("⚠ Corrigiendo: lista de equipos nula");
             GestorLog.advertencia("Lista de equipos nula - corregida");
             huboCorrecciones = true;
         }
         if (datos.getListaTemporadas() == null) {
-            System.out.println(" Corrigiendo: lista de temporadas nula");
+            System.out.println("⚠ Corrigiendo: lista de temporadas nula");
             GestorLog.advertencia("Lista de temporadas nula - corregida");
             huboCorrecciones = true;
         }
@@ -494,37 +451,13 @@ public class GestorArchivos {
         return datos;
     }
     
-    /**
-     * Crea una instancia inicial con datos por defecto
-     */
     private static DatosFederacion inicializarDatosPorDefecto() {
         DatosFederacion datos = new DatosFederacion();
         
-        // Crear los 4 usuarios predeterminados
-        Usuario admin = new Usuario(
-            "Administrador del Sistema",
-            "admin",
-            "123",
-            Rol.ADMINISTRADOR
-        );
-        Usuario invitado = new Usuario(
-            "Usuario Invitado",
-            "invitado",
-            "123",
-            Rol.INVITADO
-        );
-        Usuario arbitro = new Usuario(
-            "Árbitro Principal",
-            "arbitro",
-            "123",
-            Rol.ARBITRO
-        );
-        Usuario manager = new Usuario(
-            "Manager Principal",
-            "manager",
-            "123",
-            Rol.MANAGER
-        );
+        Usuario admin = new Usuario("Administrador del Sistema", "admin", "123", Rol.ADMINISTRADOR);
+        Usuario invitado = new Usuario("Usuario Invitado", "invitado", "123", Rol.INVITADO);
+        Usuario arbitro = new Usuario("Árbitro Principal", "arbitro", "123", Rol.ARBITRO);
+        Usuario manager = new Usuario("Manager Principal", "manager", "123", Rol.MANAGER);
         
         datos.getListaUsuarios().add(admin);
         datos.getListaUsuarios().add(invitado);
@@ -540,125 +473,5 @@ public class GestorArchivos {
         GestorLog.exito("Usuarios predeterminados creados");
         
         return datos;
-    }
-    
-    // ==================== UTILIDADES ====================
-    
-    /**
-     * Obtiene información del estado del sistema de archivos
-     */
-    public static String obtenerEstadoSistema() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("╔═══════════════════════════════════════════════════════════════╗\n");
-        sb.append("║         ESTADO DEL SISTEMA DE ARCHIVOS                        ║\n");
-        sb.append("╠═══════════════════════════════════════════════════════════════╣\n");
-        
-        // Archivo principal
-        File archivo = new File(ARCHIVO_DATOS);
-        if (archivo.exists()) {
-            double tamanoMB = archivo.length() / (1024.0 * 1024.0);
-            sb.append(String.format("║  Archivo principal: %s (%.2f MB)\n", 
-                    ARCHIVO_DATOS, tamanoMB));
-            sb.append(String.format("║  Última modificación: %s\n",
-                    new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
-                        .format(new java.util.Date(archivo.lastModified()))));
-        } else {
-            sb.append("║ 📄 Archivo principal: NO EXISTE\n");
-        }
-        
-        sb.append("╠═══════════════════════════════════════════════════════════════╣\n");
-        
-        // Backups
-        File carpetaBackups = new File(CARPETA_BACKUPS);
-        if (carpetaBackups.exists() && carpetaBackups.isDirectory()) {
-            File[] backups = carpetaBackups.listFiles(
-                    (dir, name) -> name.endsWith(".dat"));
-            int numBackups = backups != null ? backups.length : 0;
-            sb.append(String.format("║ 💾 Backups disponibles: %d\n", numBackups));
-        } else {
-            sb.append("║  Backups disponibles: 0\n");
-        }
-        
-        // Exportaciones
-        File carpetaExport = new File(CARPETA_EXPORTACIONES);
-        if (carpetaExport.exists() && carpetaExport.isDirectory()) {
-            File[] exports = carpetaExport.listFiles();
-            int numExports = exports != null ? exports.length : 0;
-            sb.append(String.format("║  Exportaciones: %d archivo(s)\n", numExports));
-        } else {
-            sb.append("║  Exportaciones: 0 archivo(s)\n");
-        }
-        
-        // Imágenes
-        File carpetaLogos = new File(CARPETA_LOGOS);
-        File carpetaJugadores = new File(CARPETA_JUGADORES);
-        
-        int numLogos = 0;
-        int numFotos = 0;
-        
-        if (carpetaLogos.exists()) {
-            File[] logos = carpetaLogos.listFiles();
-            numLogos = logos != null ? logos.length : 0;
-        }
-        
-        if (carpetaJugadores.exists()) {
-            File[] fotos = carpetaJugadores.listFiles();
-            numFotos = fotos != null ? fotos.length : 0;
-        }
-        
-        sb.append(String.format("║   Escudos: %d | Fotos jugadores: %d\n", numLogos, numFotos));
-        
-        sb.append("╚═══════════════════════════════════════════════════════════════╝\n");
-        
-        return sb.toString();
-    }
-    
-    /**
-     * Resetea completamente el sistema (USAR CON PRECAUCIÓN)
-     */
-    public static boolean resetearSistema() {
-        try {
-            File archivo = new File(ARCHIVO_DATOS);
-            if (archivo.exists() && archivo.delete()) {
-                System.out.println(" Sistema reseteado correctamente.");
-                GestorLog.advertencia(" SISTEMA RESETEADO");
-                return true;
-            }
-            return false;
-        } catch (Exception e) {
-            System.err.println(" Error al resetear: " + e.getMessage());
-            GestorLog.error("Error al resetear sistema", e);
-            return false;
-        }
-    }
-    
-    /**
-     * Crea un backup manual con nombre personalizado
-     */
-    public static boolean crearBackupManual(String nombreBackup) {
-        File archivoActual = new File(ARCHIVO_DATOS);
-        if (!archivoActual.exists()) {
-            System.err.println("No hay datos para hacer backup");
-            return false;
-        }
-        
-        try {
-            if (!nombreBackup.endsWith(".dat")) {
-                nombreBackup += ".dat";
-            }
-            
-            Path rutaBackup = Paths.get(CARPETA_BACKUPS, nombreBackup);
-            Files.copy(archivoActual.toPath(), rutaBackup, 
-                    StandardCopyOption.REPLACE_EXISTING);
-            
-            System.out.println("✓ Backup manual creado: " + nombreBackup);
-            GestorLog.exito("Backup manual creado: " + nombreBackup);
-            return true;
-            
-        } catch (IOException e) {
-            System.err.println("✗ Error al crear backup manual: " + e.getMessage());
-            GestorLog.error("Error al crear backup manual", e);
-            return false;
-        }
     }
 }

@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import gestion.Jugador;
+import gestion.Equipo;
 
 public class DialogoAgregarJugador extends JDialog {
     private static final long serialVersionUID = 1L;
@@ -18,8 +19,8 @@ public class DialogoAgregarJugador extends JDialog {
     
     private boolean aceptado = false;
     private Jugador jugadorCreado = null;
+    private Equipo equipoDestino; // ⭐ NUEVO
     
-    // Posiciones válidas de balonmano
     private static final String[] POSICIONES = {
         "Portero",
         "Extremo Izquierdo",
@@ -30,63 +31,62 @@ public class DialogoAgregarJugador extends JDialog {
         "Pivote"
     };
     
+    // ⭐ CONSTRUCTOR CORREGIDO - Acepta Window en lugar de Frame
+    public DialogoAgregarJugador(Window owner) {
+        super(owner, "Agregar Nuevo Jugador", ModalityType.APPLICATION_MODAL);
+        
+        setLayout(new BorderLayout(10, 10));
+        setSize(450, 450);
+        setLocationRelativeTo(owner);
+        
+        // Panel con 7 filas
+        JPanel panelCampos = new JPanel(new GridLayout(7, 2, 10, 15));
+        panelCampos.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
+        panelCampos.setBackground(new Color(30, 34, 41));
+        
+        // --- NOMBRE ---
+        panelCampos.add(crearLabel("Nombre:"));
+        txtNombre = new JTextField();
+        estilizarCampoTexto(txtNombre);
+        panelCampos.add(txtNombre);
+        
+        // --- POSICIÓN ---
+        panelCampos.add(crearLabel("Posición:"));
+        comboPosicion = new JComboBox<>(POSICIONES);
+        panelCampos.add(comboPosicion);
+        
+        // --- DORSAL ---
+        panelCampos.add(crearLabel("Dorsal:"));
+        spinnerDorsal = new JSpinner(new SpinnerNumberModel(1, 1, 99, 1));
+        estilizarSpinner(spinnerDorsal);
+        panelCampos.add(spinnerDorsal);
 
-     // ... resto del código ...
-        public DialogoAgregarJugador(Frame owner) {
-            // Pasamos 'owner' al constructor de JDialog
-            super(owner, "Agregar Nuevo Jugador", true);
-            
-            setLayout(new BorderLayout(10, 10));
-            setSize(450, 450);
-            setLocationRelativeTo(owner); // Centrar respecto a la ventana principal
-            
-            // Panel con 7 filas (añadimos dorsal)
-            JPanel panelCampos = new JPanel(new GridLayout(7, 2, 10, 15));
-            panelCampos.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
-            panelCampos.setBackground(new Color(30, 34, 41));
-            
-            // --- NOMBRE ---
-            panelCampos.add(crearLabel("Nombre:"));
-            txtNombre = new JTextField();
-            estilizarCampoTexto(txtNombre);
-            panelCampos.add(txtNombre);
-            
-            // --- POSICIÓN ---
-            panelCampos.add(crearLabel("Posición:"));
-            comboPosicion = new JComboBox<>(POSICIONES);
-            panelCampos.add(comboPosicion);
-            
-            // --- DORSAL (Corregido: valor fijo inicial) ---
-            panelCampos.add(crearLabel("Dorsal:"));
-            spinnerDorsal = new JSpinner(new SpinnerNumberModel(1, 1, 99, 1));
-            estilizarSpinner(spinnerDorsal);
-            panelCampos.add(spinnerDorsal);
-
-            // --- EDAD ---
-            panelCampos.add(crearLabel("Edad:"));
-            spinnerEdad = new JSpinner(new SpinnerNumberModel(25, 16, 50, 1));
-            estilizarSpinner(spinnerEdad);
-            panelCampos.add(spinnerEdad);
-            
-            // --- NACIONALIDAD ---
-            panelCampos.add(crearLabel("Nacionalidad:"));
-            txtNacionalidad = new JTextField("España");
-            estilizarCampoTexto(txtNacionalidad);
-            panelCampos.add(txtNacionalidad);
-            
-            // --- ALTURA ---
-            panelCampos.add(crearLabel("Altura (cm):"));
-            spinnerAltura = new JSpinner(new SpinnerNumberModel(180, 150, 220, 1));
-            estilizarSpinner(spinnerAltura);
-            panelCampos.add(spinnerAltura);
-            
-            // --- PESO ---
-            panelCampos.add(crearLabel("Peso (kg):"));
-            spinnerPeso = new JSpinner(new SpinnerNumberModel(80, 50, 150, 1));
-            estilizarSpinner(spinnerPeso);
-            panelCampos.add(spinnerPeso);
-            
-            add(panelCampos, BorderLayout.CENTER);
+        // --- EDAD ---
+        panelCampos.add(crearLabel("Edad:"));
+        spinnerEdad = new JSpinner(new SpinnerNumberModel(25, 16, 50, 1));
+        estilizarSpinner(spinnerEdad);
+        panelCampos.add(spinnerEdad);
+        
+        // --- NACIONALIDAD ---
+        panelCampos.add(crearLabel("Nacionalidad:"));
+        txtNacionalidad = new JTextField("España");
+        estilizarCampoTexto(txtNacionalidad);
+        panelCampos.add(txtNacionalidad);
+        
+        // --- ALTURA ---
+        panelCampos.add(crearLabel("Altura (cm):"));
+        spinnerAltura = new JSpinner(new SpinnerNumberModel(180, 150, 220, 1));
+        estilizarSpinner(spinnerAltura);
+        panelCampos.add(spinnerAltura);
+        
+        // --- PESO ---
+        panelCampos.add(crearLabel("Peso (kg):"));
+        spinnerPeso = new JSpinner(new SpinnerNumberModel(80, 50, 150, 1));
+        estilizarSpinner(spinnerPeso);
+        panelCampos.add(spinnerPeso);
+        
+        add(panelCampos, BorderLayout.CENTER);
+        
         // ===== PANEL DE BOTONES =====
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
         panelBotones.setBackground(new Color(30, 34, 41));
@@ -131,6 +131,37 @@ public class DialogoAgregarJugador extends JDialog {
         getRootPane().setDefaultButton(btnAceptar);
         
         getContentPane().setBackground(new Color(30, 34, 41));
+    }
+    
+    // ⭐ MÉTODO PARA CONFIGURAR EL EQUIPO DESTINO
+    public void setEquipoDestino(Equipo equipo) {
+        this.equipoDestino = equipo;
+        
+        if (equipo != null && spinnerDorsal != null) {
+            // Encontrar el primer dorsal disponible
+            int dorsalSugerido = 1;
+            boolean encontrado = false;
+            
+            while (!encontrado && dorsalSugerido <= 99) {
+                boolean dorsalUsado = false;
+                for (Jugador j : equipo.getPlantilla()) {
+                    if (j.getDorsal() == dorsalSugerido) {
+                        dorsalUsado = true;
+                        break;
+                    }
+                }
+                
+                if (!dorsalUsado) {
+                    encontrado = true;
+                } else {
+                    dorsalSugerido++;
+                }
+            }
+            
+            if (encontrado) {
+                spinnerDorsal.setValue(dorsalSugerido);
+            }
+        }
     }
     
     private JLabel crearLabel(String texto) {
@@ -182,14 +213,27 @@ public class DialogoAgregarJugador extends JDialog {
             return;
         }
         
-        // Obtener valores (ya validados por los spinners)
+        // Obtener valores
         String posicion = (String) comboPosicion.getSelectedItem();
         int edad = (Integer) spinnerEdad.getValue();
         int altura = (Integer) spinnerAltura.getValue();
         int peso = (Integer) spinnerPeso.getValue();
         int dorsal = (Integer) spinnerDorsal.getValue();
         
-        // Validación lógica adicional
+        // ⭐ VALIDAR DORSAL ÚNICO
+        if (equipoDestino != null) {
+            for (Jugador j : equipoDestino.getPlantilla()) {
+                if (j.getDorsal() == dorsal) {
+                    JOptionPane.showMessageDialog(this,
+                        "El dorsal " + dorsal + " ya está en uso por " + j.getNombre(),
+                        "Dorsal duplicado",
+                        JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+        }
+        
+        // Validaciones lógicas
         if (edad < 16) {
             JOptionPane.showMessageDialog(this,
                 "La edad mínima permitida es 16 años",
@@ -214,12 +258,13 @@ public class DialogoAgregarJugador extends JDialog {
             return;
         }
         
-        // Crear el jugador con todos los datos
+        // Crear el jugador
         jugadorCreado = new Jugador(nombre, posicion, edad, null);
         jugadorCreado.setNacionalidad(nacionalidad);
         jugadorCreado.setAltura(altura + " cm");
         jugadorCreado.setPeso(peso + " kg");
         jugadorCreado.setDorsal(dorsal);
+        
         aceptado = true;
         dispose();
     }

@@ -4,6 +4,7 @@ import gestion.*;
 import java.util.*;
 
 public class GeneradorCalendario {
+    
     public static void crearCalendario(Temporada temp) throws Exception {
         if (temp == null) {
             GestorLog.error("Intento de generar calendario con temporada nula");
@@ -24,9 +25,9 @@ public class GeneradorCalendario {
         // Algoritmo Round Robin (Ida)
         boolean agregarDescanso = false;
         if (participantes.size() % 2 != 0) {
-            participantes.add(new Equipo("DESCANSA", ""));
+            participantes.add(new Equipo("DESCANSA"));
             agregarDescanso = true;
-            GestorLog.debug("Número impar de equipos - Se agregó equipo fantasma 'DESCANSA'");
+            GestorLog.info("Número impar de equipos - Se agregó equipo fantasma 'DESCANSA'");
         }
         
         int jornadasIda = participantes.size() - 1;
@@ -47,7 +48,7 @@ public class GeneradorCalendario {
             Collections.rotate(participantes.subList(1, participantes.size()), 1);
         }
         
-        GestorLog.debug("Fase de IDA completada - Jornadas: " + jornadasIda + " | Partidos: " + partidosGenerados);
+        GestorLog.info("Fase de IDA completada - Jornadas: " + jornadasIda + " | Partidos: " + partidosGenerados);
         
         // Generar jornadas de VUELTA
         List<Jornada> ida = new ArrayList<>(temp.getListaJornadas());
@@ -60,10 +61,10 @@ public class GeneradorCalendario {
             temp.agregarJornada(jVuelta);
         }
         
-        GestorLog.exito("Calendario generado completamente: " + temp.getNombre() + 
+        GestorLog.exito("Calendario generado: " + temp.getNombre() + 
                       " | Equipos: " + (participantes.size() - (agregarDescanso ? 1 : 0)) + 
-                      " | Jornadas totales: " + temp.getListaJornadas().size() + 
-                      " | Partidos totales: " + partidosGenerados +
-                      " | Sistema: Round-Robin (Ida y Vuelta)");
+                      " | Jornadas: " + temp.getListaJornadas().size() + 
+                      " | Partidos: " + partidosGenerados +
+                      " | Sistema: Round-Robin");
     }
 }
