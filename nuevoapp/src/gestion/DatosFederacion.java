@@ -6,37 +6,71 @@ import java.util.List;
 
 /**
  * CLASE: DatosFederacion
- * Objeto raíz para la persistencia. Contiene toda la información del sistema.
+ * <p>
+ * Actúa como el objeto raíz del sistema y es el encargado de almacenar
+ * toda la información persistente de la aplicación.
+ * </p>
+ * <p>
+ * Contiene las listas maestras de usuarios, jugadores, equipos y temporadas.
+ * Esta clase es serializable para permitir guardar y recuperar el estado
+ * completo del sistema.
+ * </p>
  */
 public class DatosFederacion implements Serializable {
 
+    /** Identificador de versión para la serialización */
     private static final long serialVersionUID = 1L;
 
-    // LISTAS MAESTRAS
+    /** Lista de usuarios registrados en el sistema */
     private List<Usuario> listaUsuarios;
-    private List<Jugador> todosLosJugadores; // Base de datos global de personas
-    private List<Equipo> listaEquipos;       // Clubes registrados
+
+    /** Base de datos global de jugadores/personas */
+    private List<Jugador> todosLosJugadores;
+
+    /** Lista de equipos (clubes) registrados */
+    private List<Equipo> listaEquipos;
+
+    /** Lista de temporadas creadas en el sistema */
     private List<Temporada> listaTemporadas;
 
+    /**
+     * Constructor por defecto.
+     * <p>
+     * Inicializa todas las listas maestras del sistema como listas vacías.
+     * </p>
+     */
     public DatosFederacion() {
         this.listaUsuarios = new ArrayList<>();
         this.todosLosJugadores = new ArrayList<>();
         this.listaEquipos = new ArrayList<>();
         this.listaTemporadas = new ArrayList<>();
-        
-        // Sugerencia: Inicializar con un usuario admin por defecto 
-        // para no quedarnos bloqueados en el primer inicio.
-        // initDefaultAdmin(); 
     }
+
+    /**
+     * Añade una nueva temporada al sistema.
+     *
+     * @param t la temporada que se desea añadir
+     */
     public void add(Temporada t) {
         if (t != null) {
             this.listaTemporadas.add(t);
         }
     }
-    // --- MÉTODOS DE BÚSQUEDA (Requisito: Login y Gestión) ---
 
+    // --- MÉTODOS DE BÚSQUEDA ---
+
+    /**
+     * Busca un usuario por su nombre de login.
+     * <p>
+     * La búsqueda no distingue entre mayúsculas y minúsculas.
+     * </p>
+     *
+     * @param nombreLogin nombre de usuario a buscar
+     * @return el {@link Usuario} encontrado o {@code null} si no existe
+     */
     public Usuario buscarUsuario(String nombreLogin) {
         if (nombreLogin == null) return null;
+
         for (Usuario u : listaUsuarios) {
             if (u.getNombreUsuario().equalsIgnoreCase(nombreLogin)) {
                 return u;
@@ -45,8 +79,18 @@ public class DatosFederacion implements Serializable {
         return null;
     }
 
+    /**
+     * Busca una temporada por su nombre.
+     * <p>
+     * La comparación del nombre se realiza sin distinguir mayúsculas.
+     * </p>
+     *
+     * @param nombre nombre de la temporada
+     * @return la {@link Temporada} encontrada o {@code null} si no existe
+     */
     public Temporada buscarTemporadaPorNombre(String nombre) {
         if (nombre == null) return null;
+
         for (Temporada t : listaTemporadas) {
             if (t.getNombre().equalsIgnoreCase(nombre)) {
                 return t;
@@ -54,21 +98,63 @@ public class DatosFederacion implements Serializable {
         }
         return null;
     }
-    
+
     /**
-     * Requisito: Exportación y Logs.
-     * Útil para comprobar si un equipo ya existe globalmente antes de inscribirlo.
+     * Busca un equipo registrado por su nombre.
+     * <p>
+     * Útil para comprobar si un equipo ya existe globalmente
+     * antes de inscribirlo en una temporada.
+     * </p>
+     *
+     * @param nombre nombre del equipo a buscar
+     * @return el {@link Equipo} encontrado o {@code null} si no existe
      */
     public Equipo buscarEquipoPorNombre(String nombre) {
+        if (nombre == null) return null;
+
         for (Equipo e : listaEquipos) {
-            if (e.getNombre().equalsIgnoreCase(nombre)) return e;
+            if (e.getNombre().equalsIgnoreCase(nombre)) {
+                return e;
+            }
         }
         return null;
     }
 
     // --- GETTERS ---
-    public List<Usuario> getListaUsuarios() { return listaUsuarios; }
-    public List<Jugador> getTodosLosJugadores() { return todosLosJugadores; }
-    public List<Equipo> getListaEquipos() { return listaEquipos; }
-    public List<Temporada> getListaTemporadas() { return listaTemporadas; }
+
+    /**
+     * Obtiene la lista de usuarios del sistema.
+     *
+     * @return lista de usuarios
+     */
+    public List<Usuario> getListaUsuarios() {
+        return listaUsuarios;
+    }
+
+    /**
+     * Obtiene la base de datos global de jugadores.
+     *
+     * @return lista de todos los jugadores
+     */
+    public List<Jugador> getTodosLosJugadores() {
+        return todosLosJugadores;
+    }
+
+    /**
+     * Obtiene la lista de equipos registrados.
+     *
+     * @return lista de equipos
+     */
+    public List<Equipo> getListaEquipos() {
+        return listaEquipos;
+    }
+
+    /**
+     * Obtiene la lista de temporadas creadas.
+     *
+     * @return lista de temporadas
+     */
+    public List<Temporada> getListaTemporadas() {
+        return listaTemporadas;
+    }
 }

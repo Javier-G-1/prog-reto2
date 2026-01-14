@@ -11,27 +11,55 @@ import gestion.*;
 import logica.GestorLog;
 
 /**
- * Panel de gestión de usuarios del sistema
- * Permite crear, editar roles y eliminar usuarios
+ * PanelGestionUsuarios.
+ * 
+ * Panel de administración de usuarios del sistema.
+ * Permite:
+ * - Crear nuevos usuarios
+ * - Cambiar roles de usuarios existentes
+ * - Cambiar contraseña
+ * - Eliminar usuarios
+ * 
+ * Algunos usuarios están protegidos y no se pueden eliminar ni modificar
+ * su rol (ej: admin, invitado, árbitro, manager).
+ * 
+ * La información de usuarios se obtiene de un objeto DatosFederacion.
+ * La tabla muestra todos los usuarios con sus roles y estado protegido.
+ * 
+ * Renderiza colores diferentes en la tabla según el rol.
+ * Registra acciones de administración en GestorLog.
+ * 
  */
 public class PanelGestionUsuarios extends JPanel {
     
     private static final long serialVersionUID = 1L;
-    
+    /** Datos de la federación que contienen usuarios */
     private DatosFederacion datosFederacion;
+    
+    /** Tabla principal de usuarios */
     private JTable tablaUsuarios;
+    
+    /** Modelo de la tabla */
     private DefaultTableModel modeloTabla;
+    
+    /** Botones de acción */
     private JButton btnCrearUsuario;
     private JButton btnEditarRol;
     private JButton btnEliminarUsuario;
     private JButton btnCambiarPassword;
+    
+    /** Label que muestra total de usuarios */
     private JLabel lblTotalUsuarios;
     
-    // Usuarios protegidos que no se pueden eliminar
+    /** Lista de usuarios protegidos */
     private static final String[] USUARIOS_PROTEGIDOS = {
         "admin", "invitado", "arbitro", "manager"
     };
     
+    /**
+     * Constructor del panel de gestión de usuarios
+     * @param datos DatosFederacion que contiene la lista de usuarios
+     */
     public PanelGestionUsuarios(DatosFederacion datos) {
         this.datosFederacion = datos;
         
@@ -45,7 +73,8 @@ public class PanelGestionUsuarios extends JPanel {
     }
     
     /**
-     * Inicializa los 4 usuarios predeterminados si no existen
+     * Inicializa los usuarios predeterminados (admin, invitado, árbitro, manager)
+     * si no existen en la lista de usuarios
      */
     private void inicializarUsuariosPredeterminados() {
         List<Usuario> usuarios = datosFederacion.getListaUsuarios();
@@ -71,6 +100,13 @@ public class PanelGestionUsuarios extends JPanel {
         }
     }
     
+    
+    /**
+     * Crea la interfaz visual del panel
+     * - Panel superior con título y total de usuarios
+     * - Tabla de usuarios con renderizado por rol
+     * - Panel de botones de acción
+     */
     private void crearInterfaz() {
         // ===== PANEL SUPERIOR =====
         JPanel panelSuperior = new JPanel(new BorderLayout(10, 10));
@@ -171,6 +207,12 @@ public class PanelGestionUsuarios extends JPanel {
         add(panelBotones, BorderLayout.SOUTH);
     }
     
+    /**
+     * Crea un botón con estilo personalizado
+     * @param texto Texto del botón
+     * @param color Color de fondo principal
+     * @return JButton con estilo aplicado
+     */
     private JButton crearBoton(String texto, Color color) {
         JButton btn = new JButton(texto);
         btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
@@ -222,6 +264,8 @@ public class PanelGestionUsuarios extends JPanel {
     
     /**
      * Comprueba si un usuario está protegido
+     * @param nombreUsuario Nombre del usuario
+     * @return true si está protegido
      */
     private boolean esUsuarioProtegido(String nombreUsuario) {
         for (String protegido : USUARIOS_PROTEGIDOS) {
@@ -233,7 +277,7 @@ public class PanelGestionUsuarios extends JPanel {
     }
     
     /**
-     * Crear nuevo usuario
+     * Muestra el diálogo para crear un nuevo usuario
      */
     private void crearNuevoUsuario() {
         DialogoCrearUsuario dialogo = new DialogoCrearUsuario((JFrame) SwingUtilities.getWindowAncestor(this));
@@ -270,7 +314,7 @@ public class PanelGestionUsuarios extends JPanel {
     }
     
     /**
-     * Cambiar rol de usuario seleccionado
+     * Cambia el rol del usuario seleccionado
      */
     private void cambiarRolUsuario() {
         int filaSeleccionada = tablaUsuarios.getSelectedRow();
@@ -343,7 +387,7 @@ public class PanelGestionUsuarios extends JPanel {
     }
     
     /**
-     * Cambiar contraseña de usuario
+     * Cambia la contraseña del usuario seleccionado
      */
     private void cambiarPasswordUsuario() {
         int filaSeleccionada = tablaUsuarios.getSelectedRow();
@@ -405,7 +449,7 @@ public class PanelGestionUsuarios extends JPanel {
     }
     
     /**
-     * Eliminar usuario seleccionado
+     * Elimina el usuario seleccionado
      */
     private void eliminarUsuario() {
         int filaSeleccionada = tablaUsuarios.getSelectedRow();
@@ -460,7 +504,7 @@ public class PanelGestionUsuarios extends JPanel {
 }
 
 /**
- * Diálogo para crear un nuevo usuario
+ * Diálogo modal para crear un nuevo usuario
  */
 class DialogoCrearUsuario extends JDialog {
     
@@ -471,6 +515,11 @@ class DialogoCrearUsuario extends JDialog {
     private JPasswordField txtPasswordConfirm;
     private JComboBox<String> comboRol;
     
+    
+    /**
+     * Constructor del diálogo
+     * @param parent JFrame padre
+     */
     public DialogoCrearUsuario(JFrame parent) {
         super(parent, "Crear Nuevo Usuario", true);
         
@@ -520,6 +569,11 @@ class DialogoCrearUsuario extends JDialog {
         add(panel);
     }
     
+    
+    /**
+     * Valida los campos ingresados por el usuario
+     * @return true si son válidos
+     */
     private boolean validar() {
         if (txtNombreUsuario.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "El nombre de usuario no puede estar vacío");
@@ -547,11 +601,19 @@ class DialogoCrearUsuario extends JDialog {
         return true;
     }
     
+    /** @return true si el usuario presionó Aceptar */
     public boolean isAceptado() { return aceptado; }
+    
+    /** @return Nombre de usuario ingresado */
     public String getNombreUsuario() { return txtNombreUsuario.getText().trim(); }
+    
+    /** @return Nombre real ingresado */
     public String getNombreReal() { return txtNombreReal.getText().trim(); }
+    
+    /** @return Contraseña ingresada */
     public String getPassword() { return new String(txtPassword.getPassword()); }
     
+    /** @return Rol seleccionado */
     public Rol getRol() {
         String seleccion = (String) comboRol.getSelectedItem();
         switch (seleccion) {

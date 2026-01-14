@@ -5,98 +5,162 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * CLASE: Equipo
+ * <p>
+ * Representa un equipo o club deportivo dentro del sistema.
+ * Contiene información básica como el nombre, el escudo y
+ * la plantilla de jugadores que lo componen.
+ * </p>
+ * <p>
+ * Esta clase implementa {@link Serializable} para permitir
+ * su persistencia junto al resto de datos del sistema.
+ * </p>
+ */
 public class Equipo implements Serializable {
+
+    /** Identificador de versión para la serialización */
     private static final long serialVersionUID = 1L;
-    
+
+    /** Nombre del equipo */
     private String nombre;
+
+    /** Ruta al archivo de imagen del escudo del equipo */
     private String rutaEscudo;
+
+    /** Lista de jugadores que forman la plantilla del equipo */
     private List<Jugador> plantilla;
-    
+
+    /**
+     * Constructor principal del equipo.
+     * <p>
+     * Si la ruta del escudo es nula o está vacía, se asigna
+     * un escudo por defecto.
+     * </p>
+     *
+     * @param nombre nombre del equipo
+     * @param rutaEscudo ruta del escudo del equipo
+     */
     public Equipo(String nombre, String rutaEscudo) {
         this.nombre = nombre;
-        this.rutaEscudo = (rutaEscudo == null || rutaEscudo.isBlank()) ? "img/default_escudo.png" : rutaEscudo;
+        this.rutaEscudo = (rutaEscudo == null || rutaEscudo.isBlank())
+                ? "img/default_escudo.png"
+                : rutaEscudo;
         this.plantilla = new ArrayList<>();
     }
-    
+
+    /**
+     * Constructor simplificado.
+     * <p>
+     * Crea un equipo asignándole un escudo por defecto.
+     * </p>
+     *
+     * @param nombre nombre del equipo
+     */
     public Equipo(String nombre) {
         this(nombre, "img/default_escudo.png");
     }
-    
+
     /**
-     * ⭐ MEJORADO: Ficha un jugador verificando que el dorsal sea único
-     * @throws IllegalArgumentException si el dorsal ya está ocupado
+     * Ficha un jugador en la plantilla del equipo.
+     * <p>
+     * Valida que el jugador no sea nulo, que no esté ya en la plantilla
+     * y que su dorsal sea único dentro del equipo.
+     * </p>
+     *
+     * @param j jugador a fichar
+     * @throws IllegalArgumentException si el jugador es nulo,
+     *                                  ya pertenece al equipo
+     *                                  o su dorsal está ocupado
      */
     public void ficharJugador(Jugador j) {
         if (j == null) {
             throw new IllegalArgumentException("El jugador no puede ser nulo");
         }
-        
-        // Verificar que el jugador no esté ya en la plantilla (por ID)
+
+        // Verificar que el jugador no esté ya en la plantilla
         if (plantilla.contains(j)) {
             throw new IllegalArgumentException("El jugador ya está en la plantilla");
         }
-        
-        // ⭐ VALIDACIÓN DE DORSAL ÚNICO
+
+        // Validación de dorsal único
         if (j.getDorsal() > 0) {
             validarDorsalUnico(j.getDorsal(), j.getId());
         }
-        
+
         plantilla.add(j);
     }
-    
+
     /**
-     * ⭐ NUEVO: Valida que un dorsal no esté ocupado por otro jugador
-     * @param dorsal El número de dorsal a validar
-     * @param idJugadorActual El ID del jugador actual (para permitir mantener su propio dorsal)
-     * @throws IllegalArgumentException si el dorsal ya está ocupado
+     * Valida que un dorsal no esté ocupado por otro jugador del equipo.
+     * <p>
+     * Permite excluir a un jugador concreto para facilitar
+     * modificaciones de dorsal.
+     * </p>
+     *
+     * @param dorsal número de dorsal a validar
+     * @param idJugadorActual identificador del jugador actual
+     * @throws IllegalArgumentException si el dorsal no es válido
+     *                                  o ya está ocupado
      */
     public void validarDorsalUnico(int dorsal, String idJugadorActual) {
         if (dorsal <= 0 || dorsal > 99) {
             throw new IllegalArgumentException("El dorsal debe estar entre 1 y 99");
         }
-        
+
         for (Jugador jugadorEnPlantilla : plantilla) {
+
             // Permitir que el jugador mantenga su propio dorsal
             if (jugadorEnPlantilla.getId().equals(idJugadorActual)) {
                 continue;
             }
-            
+
             if (jugadorEnPlantilla.getDorsal() == dorsal) {
                 throw new IllegalArgumentException(
-                    "El dorsal " + dorsal + " ya está ocupado por " + jugadorEnPlantilla.getNombre()
+                        "El dorsal " + dorsal + " ya está ocupado por "
+                                + jugadorEnPlantilla.getNombre()
                 );
             }
         }
     }
-    
+
     /**
-     * ⭐ NUEVO: Verifica si un dorsal está disponible
+     * Comprueba si un dorsal está disponible en el equipo.
+     *
+     * @param dorsal dorsal a comprobar
+     * @return {@code true} si el dorsal está libre, {@code false} en caso contrario
      */
     public boolean dorsalDisponible(int dorsal) {
         return dorsalDisponible(dorsal, null);
     }
-    
+
     /**
-     * ⭐ NUEVO: Verifica si un dorsal está disponible (excepto para un jugador específico)
+     * Comprueba si un dorsal está disponible, excluyendo a un jugador concreto.
+     *
+     * @param dorsal dorsal a comprobar
+     * @param idJugadorExcluir ID del jugador a excluir de la comprobación
+     * @return {@code true} si el dorsal está libre, {@code false} en caso contrario
      */
     public boolean dorsalDisponible(int dorsal, String idJugadorExcluir) {
         if (dorsal <= 0 || dorsal > 99) return false;
-        
+
         for (Jugador j : plantilla) {
             if (idJugadorExcluir != null && j.getId().equals(idJugadorExcluir)) {
                 continue;
             }
-            
+
             if (j.getDorsal() == dorsal) {
                 return false;
             }
         }
-        
         return true;
     }
-    
+
     /**
-     * ⭐ NUEVO: Obtiene el siguiente dorsal disponible
+     * Obtiene el siguiente dorsal disponible en la plantilla.
+     *
+     * @return el primer dorsal libre entre 1 y 99,
+     *         o {@code -1} si no hay dorsales disponibles
      */
     public int obtenerSiguienteDorsalDisponible() {
         for (int dorsal = 1; dorsal <= 99; dorsal++) {
@@ -104,44 +168,101 @@ public class Equipo implements Serializable {
                 return dorsal;
             }
         }
-        return -1; // No hay dorsales disponibles
+        return -1;
     }
-    
+
     /**
-     * ⭐ NUEVO: Obtiene una lista de dorsales disponibles
+     * Obtiene la lista de todos los dorsales disponibles.
+     *
+     * @return lista de dorsales libres
      */
     public List<Integer> obtenerDorsalesDisponibles() {
         List<Integer> disponibles = new ArrayList<>();
-        
+
         for (int dorsal = 1; dorsal <= 99; dorsal++) {
             if (dorsalDisponible(dorsal)) {
                 disponibles.add(dorsal);
             }
         }
-        
         return disponibles;
     }
-    
+
     /**
-     * Da de baja a un jugador
+     * Da de baja a un jugador de la plantilla.
+     *
+     * @param j jugador a eliminar
      */
     public void bajaJugador(Jugador j) {
         plantilla.remove(j);
     }
-    
-    // Getters y Setters
-    
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
-    
-    public String getRutaEscudo() { return rutaEscudo; }
-    public void setRutaEscudo(String rutaEscudo) { this.rutaEscudo = rutaEscudo; }
-    
-    public List<Jugador> getPlantilla() { return plantilla; }
-    
+
+    // --- GETTERS Y SETTERS ---
+
+    /**
+     * Obtiene el nombre del equipo.
+     *
+     * @return nombre del equipo
+     */
+    public String getNombre() {
+        return nombre;
+    }
+
+    /**
+     * Modifica el nombre del equipo.
+     *
+     * @param nombre nuevo nombre
+     */
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    /**
+     * Obtiene la ruta del escudo del equipo.
+     *
+     * @return ruta del escudo
+     */
+    public String getRutaEscudo() {
+        return rutaEscudo;
+    }
+
+    /**
+     * Modifica la ruta del escudo del equipo.
+     *
+     * @param rutaEscudo nueva ruta del escudo
+     */
+    public void setRutaEscudo(String rutaEscudo) {
+        this.rutaEscudo = rutaEscudo;
+    }
+
+    /**
+     * Obtiene la plantilla completa del equipo.
+     *
+     * @return lista de jugadores del equipo
+     */
+    public List<Jugador> getPlantilla() {
+        return plantilla;
+    }
+
+    /**
+     * Representación en texto del equipo.
+     *
+     * @return nombre del equipo
+     */
     @Override
-    public String toString() { return nombre; }
-    
+    public String toString() {
+        return nombre;
+    }
+
+    /**
+     * Comprueba la igualdad entre equipos.
+     * <p>
+     * Dos equipos se consideran iguales si tienen el mismo nombre
+     * (ignorando mayúsculas y minúsculas).
+     * </p>
+     *
+     * @param obj objeto a comparar
+     * @return {@code true} si son iguales, {@code false} en caso contrario
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -149,7 +270,12 @@ public class Equipo implements Serializable {
         Equipo e = (Equipo) obj;
         return nombre.equalsIgnoreCase(e.nombre);
     }
-    
+
+    /**
+     * Calcula el código hash del equipo.
+     *
+     * @return valor hash basado en el nombre del equipo
+     */
     @Override
     public int hashCode() {
         return Objects.hash(nombre.toLowerCase());

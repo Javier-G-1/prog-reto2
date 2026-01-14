@@ -2,14 +2,25 @@ package logica;
 
 import java.io.*;
 import java.nio.file.*;
-import java.util.List;
 import gestion.*;
 
 /**
  * GESTOR CENTRALIZADO DE PERSISTENCIA Y ARCHIVOS
- * ⭐ MEJORADO: Rutas relativas unificadas con formato "./imagenes/..."
+ * 
+ * <p>Responsable de:</p>
+ * <ul>
+ *     <li>Guardar y cargar datos de la federación (DatosFederacion).</li>
+ *     <li>Crear y mantener backups automáticos.</li>
+ *     <li>Normalizar rutas de imágenes de escudos y fotos de jugadores.</li>
+ *     <li>Inicializar datos por defecto si no existen o están corruptos.</li>
+ * </ul>
+ * 
+ * <p>Usa rutas relativas estandarizadas: "./imagenes/imagenes_Logos" y
+ * "./imagenes/imagenes_Jugadores".</p>
  */
 public class GestorArchivos {
+	
+	 
     
     private static final String ARCHIVO_DATOS = "datos_federacion.dat";
     private static final String CARPETA_BACKUPS = "backups";
@@ -43,7 +54,12 @@ public class GestorArchivos {
     }
     
     /**
-     * ⭐ MEJORADO: Guarda datos y normaliza URLs de imágenes
+     * Guarda todos los datos de la federación en disco.
+     * Normaliza las URLs de imágenes antes de guardar.
+     * Crea backup automático si el archivo ya existe.
+     * 
+     * @param datos Datos de la federación a guardar
+     * @return true si se guardaron correctamente, false si hubo error
      */
     public static boolean guardarTodo(DatosFederacion datos) {
         if (datos == null) {
@@ -119,7 +135,7 @@ public class GestorArchivos {
         }
         
         if (escudosNormalizados > 0 || fotosNormalizadas > 0) {
-            System.out.println("🔄 URLs normalizadas: " + escudosNormalizados + 
+            System.out.println(" URLs normalizadas: " + escudosNormalizados + 
                              " escudos, " + fotosNormalizadas + " fotos");
         }
     }
@@ -166,7 +182,11 @@ public class GestorArchivos {
     }
     
     /**
-     * ⭐ MEJORADO: Carga datos y sincroniza contador de IDs
+     * Carga los datos de la federación desde disco.
+     * Sincroniza los contadores de jugadores y normaliza rutas de imágenes.
+     * Si el archivo principal está corrupto, intenta restaurar desde el backup más reciente.
+     * 
+     * @return Objeto DatosFederacion cargado o inicializado por defecto
      */
     public static DatosFederacion cargarTodo() {
         File archivo = new File(ARCHIVO_DATOS);
@@ -253,13 +273,13 @@ public class GestorArchivos {
             Files.copy(archivoActual.toPath(), rutaBackup, 
                     StandardCopyOption.REPLACE_EXISTING);
             
-            System.out.println("💾 Backup creado: " + nombreBackup);
+            System.out.println(" Backup creado: " + nombreBackup);
             GestorLog.info("Backup automático creado: " + nombreBackup);
             
             limpiarBackupsAntiguos();
             
         } catch (IOException e) {
-            System.err.println("⚠ Advertencia: No se pudo crear backup: " + e.getMessage());
+            System.err.println("Advertencia: No se pudo crear backup: " + e.getMessage());
             GestorLog.advertencia("Fallo al crear backup: " + e.getMessage());
         }
     }
@@ -281,7 +301,7 @@ public class GestorArchivos {
                     Long.compare(b.lastModified(), a.lastModified()));
             
             File backupMasReciente = backups[0];
-            System.out.println("📂 → Restaurando desde: " + backupMasReciente.getName());
+            System.out.println(" Restaurando desde: " + backupMasReciente.getName());
             GestorLog.info("Restaurando desde backup: " + backupMasReciente.getName());
             
             try (ObjectInputStream ois = new ObjectInputStream(
@@ -290,7 +310,7 @@ public class GestorArchivos {
             }
             
         } catch (Exception e) {
-            System.err.println("❌ Error al restaurar backup: " + e.getMessage());
+            System.err.println(" Error al restaurar backup: " + e.getMessage());
             GestorLog.error("Error al restaurar backup", e);
             return null;
         }
@@ -312,18 +332,22 @@ public class GestorArchivos {
             
             for (int i = 5; i < backups.length; i++) {
                 if (backups[i].delete()) {
-                    System.out.println("🗑️ → Backup antiguo eliminado: " + backups[i].getName());
+                    System.out.println(" Backup antiguo eliminado: " + backups[i].getName());
                     GestorLog.debug("Backup antiguo eliminado: " + backups[i].getName());
                 }
             }
             
         } catch (Exception e) {
-            System.err.println("⚠ Error al limpiar backups: " + e.getMessage());
+            System.err.println(" Error al limpiar backups: " + e.getMessage());
         }
     }
     
     /**
-     * ⭐ MEJORADO: Copia un escudo con ruta relativa normalizada
+     * Copia un escudo de equipo al directorio estándar y devuelve su ruta relativa normalizada.
+     * 
+     * @param rutaOrigen Ruta de archivo original
+     * @param nombreEquipo Nombre del equipo
+     * @return Ruta relativa al escudo normalizado, o null si falla
      */
     public static String copiarEscudo(String rutaOrigen, String nombreEquipo) {
         if (rutaOrigen == null || rutaOrigen.isEmpty() || nombreEquipo == null) {
@@ -352,14 +376,19 @@ public class GestorArchivos {
             return "./imagenes/imagenes_Logos/" + nombreNormalizado;
             
         } catch (IOException e) {
-            System.err.println("✗ Error al copiar escudo: " + e.getMessage());
+            System.err.println(" Error al copiar escudo: " + e.getMessage());
             GestorLog.error("Error al copiar escudo de " + nombreEquipo, e);
             return null;
         }
     }
     
     /**
-     * ⭐ MEJORADO: Copia una foto de jugador con ruta relativa normalizada
+     * Copia una foto de jugador al directorio estándar y devuelve su ruta relativa normalizada.
+     * 
+     * @param rutaOrigen Ruta del archivo original
+     * @param nombreJugador Nombre del jugador
+     * @param nombreEquipo Nombre del equipo
+     * @return Ruta relativa al archivo normalizado, o null si falla
      */
     public static String copiarFotoJugador(String rutaOrigen, String nombreJugador, String nombreEquipo) {
         if (rutaOrigen == null || rutaOrigen.isEmpty()) {
@@ -389,7 +418,7 @@ public class GestorArchivos {
             return "./imagenes/imagenes_Jugadores/" + nombreNormalizado;
             
         } catch (IOException e) {
-            System.err.println("✗ Error al copiar foto: " + e.getMessage());
+            System.err.println(" Error al copiar foto: " + e.getMessage());
             GestorLog.error("Error al copiar foto de " + nombreJugador, e);
             return null;
         }

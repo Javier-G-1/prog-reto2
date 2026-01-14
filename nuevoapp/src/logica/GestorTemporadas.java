@@ -2,11 +2,27 @@ package logica;
 
 import gestion.*;
 
+
+/**
+ * <h2>Gestor de Temporadas</h2>
+ * <p>
+ * Clase encargada de la gestión de temporadas de la federación:
+ * finalizar temporadas, crear nuevas, inscribir equipos,
+ * asignar dorsales y preparar escenarios iniciales de prueba.
+ * </p>
+ */
 public class GestorTemporadas {
 
-    /**
+	  /**
      * Finaliza la temporada actual y activa la siguiente.
-     * ⭐ ACTUALIZADO: Ahora exporta solo la temporada finalizada a general.xml
+     * <p>
+     * Cambia los estados de las temporadas, vacía las plantillas
+     * y exporta la temporada finalizada a XML.
+     * </p>
+     * 
+     * @param actual  Temporada que se va a finalizar
+     * @param siguiente Temporada que se va a activar
+     * @param datos  Datos de la federación
      */
     public void finalizarTemporada(Temporada actual, Temporada siguiente, DatosFederacion datos) {
         if (actual == null || siguiente == null || datos == null) {
@@ -52,10 +68,16 @@ public class GestorTemporadas {
     }
 
     /**
-     * ⭐ MEJORADO: Crea una nueva temporada futura copiando de una temporada específica.
-     * IMPORTANTE: Solo se puede crear si NO hay ninguna temporada EN_JUEGO.
-     * @param temporadaOrigen La temporada desde la cual copiar (puede ser null para crear vacía)
-     * @return true si se creó exitosamente, false si no se pudo crear
+     * Crea una nueva temporada futura.
+     * <p>
+     * Solo se puede crear si no hay ninguna temporada en curso.
+     * Si se proporciona una temporada origen, se copian los equipos y jugadores.
+     * </p>
+     * 
+     * @param nombre Nombre de la nueva temporada
+     * @param datos Datos de la federación
+     * @param temporadaOrigen Temporada desde la cual copiar datos (puede ser null)
+     * @return true si se creó correctamente, false en caso contrario
      */
     public boolean crearTemporadaFutura(String nombre, DatosFederacion datos, Temporada temporadaOrigen) {
         if (nombre == null || nombre.isBlank() || datos == null) {
@@ -125,7 +147,10 @@ public class GestorTemporadas {
     }
     
     /**
-     * ⭐ NUEVO: Obtiene todas las temporadas FINALIZADAS
+     * Obtiene todas las temporadas que estén finalizadas.
+     *
+     * @param datos Datos de la federación
+     * @return Lista de temporadas finalizadas
      */
     public java.util.List<Temporada> obtenerTemporadasFinalizadas(DatosFederacion datos) {
         java.util.List<Temporada> finalizadas = new java.util.ArrayList<>();
@@ -142,7 +167,10 @@ public class GestorTemporadas {
     }
     
     /**
-     * ⭐ NUEVO: Obtiene la última temporada que esté FINALIZADA
+     * Obtiene la última temporada finalizada.
+     *
+     * @param datos Datos de la federación
+     * @return La última temporada finalizada o null si no hay
      */
     public Temporada obtenerUltimaTemporadaFinalizada(DatosFederacion datos) {
         if (datos == null || datos.getListaTemporadas().isEmpty()) {
@@ -163,7 +191,10 @@ public class GestorTemporadas {
     }
 
     /**
-     * ⭐ NUEVO: Verifica si ya existe una temporada EN_JUEGO
+     * Verifica si ya existe una temporada en curso.
+     *
+     * @param datos Datos de la federación
+     * @return true si hay una temporada EN_JUEGO, false en caso contrario
      */
     public boolean existeTemporadaEnCurso(DatosFederacion datos) {
         if (datos == null) return false;
@@ -177,7 +208,10 @@ public class GestorTemporadas {
     }
 
     /**
-     * ⭐ NUEVO: Obtiene la temporada que está EN_JUEGO (si existe)
+     * Obtiene la temporada que está actualmente en curso.
+     *
+     * @param datos Datos de la federación
+     * @return Temporada en curso o null si no existe
      */
     public Temporada obtenerTemporadaEnCurso(DatosFederacion datos) {
         if (datos == null) return null;
@@ -191,7 +225,15 @@ public class GestorTemporadas {
     }
 
     /**
-     * Inscribe un equipo en una temporada específica
+     * Inscribe un equipo en una temporada específica.
+     * <p>
+     * Solo se pueden inscribir equipos en temporadas FUTURAS.
+     * Si el equipo no existe en la federación, se crea.
+     * </p>
+     *
+     * @param nombreT Nombre de la temporada
+     * @param nombreE Nombre del equipo
+     * @param datos Datos de la federación
      */
     public void inscribirEquipoEnTemporada(String nombreT, String nombreE, DatosFederacion datos) {
         Temporada t = datos.buscarTemporadaPorNombre(nombreT);
@@ -231,7 +273,9 @@ public class GestorTemporadas {
     }
 
     /**
-     * Asigna dorsales automáticos
+     * Asigna dorsales automáticamente a los jugadores de cada equipo en una temporada.
+     *
+     * @param t Temporada cuyos jugadores recibirán dorsales
      */
     public void asignarDorsalesAutomaticos(Temporada t) {
         for (Equipo eq : t.getEquiposParticipantes()) {
@@ -245,7 +289,12 @@ public class GestorTemporadas {
     }
 
     /**
-     * Crea el escenario inicial con temporadas y equipos de prueba
+     * Crea un escenario inicial con temporadas y equipos de prueba.
+     * <p>
+     * Solo se ejecuta si no hay temporadas existentes en los datos.
+     * </p>
+     *
+     * @param datos Datos de la federación
      */
     public void prepararEscenarioInicial(DatosFederacion datos) {
     	 if (!datos.getListaTemporadas().isEmpty()) {

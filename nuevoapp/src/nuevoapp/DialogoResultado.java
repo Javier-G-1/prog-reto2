@@ -16,40 +16,66 @@ import javax.swing.JTextField;
 import gestion.Partido;
 import logica.GestorLog;
 
+/**
+ * Clase DialogoResultado.
+ * 
+ * Esta clase representa un diálogo modal que permite introducir y guardar
+ * el resultado de un partido específico. Incluye validaciones de entrada
+ * y actualiza directamente el objeto Partido.
+ * 
+ */
 public class DialogoResultado extends JDialog {
+    
     private static final long serialVersionUID = 1L;
 
-    private JTextField txtGolesLocal, txtGolesVisitante;
+    /** Campo de texto para los goles del equipo local */
+    private JTextField txtGolesLocal;
+
+    /** Campo de texto para los goles del equipo visitante */
+    private JTextField txtGolesVisitante;
+
+    /** Botón para guardar el resultado y finalizar el partido */
     private JButton btnGuardar;
-    private boolean aceptado = false; // Cambiado a 'aceptado' para coincidir con tu VentanaPrincipal
+
+    /** Indica si se ha aceptado y guardado el resultado */
+    private boolean aceptado = false;
+
+    /** Objeto Partido cuyo resultado se va a modificar */
     private Partido partido;
+
+    /** Goles introducidos para el equipo local */
     private int golesL;
+
+    /** Goles introducidos para el equipo visitante */
     private int golesV;
-    
+
+    /**
+     * Constructor del diálogo.
+     * 
+     * @param padre La ventana padre sobre la que se centra el diálogo
+     * @param p El partido cuyo resultado se va a introducir
+     */
     public DialogoResultado(Frame padre, Partido p) {
-        // Usamos un operador ternario: si p es null ponemos un título genérico, si no, el real
-        super(padre, (p == null) ? "Resultado" : "Resultado: " + p.getEquipoLocal().getNombre() + " vs " + p.getEquipoVisitante().getNombre(), true);
+        super(padre, (p == null) ? "Resultado" : "Resultado: " 
+                + p.getEquipoLocal().getNombre() + " vs " 
+                + p.getEquipoVisitante().getNombre(), true);
         
-        // Ahora el check ya no es "dead code" porque el programa no ha petado antes
         if (p == null) {
             dispose();
             return;
         }
-        this.partido = p;
-        // ... resto del código
-    
 
-        // Configuración visual mejorada
+        this.partido = p;
+
         setLayout(new BorderLayout(10, 10));
         setSize(350, 200);
         setLocationRelativeTo(padre);
 
-        // Panel Central para los inputs
+        // Panel de inputs
         JPanel panelInputs = new JPanel(new GridLayout(2, 2, 10, 10));
         panelInputs.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
 
         panelInputs.add(new JLabel("Goles " + p.getEquipoLocal().getNombre() + ":"));
-        // Pre-cargamos los goles actuales para que no aparezca vacío (evita el 0-0 por error)
         txtGolesLocal = new JTextField(String.valueOf(p.getGolesLocal()));
         panelInputs.add(txtGolesLocal);
 
@@ -59,7 +85,7 @@ public class DialogoResultado extends JDialog {
 
         add(panelInputs, BorderLayout.CENTER);
 
-        // Panel Inferior para los botones
+        // Panel de botones
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         btnGuardar = new JButton("Finalizar Partido");
         btnGuardar.addActionListener(e -> guardarResultado());
@@ -72,42 +98,61 @@ public class DialogoResultado extends JDialog {
         add(panelBotones, BorderLayout.SOUTH);
     }
 
+    /**
+     * Guarda el resultado introducido en los campos de texto.
+     * 
+     * Valida que los valores sean números enteros y estén dentro del rango
+     * permitido (0-50). Actualiza el objeto Partido y registra el evento.
+     */
     private void guardarResultado() {
         try {
-            // 1. Validación de caracteres (NumberFormatException)
             int gL = Integer.parseInt(txtGolesLocal.getText().trim());
             int gV = Integer.parseInt(txtGolesVisitante.getText().trim());
 
-            // 2. Validación de "Goles Infinitos" o Negativos (Reglas de Federación)
             if (gL < 0 || gV < 0 || gL > 50 || gV > 50) {
-                JOptionPane.showMessageDialog(this, "Los goles deben estar entre 0 y 50.", "Error de Rango", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Los goles deben estar entre 0 y 50.", 
+                        "Error de Rango", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            // 3. Guardado de datos
             this.golesL = gL;
             this.golesV = gV;
             
-            // Actualizamos el objeto directamente
             partido.setGolesLocal(gL);
             partido.setGolesVisitante(gV);
             partido.setFinalizado(true);
 
-            GestorLog.registrarEvento("PARTIDO FINALIZADO: " + partido.getEquipoLocal().getNombre() + " " + gL + " - " + gV + " " + partido.getEquipoVisitante().getNombre());
+            GestorLog.registrarEvento("PARTIDO FINALIZADO: " + partido.getEquipoLocal().getNombre() 
+                    + " " + gL + " - " + gV + " " + partido.getEquipoVisitante().getNombre());
 
             aceptado = true;
             dispose();
             
         } catch (NumberFormatException ex) {
-            // Solución al error de caracteres
-            JOptionPane.showMessageDialog(this, "¡Error! Introduce solo números enteros.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "¡Error! Introduce solo números enteros.", 
+                    "Error de Formato", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    // Métodos Getter para que VentanaPrincipal pueda leer los resultados
- // 2. AÑADE ESTOS MÉTODOS AL FINAL (Los Getters)
+    /**
+     * Indica si se aceptó el resultado.
+     * 
+     * @return true si se ha guardado el resultado, false en caso contrario
+     */
     public boolean isAceptado() { return aceptado; }
+
+    /**
+     * Devuelve los goles del equipo local introducidos.
+     * 
+     * @return Goles del equipo local
+     */
     public int getGolesL() { return golesL; }
+
+    /**
+     * Devuelve los goles del equipo visitante introducidos.
+     * 
+     * @return Goles del equipo visitante
+     */
     public int getGolesV() { return golesV; }
     
 }
