@@ -688,3 +688,264 @@
 [2026-01-14 09:29:18] [INFO] Navegación: Jugadores
 [2026-01-14 09:29:19] [INFO] Navegación: Jugadores
 [2026-01-14 09:29:20] [INFO] ➖ Ventana minimizada
+[2026-01-14 09:31:15] [INFO]  Auto-guardado iniciado...
+[2026-01-14 09:31:15] [INFO] Backup automático creado: backup_20260114_093115.dat
+[2026-01-14 09:31:15] [DEBUG] Backup antiguo eliminado: backup_20260114_091447.dat
+[2026-01-14 09:31:15] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 09:31:15] [SUCCESS]  Auto-guardado completado
+[2026-01-14 09:34:57] [INFO] ⬆️ Ventana restaurada
+[2026-01-14 09:34:59] [INFO] Navegación: Partidos
+[2026-01-14 09:35:00] [INFO] Navegación: Jugadores
+[2026-01-14 09:35:01] [INFO] Navegación: Equipos
+[2026-01-14 09:35:03] [INFO] Navegación: Equipos
+[2026-01-14 09:35:03] [INFO] Navegación: Equipos
+[2026-01-14 09:35:05] [INFO] Navegación: Inicio
+[2026-01-14 09:35:06] [INFO] Navegación: Equipos
+[2026-01-14 09:35:09] [INFO] Navegación: Inicio
+[2026-01-14 09:35:10] [INFO] Navegación: Equipos
+[2026-01-14 09:35:10] [INFO] Navegación: Jugadores
+[2026-01-14 09:35:12] [INFO] Navegación: Partidos
+[2026-01-14 09:35:13] [INFO] Navegación: Clasificación
+[2026-01-14 09:35:14] [INFO] Navegación: Partidos
+[2026-01-14 09:35:15] [INFO] Navegación: Jugadores
+[2026-01-14 09:35:15] [INFO] Navegación: Equipos
+[2026-01-14 09:35:23] [WARN] Intento de eliminar equipo en temporada TERMINADA
+[2026-01-14 09:35:31] [WARN] Intento de eliminar equipo en temporada TERMINADA
+[2026-01-14 09:35:38] [WARN] Intento de eliminar equipo en temporada TERMINADA
+[2026-01-14 09:35:40] [INFO] Navegación: Equipos
+[2026-01-14 09:35:41] [INFO] Navegación: Equipos
+[2026-01-14 09:35:55] [INFO] Navegación: Equipos
+[2026-01-14 09:36:01] [INFO] ➖ Ventana minimizada
+[2026-01-14 09:36:12] [INFO] ⬆️ Ventana restaurada
+[2026-01-14 09:36:15] [INFO]  Auto-guardado iniciado...
+[2026-01-14 09:36:15] [INFO] Backup automático creado: backup_20260114_093615.dat
+[2026-01-14 09:36:15] [DEBUG] Backup antiguo eliminado: backup_20260114_091947.dat
+[2026-01-14 09:36:15] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 09:36:15] [SUCCESS]  Auto-guardado completado
+[2026-01-14 09:36:46] [INFO] ➖ Ventana minimizada
+[2026-01-14 09:38:09] [INFO] ⬆️ Ventana restaurada
+[2026-01-14 09:38:15] [WARN]  Aplicación cerrada sin guardar cambios
+[2026-01-14 09:38:17] [INFO] Datos cargados desde datos_federacion.dat
+[2026-01-14 09:38:17] [INFO] Datos validados correctamente
+[2026-01-14 09:38:17] [INFO] Backup automático creado: backup_20260114_093817.dat
+[2026-01-14 09:38:17] [DEBUG] Backup antiguo eliminado: backup_20260114_092109.dat
+[2026-01-14 09:38:17] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 09:38:23] [INFO] Login exitoso: admin | Rol: Administrador
+[2026-01-14 09:38:23] [INFO] ================================================================================
+[2026-01-14 09:38:23] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-14 09:38:23] [INFO] Sistema: Windows 11 10.0
+[2026-01-14 09:38:23] [INFO] Java: 21.0.8
+[2026-01-14 09:38:23] [INFO] ================================================================================
+[2026-01-14 09:38:23] [INFO] Datos ya cargados desde archivo. No se crea escenario inicial.
+[2026-01-14 09:38:23] [INFO] Usuarios cargados en tabla: 5
+[2026-01-14 09:38:23] [INFO]  Sistema de auto-guardado activado (cada 5 minutos)
+[2026-01-14 09:38:23] [INFO]  Ventana principal abierta
+[2026-01-14 09:38:27] [INFO] Navegación: Equipos
+[2026-01-14 09:38:32] [INFO] Navegación: Jugadores
+[2026-01-14 09:38:41] [INFO] Auto-guardado detenido
+[2026-01-14 09:38:41] [INFO] Guardando datos antes de cerrar sesión...
+[2026-01-14 09:38:41] [INFO] Backup automático creado: backup_20260114_093841.dat
+[2026-01-14 09:38:41] [DEBUG] Backup antiguo eliminado: backup_20260114_092406.dat
+[2026-01-14 09:38:41] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 09:38:41] [INFO] Datos guardados correctamente
+[2026-01-14 09:38:42] [INFO] Datos cargados desde datos_federacion.dat
+[2026-01-14 09:38:42] [INFO] Datos validados correctamente
+[2026-01-14 09:38:42] [INFO] Backup automático creado: backup_20260114_093842.dat
+[2026-01-14 09:38:42] [DEBUG] Backup antiguo eliminado: backup_20260114_092608.dat
+[2026-01-14 09:38:42] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 09:38:42] [INFO] Sesión cerrada correctamente
+[2026-01-14 09:38:42] [INFO]  Ventana principal cerrada
+[2026-01-14 09:43:37] [INFO] Datos cargados desde datos_federacion.dat
+[2026-01-14 09:43:37] [INFO] Datos validados correctamente
+[2026-01-14 09:43:37] [INFO] Backup automático creado: backup_20260114_094337.dat
+[2026-01-14 09:43:37] [DEBUG] Backup antiguo eliminado: backup_20260114_093115.dat
+[2026-01-14 09:43:37] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 09:43:46] [WARN] Intento de login fallido: usuario
+[2026-01-14 09:44:03] [WARN] Intento de login fallido: visitante
+[2026-01-14 09:44:51] [INFO] Login exitoso: manager | Rol: Manager
+[2026-01-14 09:44:52] [INFO] ================================================================================
+[2026-01-14 09:44:52] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-14 09:44:52] [INFO] Sistema: Windows 11 10.0
+[2026-01-14 09:44:52] [INFO] Java: 21.0.8
+[2026-01-14 09:44:52] [INFO] ================================================================================
+[2026-01-14 09:44:52] [INFO] Datos ya cargados desde archivo. No se crea escenario inicial.
+[2026-01-14 09:44:52] [INFO] Usuarios cargados en tabla: 5
+[2026-01-14 09:44:52] [INFO]  Sistema de auto-guardado activado (cada 5 minutos)
+[2026-01-14 09:44:52] [INFO]  Ventana principal abierta
+[2026-01-14 09:44:54] [INFO] Navegación: Equipos
+[2026-01-14 09:44:58] [INFO] Navegación: Partidos
+[2026-01-14 09:44:59] [INFO] Navegación: Jugadores
+[2026-01-14 09:45:01] [INFO] Navegación: Partidos
+[2026-01-14 09:45:06] [INFO] Navegación: Jugadores
+[2026-01-14 09:45:51] [INFO] Navegación: Equipos
+[2026-01-14 09:46:03] [INFO] ➖ Ventana minimizada
+[2026-01-14 09:46:28] [INFO] ⬆️ Ventana restaurada
+[2026-01-14 09:46:34] [INFO] Auto-guardado detenido
+[2026-01-14 09:46:34] [INFO] Guardando datos antes de cerrar sesión...
+[2026-01-14 09:46:34] [INFO] Backup automático creado: backup_20260114_094634.dat
+[2026-01-14 09:46:34] [DEBUG] Backup antiguo eliminado: backup_20260114_093615.dat
+[2026-01-14 09:46:34] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 09:46:34] [INFO] Datos guardados correctamente
+[2026-01-14 09:46:34] [INFO] Datos cargados desde datos_federacion.dat
+[2026-01-14 09:46:34] [INFO] Datos validados correctamente
+[2026-01-14 09:46:34] [INFO] Backup automático creado: backup_20260114_094634.dat
+[2026-01-14 09:46:34] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 09:46:34] [INFO] Sesión cerrada correctamente
+[2026-01-14 09:46:34] [INFO]  Ventana principal cerrada
+[2026-01-14 09:46:48] [INFO] Login exitoso: invitado | Rol: Invitado
+[2026-01-14 09:46:50] [INFO] Navegación: Equipos
+[2026-01-14 09:46:51] [INFO] Navegación: Equipos
+[2026-01-14 09:46:51] [INFO] Navegación: Equipos
+[2026-01-14 09:46:56] [INFO] Navegación: Jugadores
+[2026-01-14 09:46:58] [INFO] Navegación: Partidos
+[2026-01-14 09:47:09] [WARN] Intento de modificar resultado en temporada FINALIZADA: Temporada 2025/26
+[2026-01-14 09:47:18] [WARN] Intento de modificar resultado en temporada FINALIZADA: Temporada 2025/26
+[2026-01-14 09:47:19] [INFO] Navegación: Equipos
+[2026-01-14 09:47:23] [INFO] Navegación: Jugadores
+[2026-01-14 09:47:24] [INFO] Navegación: Partidos
+[2026-01-14 09:47:34] [INFO] ➖ Ventana minimizada
+[2026-01-14 09:47:54] [INFO] ⬆️ Ventana restaurada
+[2026-01-14 09:47:56] [INFO] Guardando datos antes de cerrar sesión...
+[2026-01-14 09:47:56] [INFO] Backup automático creado: backup_20260114_094756.dat
+[2026-01-14 09:47:56] [DEBUG] Backup antiguo eliminado: backup_20260114_093817.dat
+[2026-01-14 09:47:56] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 09:47:56] [INFO] Datos guardados correctamente
+[2026-01-14 09:47:56] [INFO] Datos cargados desde datos_federacion.dat
+[2026-01-14 09:47:56] [INFO] Datos validados correctamente
+[2026-01-14 09:47:56] [INFO] Backup automático creado: backup_20260114_094756.dat
+[2026-01-14 09:47:56] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 09:47:56] [INFO] Sesión cerrada correctamente
+[2026-01-14 09:47:56] [INFO]  Ventana principal cerrada
+[2026-01-14 09:48:05] [INFO] Login exitoso: arbitro | Rol: Árbitro
+[2026-01-14 09:48:07] [INFO] Navegación: Jugadores
+[2026-01-14 09:48:18] [INFO] Navegación: Equipos
+[2026-01-14 09:48:25] [INFO] Navegación: Partidos
+[2026-01-14 09:48:29] [WARN] Intento de modificar resultado en temporada FINALIZADA: Temporada 2025/26
+[2026-01-14 09:48:37] [INFO] ➖ Ventana minimizada
+[2026-01-14 09:48:40] [INFO] ⬆️ Ventana restaurada
+[2026-01-14 09:48:47] [INFO] ➖ Ventana minimizada
+[2026-01-14 09:48:57] [INFO] ⬆️ Ventana restaurada
+[2026-01-14 09:49:02] [INFO] ➖ Ventana minimizada
+[2026-01-14 09:49:48] [INFO] ⬆️ Ventana restaurada
+[2026-01-14 09:49:55] [INFO] Navegación: Partidos
+[2026-01-14 09:49:56] [INFO] Navegación: Jugadores
+[2026-01-14 09:50:00] [INFO] Guardando datos antes de cerrar sesión...
+[2026-01-14 09:50:00] [INFO] Backup automático creado: backup_20260114_095000.dat
+[2026-01-14 09:50:00] [DEBUG] Backup antiguo eliminado: backup_20260114_093841.dat
+[2026-01-14 09:50:00] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 09:50:00] [INFO] Datos guardados correctamente
+[2026-01-14 09:50:00] [INFO] Datos cargados desde datos_federacion.dat
+[2026-01-14 09:50:00] [INFO] Datos validados correctamente
+[2026-01-14 09:50:00] [INFO] Backup automático creado: backup_20260114_095000.dat
+[2026-01-14 09:50:00] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 09:50:00] [INFO] Sesión cerrada correctamente
+[2026-01-14 09:50:00] [INFO]  Ventana principal cerrada
+[2026-01-14 09:50:04] [INFO] Login exitoso: admin | Rol: Administrador
+[2026-01-14 09:50:06] [INFO] Navegación: Partidos
+[2026-01-14 09:50:07] [INFO] Navegación: Jugadores
+[2026-01-14 09:50:10] [INFO] Navegación: Equipos
+[2026-01-14 09:50:13] [INFO] Navegación: Inicio
+[2026-01-14 09:50:15] [INFO] Navegación: Jugadores
+[2026-01-14 09:50:17] [INFO] Navegación: Equipos
+[2026-01-14 09:50:22] [INFO] Navegación: Inicio
+[2026-01-14 09:50:23] [INFO] Navegación: Equipos
+[2026-01-14 09:50:32] [INFO] Navegación: Partidos
+[2026-01-14 09:50:36] [INFO] Navegación: Clasificación
+[2026-01-14 09:50:37] [INFO] Navegación: Partidos
+[2026-01-14 09:50:41] [WARN]  Aplicación cerrada sin guardar cambios
+[2026-01-14 09:50:45] [INFO] Datos cargados desde datos_federacion.dat
+[2026-01-14 09:50:45] [INFO] Datos validados correctamente
+[2026-01-14 09:50:45] [INFO] Backup automático creado: backup_20260114_095045.dat
+[2026-01-14 09:50:45] [DEBUG] Backup antiguo eliminado: backup_20260114_093842.dat
+[2026-01-14 09:50:45] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 09:50:55] [INFO] Login exitoso: admin | Rol: Administrador
+[2026-01-14 09:50:55] [INFO] ================================================================================
+[2026-01-14 09:50:55] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-14 09:50:55] [INFO] Sistema: Windows 11 10.0
+[2026-01-14 09:50:55] [INFO] Java: 21.0.8
+[2026-01-14 09:50:55] [INFO] ================================================================================
+[2026-01-14 09:50:55] [INFO] Datos ya cargados desde archivo. No se crea escenario inicial.
+[2026-01-14 09:50:55] [INFO] Usuarios cargados en tabla: 5
+[2026-01-14 09:50:55] [INFO]  Sistema de auto-guardado activado (cada 5 minutos)
+[2026-01-14 09:50:55] [INFO]  Ventana principal abierta
+[2026-01-14 09:51:49] [INFO] ➖ Ventana minimizada
+[2026-01-14 09:52:09] [INFO] ⬆️ Ventana restaurada
+[2026-01-14 09:52:15] [INFO] ➖ Ventana minimizada
+[2026-01-14 09:53:46] [INFO] ⬆️ Ventana restaurada
+[2026-01-14 09:53:48] [INFO] Navegación: Equipos
+[2026-01-14 09:53:48] [INFO] Navegación: Equipos
+[2026-01-14 09:53:51] [INFO] Navegación: Inicio
+[2026-01-14 09:53:53] [INFO] Navegación: Equipos
+[2026-01-14 09:55:55] [INFO]  Auto-guardado iniciado...
+[2026-01-14 09:55:55] [INFO] Backup automático creado: backup_20260114_095555.dat
+[2026-01-14 09:55:55] [DEBUG] Backup antiguo eliminado: backup_20260114_094337.dat
+[2026-01-14 09:55:55] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 09:55:55] [SUCCESS]  Auto-guardado completado
+[2026-01-14 09:57:19] [INFO] ➖ Ventana minimizada
+[2026-01-14 09:58:21] [INFO] ⬆️ Ventana restaurada
+[2026-01-14 09:58:54] [INFO] Navegación: Gestión de Usuarios
+[2026-01-14 09:58:54] [INFO] Usuarios cargados en tabla: 5
+[2026-01-14 09:59:02] [INFO] Navegación: Partidos
+[2026-01-14 09:59:04] [INFO] Navegación: Jugadores
+[2026-01-14 09:59:06] [INFO] Navegación: Equipos
+[2026-01-14 09:59:15] [INFO] ➖ Ventana minimizada
+[2026-01-14 10:00:55] [INFO]  Auto-guardado iniciado...
+[2026-01-14 10:00:55] [INFO] Backup automático creado: backup_20260114_100055.dat
+[2026-01-14 10:00:55] [DEBUG] Backup antiguo eliminado: backup_20260114_094634.dat
+[2026-01-14 10:00:55] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 10:00:55] [SUCCESS]  Auto-guardado completado
+[2026-01-14 10:02:41] [INFO] ⬆️ Ventana restaurada
+[2026-01-14 10:02:45] [INFO] 💾 Guardando datos antes de cerrar aplicación...
+[2026-01-14 10:02:45] [INFO] Backup automático creado: backup_20260114_100245.dat
+[2026-01-14 10:02:45] [DEBUG] Backup antiguo eliminado: backup_20260114_094756.dat
+[2026-01-14 10:02:45] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 10:02:45] [SUCCESS]  Datos guardados correctamente
+[2026-01-14 10:02:48] [INFO]  Aplicación cerrada por el usuario
+[2026-01-14 10:02:52] [INFO] Datos cargados desde datos_federacion.dat
+[2026-01-14 10:02:52] [INFO] Datos validados correctamente
+[2026-01-14 10:02:52] [INFO] Backup automático creado: backup_20260114_100252.dat
+[2026-01-14 10:02:52] [DEBUG] Backup antiguo eliminado: backup_20260114_095000.dat
+[2026-01-14 10:02:52] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 10:03:01] [INFO] Login exitoso: invitado | Rol: Invitado
+[2026-01-14 10:03:01] [INFO] ================================================================================
+[2026-01-14 10:03:01] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-14 10:03:01] [INFO] Sistema: Windows 11 10.0
+[2026-01-14 10:03:01] [INFO] Java: 21.0.8
+[2026-01-14 10:03:01] [INFO] ================================================================================
+[2026-01-14 10:03:01] [INFO] Datos ya cargados desde archivo. No se crea escenario inicial.
+[2026-01-14 10:03:01] [INFO] Usuarios cargados en tabla: 5
+[2026-01-14 10:03:01] [INFO]  Sistema de auto-guardado activado (cada 5 minutos)
+[2026-01-14 10:03:01] [INFO]  Ventana principal abierta
+[2026-01-14 10:03:04] [INFO] Navegación: Equipos
+[2026-01-14 10:03:17] [INFO] Navegación: Jugadores
+[2026-01-14 10:03:19] [INFO] Navegación: Partidos
+[2026-01-14 10:03:21] [INFO] Navegación: Clasificación
+[2026-01-14 10:03:22] [INFO] Navegación: Inicio
+[2026-01-14 10:03:23] [INFO] Navegación: Equipos
+[2026-01-14 10:03:24] [INFO] Navegación: Jugadores
+[2026-01-14 10:03:25] [INFO] Navegación: Partidos
+[2026-01-14 10:03:27] [INFO] Navegación: Jugadores
+[2026-01-14 10:03:31] [INFO] Navegación: Inicio
+[2026-01-14 10:03:32] [INFO] Navegación: Equipos
+[2026-01-14 10:03:34] [INFO] Navegación: Partidos
+[2026-01-14 10:03:38] [INFO] Navegación: Clasificación
+[2026-01-14 10:04:10] [INFO] Navegación: Jugadores
+[2026-01-14 10:04:13] [INFO] Navegación: Equipos
+[2026-01-14 10:04:42] [WARN]  Aplicación cerrada sin guardar cambios
+[2026-01-14 10:06:02] [INFO] Datos cargados desde datos_federacion.dat
+[2026-01-14 10:06:02] [INFO] Datos validados correctamente
+[2026-01-14 10:06:02] [INFO] Backup automático creado: backup_20260114_100602.dat
+[2026-01-14 10:06:02] [DEBUG] Backup antiguo eliminado: backup_20260114_095045.dat
+[2026-01-14 10:06:02] [INFO] Datos guardados en datos_federacion.dat
+[2026-01-14 10:06:10] [INFO] Login exitoso: admin | Rol: Administrador
+[2026-01-14 10:06:10] [INFO] ================================================================================
+[2026-01-14 10:06:10] [INFO] INICIO DE SESIÓN - Usuario: Admin
+[2026-01-14 10:06:10] [INFO] Sistema: Windows 11 10.0
+[2026-01-14 10:06:10] [INFO] Java: 21.0.8
+[2026-01-14 10:06:10] [INFO] ================================================================================
+[2026-01-14 10:06:10] [INFO] Datos ya cargados desde archivo. No se crea escenario inicial.
+[2026-01-14 10:06:10] [INFO] Usuarios cargados en tabla: 5
+[2026-01-14 10:06:10] [INFO]  Sistema de auto-guardado activado (cada 5 minutos)
+[2026-01-14 10:06:10] [INFO]  Ventana principal abierta
+[2026-01-14 10:06:12] [INFO] Navegación: Jugadores
+[2026-01-14 10:06:18] [INFO] ➖ Ventana minimizada
