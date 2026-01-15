@@ -6,7 +6,7 @@ import java.util.*;
 /**
  * Clase responsable de generar el calendario de partidos de una temporada.
  * Utiliza el algoritmo Round-Robin para crear las jornadas de ida y vuelta.
- * 
+ *
  * <p>Reglas principales:
  * <ul>
  *     <li>Mínimo de 6 equipos para generar calendario.</li>
@@ -42,35 +42,71 @@ public class GeneradorCalendario {
         GestorLog.info("Iniciando generación de calendario: " + temp.getNombre() +
                       " | Equipos: " + participantes.size());
 
+        // ⭐ CORRECCIÓN: Crear una copia independiente para rotar
+        List<Equipo> equiposRotacion = new ArrayList<>(participantes);
+
         // Algoritmo Round-Robin (Ida)
         boolean agregarDescanso = false;
-        if (participantes.size() % 2 != 0) {
-            participantes.add(new Equipo("DESCANSA"));
+        if (equiposRotacion.size() % 2 != 0) {
+            equiposRotacion.add(new Equipo("DESCANSA"));
             agregarDescanso = true;
             GestorLog.info("Número impar de equipos - Se agregó equipo fantasma 'DESCANSA'");
         }
 
-        int jornadasIda = participantes.size() - 1;
+        int jornadasIda = equiposRotacion.size() - 1;
         int partidosGenerados = 0;
+
+        // ⭐ CORRECCIÓN: Fijar el primer equipo y rotar el resto
+        Equipo equipoFijo = equiposRotacion.get(0);
+        List<Equipo> equiposRotativos = new ArrayList<>(equiposRotacion.subList(1, equiposRotacion.size()));
 
         // Generar jornadas de IDA
         for (int i = 0; i < jornadasIda; i++) {
             Jornada j = new Jornada("Jornada " + (i + 1));
-            for (int k = 0; k < participantes.size() / 2; k++) {
-                Equipo local = participantes.get(k);
-                Equipo visita = participantes.get(participantes.size() - 1 - k);
-                if (!local.getNombre().equals("DESCANSA") && !visita.getNombre().equals("DESCANSA")) {
-                    j.agregarPartido(new Partido(local, visita));
+            
+            // ⭐ EMPAREJAMIENTO: El equipo fijo juega contra el primero de los rotativos
+            Equipo rival = equiposRotativos.get(0);
+            
+            // Alternar local/visitante según la jornada
+            if (i % 2 == 0) {
+                if (!equipoFijo.getNombre().equals("DESCANSA") && !rival.getNombre().equals("DESCANSA")) {
+                    j.agregarPartido(new Partido(equipoFijo, rival));
+                    partidosGenerados++;
+                }
+            } else {
+                if (!equipoFijo.getNombre().equals("DESCANSA") && !rival.getNombre().equals("DESCANSA")) {
+                    j.agregarPartido(new Partido(rival, equipoFijo));
                     partidosGenerados++;
                 }
             }
+            
+            // ⭐ RESTO DE EMPAREJAMIENTOS: Método espejo (1º con último, 2º con penúltimo...)
+            int mitad = equiposRotativos.size() / 2;
+            for (int k = 1; k <= mitad; k++) {
+                int indexLocal = k;
+                int indexVisitante = equiposRotativos.size() - k;
+                
+                // Solo emparejar si son posiciones diferentes
+                if (indexLocal != indexVisitante) {
+                    Equipo local = equiposRotativos.get(indexLocal);
+                    Equipo visita = equiposRotativos.get(indexVisitante);
+                    
+                    if (!local.getNombre().equals("DESCANSA") && !visita.getNombre().equals("DESCANSA")) {
+                        j.agregarPartido(new Partido(local, visita));
+                        partidosGenerados++;
+                    }
+                }
+            }
+            
             temp.agregarJornada(j);
-            Collections.rotate(participantes.subList(1, participantes.size()), 1);
+            
+            // ⭐ ROTACIÓN: Rotar solo la lista de equipos rotativos (sentido horario)
+            Collections.rotate(equiposRotativos, 1);
         }
 
         GestorLog.info("Fase de IDA completada - Jornadas: " + jornadasIda + " | Partidos: " + partidosGenerados);
 
-        // Generar jornadas de VUELTA
+        // Generar jornadas de VUELTA (invertir local y visitante)
         List<Jornada> ida = new ArrayList<>(temp.getListaJornadas());
         for (Jornada jIda : ida) {
             Jornada jVuelta = new Jornada("Vuelta - " + jIda.getNombre());
@@ -82,7 +118,7 @@ public class GeneradorCalendario {
         }
 
         GestorLog.exito("Calendario generado: " + temp.getNombre() +
-                      " | Equipos: " + (participantes.size() - (agregarDescanso ? 1 : 0)) +
+                      " | Equipos: " + (equiposRotacion.size() - (agregarDescanso ? 1 : 0)) +
                       " | Jornadas: " + temp.getListaJornadas().size() +
                       " | Partidos: " + partidosGenerados +
                       " | Sistema: Round-Robin");
