@@ -252,6 +252,106 @@ public class Equipo implements Serializable {
     public String toString() {
         return nombre;
     }
+    
+    
+    /** 
+     * Número mínimo de jugadores requeridos para que un equipo
+     * pueda participar en una temporada.
+     */
+    public static final int JUGADORES_MINIMOS = 9;
+
+    /** 
+     * Número recomendado de jugadores para considerar
+     * la plantilla como completa.
+     */
+    public static final int JUGADORES_RECOMENDADOS = 18;
+
+    /**
+     * Comprueba si el equipo tiene el número mínimo de jugadores necesarios.
+     *
+     * @return {@code true} si la plantilla tiene al menos
+     *         {@link #JUGADORES_MINIMOS} jugadores, {@code false} en caso contrario
+     */
+    public boolean tieneJugadoresSuficientes() {
+        return plantilla.size() >= JUGADORES_MINIMOS;
+    }
+
+    /**
+     * Calcula cuántos jugadores faltan para alcanzar el mínimo requerido.
+     *
+     * @return número de jugadores faltantes, o {@code 0}
+     *         si ya se ha alcanzado el mínimo
+     */
+    public int jugadoresFaltantes() {
+        int faltantes = JUGADORES_MINIMOS - plantilla.size();
+        return Math.max(0, faltantes);
+    }
+
+    /**
+     * Obtiene el número total de jugadores en la plantilla.
+     *
+     * @return cantidad de jugadores del equipo
+     */
+    public int numeroDeJugadores() {
+        return plantilla.size();
+    }
+
+    /**
+     * Obtiene un mensaje descriptivo del estado actual de la plantilla.
+     * <p>
+     * El mensaje indica si la plantilla está completa,
+     * si ha alcanzado el mínimo o cuántos jugadores faltan.
+     * </p>
+     *
+     * @return mensaje de estado de la plantilla
+     */
+    public String obtenerMensajeEstadoPlantilla() {
+        int actual = plantilla.size();
+        
+        if (actual >= JUGADORES_RECOMENDADOS) {
+            return String.format("✓ Plantilla completa (%d/%d jugadores)", 
+                               actual, JUGADORES_RECOMENDADOS);
+        } else if (actual >= JUGADORES_MINIMOS) {
+            return String.format("✓ Mínimo alcanzado (%d/%d jugadores)", 
+                               actual, JUGADORES_MINIMOS);
+        } else {
+            int faltan = JUGADORES_MINIMOS - actual;
+            return String.format("✗ Faltan %d jugador%s (%d/%d)", 
+                               faltan, 
+                               faltan == 1 ? "" : "es",
+                               actual, 
+                               JUGADORES_MINIMOS);
+        }
+    }
+
+    /**
+     * Obtiene un mensaje detallado de validación del equipo.
+     * <p>
+     * El mensaje incluye el nombre del equipo, el número actual
+     * de jugadores y si cumple o no el mínimo requerido.
+     * </p>
+     *
+     * @return mensaje de validación de la plantilla
+     */
+    public String obtenerDetalleValidacion() {
+        int actual = plantilla.size();
+        int faltan = jugadoresFaltantes();
+        
+        if (tieneJugadoresSuficientes()) {
+            return String.format("%s tiene %d jugador%s (mínimo: %d) ✓", 
+                               nombre, 
+                               actual,
+                               actual == 1 ? "" : "es",
+                               JUGADORES_MINIMOS);
+        } else {
+            return String.format("%s tiene %d jugador%s. Faltan %d para alcanzar el mínimo de %d ✗", 
+                               nombre, 
+                               actual,
+                               actual == 1 ? "" : "es",
+                               faltan,
+                               JUGADORES_MINIMOS);
+        }
+    }
 
     /**
      * Comprueba la igualdad entre equipos.

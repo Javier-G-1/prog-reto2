@@ -254,6 +254,8 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
     
     /** Timer para autoguardado periódico de datos */
     private javax.swing.Timer autoSaveTimer;
+    
+    
 
     // ==================== ESPACIADORES ====================
     
@@ -1405,18 +1407,25 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
             if (t == null) {
                 GestorLog.advertencia("Intento de crear jornada sin temporada seleccionada");
                 return;
-            }  GestorTemporadas gestor = new GestorTemporadas();
+            }
+
+            GestorTemporadas gestor = new GestorTemporadas();
             if (gestor.existeTemporadaEnCurso(datosFederacion)) {
                 Temporada temporadaEnCurso = gestor.obtenerTemporadaEnCurso(datosFederacion);
-                
+
                 JOptionPane.showMessageDialog(this,
                     "Ya existe una temporada en curso: " + temporadaEnCurso.getNombre() + "\n" +
                     "Debes finalizarla antes de iniciar una nueva temporada.",
                     "Temporada en curso activa",
                     JOptionPane.WARNING_MESSAGE);
-                
+
                 GestorLog.advertencia("Intento de activar " + t.getNombre() + 
                                     " mientras " + temporadaEnCurso.getNombre() + " está EN_JUEGO");
+                return;
+            }
+
+            // Corregido: La validación debe ir ANTES del proceso, no después de un return
+            if (!validarJugadoresMinimosPorTemporada(t)) {
                 return;
             }
 
@@ -1424,18 +1433,19 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 int equiposInscritos = t.getEquiposParticipantes().size();
                 String estadoAnterior = t.getEstado();
                 
-                // Generar calendario (el log ya está dentro de GeneradorCalendario)
+                // Generar calendario
                 GeneradorCalendario.crearCalendario(t);
                 
                 t.setEstado(Temporada.EN_JUEGO);
-                sincronizarCombos(); // 
+                
+                // Actualización de la interfaz
+                sincronizarCombos(); 
                 actualizarComboJornadas();
                 actualizarVistaPartidos(); 
                 actualizarIndicadorEstadoTemporada();
                 actualizarIndicadorEstadoPartidos(); 
                 actualizarVistaEquipos();
                 
-                // Log adicional con detalles del cambio de estado
                 GestorLog.exito("Temporada activada: " + t.getNombre() + 
                               " | Equipos: " + equiposInscritos + 
                               " | Jornadas creadas: " + t.getListaJornadas().size() +
@@ -1447,17 +1457,18 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 GestorLog.error("Error al generar calendario para " + t.getNombre() + ": " + ex.getMessage());
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error de Validación", JOptionPane.ERROR_MESSAGE);
             }
-        }
+        } // <--- Llave de cierre que faltaba
 
         else if (e.getSource() == btnNuevoPart) {
             GestorLog.info("Iniciando creación de partido manual");
             crearDialogoNuevoPartido();
         }
-        
+
         else if (e.getSource() == btnInscribirEquipo) {
             GestorLog.info("Iniciando proceso de inscripción de equipo");
             ejecutarInscripcionEquipo();
         }
+
         else if (e.getSource() == btnEditarJugador) {
             if (jugadorSeleccionado == null) {
                 JOptionPane.showMessageDialog(this, "Selecciona un jugador primero");
@@ -1479,7 +1490,6 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
             dialogo.setVisible(true);
             
             if (dialogo.isAceptado()) {
-                // Refrescar vista
                 actualizarJugadoresPorTemporada(
                     (String) comboTemporadasJugadores.getSelectedItem(),
                     (String) comboEquiposJugadores.getSelectedItem()
@@ -1487,18 +1497,14 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 GestorLog.exito("Jugador editado: " + jugadorSeleccionado.getNombre());
             }
         }
-            
-          
+
         else if (e.getSource() == btnFinalizarTemporada) {
-        	// Mirar si todos los partidos están jugados
-        	finalizarTemporada();
+            finalizarTemporada();
         }
+
         else if (e.getSource() == btnTxema) {
-        	funcionTxema();
-        }
-     // En newVentanaPrincipal, el código ya existente:
-    
-    }
+            funcionTxema();
+        }}
 
 
 
@@ -2326,7 +2332,79 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
 
         panelTarjetasJugadores.revalidate();
         panelTarjetasJugadores.repaint();
+    }/**
+     * Valida que todos los equipos de una temporada tengan
+     * el número mínimo de jugadores requerido.
+     * <p>
+     * El método comprueba que la temporada y su lista de equipos
+     * no sean nulas, que exista al menos un equipo registrado
+     * y que cada equipo cumpla con el mínimo de jugadores definido
+     * en {@link Equipo#JUGADORES_MINIMOS}.
+     * </p>
+     * <p>
+     * En caso de detectar equipos que no cumplen el requisito,
+     * se muestra un mensaje de advertencia detallado al usuario
+     * y se registra el evento en el sistema de logs.
+     * </p>
+     *
+     * @param temporada temporada a validar
+     * @return {@code true} si todos los equipos tienen jugadores suficientes
+     *         y la temporada puede inicializarse;
+     *         {@code false} en caso contrario
+     */
+    private boolean validarJugadoresMinimosPorTemporada(Temporada temporada) {
+        if (temporada == null || temporada.getEquiposParticipantes() == null) {
+            return false;
+        }
+        
+        java.util.List<Equipo> equipos = temporada.getEquiposParticipantes();
+        
+        if (equipos.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "No hay equipos registrados en esta temporada.",
+                "Error de validación",
+                JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        java.util.List<String> equiposInvalidos = new java.util.ArrayList<>();
+        
+        for (Equipo equipo : equipos) {
+            if (!equipo.tieneJugadoresSuficientes()) {
+                equiposInvalidos.add(equipo.obtenerDetalleValidacion());
+            }
+        }
+        
+        if (!equiposInvalidos.isEmpty()) {
+            StringBuilder mensaje = new StringBuilder();
+            mensaje.append("No se puede inicializar la temporada.\n\n");
+            mensaje.append("Los siguientes equipos no tienen el mínimo de ");
+            mensaje.append(Equipo.JUGADORES_MINIMOS);
+            mensaje.append(" jugadores:\n\n");
+            
+            for (String detalle : equiposInvalidos) {
+                mensaje.append("• ").append(detalle).append("\n");
+            }
+            
+            mensaje.append("\nPor favor, completa las plantillas antes de continuar.");
+            
+            JOptionPane.showMessageDialog(this,
+                mensaje.toString(),
+                "Validación de plantillas",
+                JOptionPane.WARNING_MESSAGE);
+            
+            GestorLog.advertencia("Validación fallida: " 
+                    + equiposInvalidos.size() 
+                    + " equipo(s) sin jugadores suficientes");
+            return false;
+        }
+        
+        return true;
     }
+
+    
+    
+    
 
     /**
      * Crea un diálogo para añadir un nuevo partido manualmente.
@@ -2708,7 +2786,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
      * 
      * @see #todosLosPartidosFinalizados(Temporada)
      * @see Temporada#setEstado(String)
-     * @see GestorLog#exito(String)
+     * @see GestorLog#exito(String)-
      */
     private void finalizarTemporada() {
         Temporada temp = obtenerTemporadaSeleccionada();
@@ -2791,30 +2869,49 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
      */
     private void funcionTxema() {
         Temporada temp = obtenerTemporadaSeleccionada();
+        
+        // 1. Verificación inicial de seguridad
+        if (temp == null) {
+            GestorLog.advertencia("No hay una temporada seleccionada para ejecutar la simulación.");
+            return;
+        }
+
+        // 2. Validaciones previas
+        if (!validarJugadoresMinimosPorTemporada(temp)) {
+            return;
+        }
+
+        // 3. Simulación de resultados
         Random random = new Random();
-        if(!todosLosPartidosFinalizados(temp)) {
+        
+        // Solo entramos si hay partidos pendientes
+        if (!todosLosPartidosFinalizados(temp)) {
             for (Jornada j : temp.getListaJornadas()) {
                 for (Partido p : j.getListaPartidos()) {
                     if (!p.isFinalizado()) {
-                        int golesLocal = random.nextInt(49)+1;
-                        int golesVisitante = random.nextInt(49)+1;
+                        // Genera goles entre 1 y 50
+                        int golesLocal = random.nextInt(50) + 1;
+                        int golesVisitante = random.nextInt(50) + 1;
+                        
                         p.setGolesLocal(golesLocal);
                         p.setGolesVisitante(golesVisitante);
                         p.setFinalizado(true);
                     }
                 }
             }
+            
+            // 4. Actualización de la interfaz (solo si hubo cambios)
+            actualizarVistaPartidos();
+            actualizarIndicadorEstadoPartidos();
+            
+            if (panelClasificacion.isVisible()) {
+                actualizarTablaClasificacionGrafica();
+            }
+            
+            GestorLog.exito("Función Txema ejecutada: Resultados aleatorios generados en " + temp.getNombre());
+        } else {
+            GestorLog.info("Todos los partidos ya estaban finalizados en " + temp.getNombre());
         }
-        // Actualizar todo después de la simulación
-        actualizarVistaPartidos();
-        actualizarIndicadorEstadoPartidos();
-        
-        // Si estamos en la vista de clasificación, actualizarla también
-        if (panelClasificacion.isVisible()) {
-            actualizarTablaClasificacionGrafica();
-        }
-        
-        GestorLog.exito("Función Txema ejecutada | " + temp.getNombre());
     }
 
     /**
