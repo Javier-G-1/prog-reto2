@@ -4,7 +4,8 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import java.io.FileOutputStream;
 import java.util.List;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import gestion.Temporada;
 
 /**
@@ -15,7 +16,7 @@ import gestion.Temporada;
  * </p>
  */
 public class ExportarPDF {
-
+    
     /**
      * Exporta la clasificación de una temporada a un archivo PDF.
      *
@@ -29,20 +30,86 @@ public class ExportarPDF {
         if (temporada == null || filas == null) {
             throw new IllegalArgumentException("La temporada y las filas no pueden ser nulas.");
         }
-
+        
         Document documento = new Document(PageSize.A4);
+        
         try {
             PdfWriter.getInstance(documento, new FileOutputStream(rutaArchivo));
             documento.open();
-
-            // --- Aquí va el resto de tu código de generación del PDF ---
-
+            
+            // ========== TÍTULO ==========
+            Font fuenteTitulo = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK);
+            Paragraph titulo = new Paragraph("Clasificación - " + temporada.getNombre(), fuenteTitulo);
+            titulo.setAlignment(Element.ALIGN_CENTER);
+            titulo.setSpacingAfter(10);
+            documento.add(titulo);
+            
+            // ========== FECHA DE GENERACIÓN ==========
+            Font fuenteFecha = FontFactory.getFont(FontFactory.HELVETICA, 10, BaseColor.GRAY);
+            String fechaActual = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date());
+            Paragraph fecha = new Paragraph("Generado el: " + fechaActual, fuenteFecha);
+            fecha.setAlignment(Element.ALIGN_CENTER);
+            fecha.setSpacingAfter(20);
+            documento.add(fecha);
+            
+            // ========== CREAR TABLA ==========
+            PdfPTable tabla = new PdfPTable(10); // 10 columnas
+            tabla.setWidthPercentage(100);
+            tabla.setSpacingBefore(10);
+            
+            // Anchos relativos de las columnas
+            float[] anchos = {1f, 4f, 1.5f, 1f, 1f, 1f, 1f, 1.5f, 1.5f, 1.5f};
+            tabla.setWidths(anchos);
+            
+            // ========== ENCABEZADOS ==========
+            Font fuenteEncabezado = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.WHITE);
+            BaseColor colorEncabezado = new BaseColor(45, 55, 140); // Azul oscuro
+            
+            agregarCelda(tabla, "Pos", fuenteEncabezado, colorEncabezado, Element.ALIGN_CENTER);
+            agregarCelda(tabla, "Equipo", fuenteEncabezado, colorEncabezado, Element.ALIGN_LEFT);
+            agregarCelda(tabla, "Pts", fuenteEncabezado, colorEncabezado, Element.ALIGN_CENTER);
+            agregarCelda(tabla, "PJ", fuenteEncabezado, colorEncabezado, Element.ALIGN_CENTER);
+            agregarCelda(tabla, "PG", fuenteEncabezado, colorEncabezado, Element.ALIGN_CENTER);
+            agregarCelda(tabla, "PE", fuenteEncabezado, colorEncabezado, Element.ALIGN_CENTER);
+            agregarCelda(tabla, "PP", fuenteEncabezado, colorEncabezado, Element.ALIGN_CENTER);
+            agregarCelda(tabla, "GF", fuenteEncabezado, colorEncabezado, Element.ALIGN_CENTER);
+            agregarCelda(tabla, "GC", fuenteEncabezado, colorEncabezado, Element.ALIGN_CENTER);
+            agregarCelda(tabla, "DIF", fuenteEncabezado, colorEncabezado, Element.ALIGN_CENTER);
+            
+            // ========== FILAS DE DATOS ==========
+            Font fuenteDatos = FontFactory.getFont(FontFactory.HELVETICA, 9, BaseColor.BLACK);
+            BaseColor colorFondoClaro = BaseColor.WHITE;
+            BaseColor colorFondoOscuro = new BaseColor(240, 240, 240);
+            
+            for (int i = 0; i < filas.size(); i++) {
+                FilaClasificacion fila = filas.get(i);
+                BaseColor colorFondo = (i % 2 == 0) ? colorFondoClaro : colorFondoOscuro;
+                
+                agregarCelda(tabla, String.valueOf(fila.getPosicion()), fuenteDatos, colorFondo, Element.ALIGN_CENTER);
+                agregarCelda(tabla, fila.getEquipo(), fuenteDatos, colorFondo, Element.ALIGN_LEFT);
+                agregarCelda(tabla, String.valueOf(fila.getPuntos()), fuenteDatos, colorFondo, Element.ALIGN_CENTER);
+                agregarCelda(tabla, String.valueOf(fila.getPj()), fuenteDatos, colorFondo, Element.ALIGN_CENTER);
+                agregarCelda(tabla, String.valueOf(fila.getPg()), fuenteDatos, colorFondo, Element.ALIGN_CENTER);
+                agregarCelda(tabla, String.valueOf(fila.getPe()), fuenteDatos, colorFondo, Element.ALIGN_CENTER);
+                agregarCelda(tabla, String.valueOf(fila.getPp()), fuenteDatos, colorFondo, Element.ALIGN_CENTER);
+                agregarCelda(tabla, String.valueOf(fila.getGf()), fuenteDatos, colorFondo, Element.ALIGN_CENTER);
+                agregarCelda(tabla, String.valueOf(fila.getGc()), fuenteDatos, colorFondo, Element.ALIGN_CENTER);
+                agregarCelda(tabla, fila.getDifFormateada(), fuenteDatos, colorFondo, Element.ALIGN_CENTER);
+            }
+            
+            documento.add(tabla);
+            
+            // ========== PIE DE PÁGINA ==========
+            Font fuentePie = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.ITALIC, BaseColor.GRAY);
+            Paragraph pie = new Paragraph("\nPts: Puntos | PJ: Partidos Jugados | PG: Partidos Ganados | PE: Partidos Empatados | PP: Partidos Perdidos\nGF: Goles a Favor | GC: Goles en Contra | DIF: Diferencia de Goles", fuentePie);
+            pie.setAlignment(Element.ALIGN_LEFT);
+            pie.setSpacingBefore(15);
+            documento.add(pie);
+            
             return true;
+            
         } catch (Exception e) {
             e.printStackTrace();
-            if (documento.isOpen()) {
-                documento.close();
-            }
             return false;
         } finally {
             if (documento.isOpen()) {
@@ -50,7 +117,7 @@ public class ExportarPDF {
             }
         }
     }
-
+    
     /**
      * Método auxiliar para agregar una celda a la tabla del PDF.
      *
