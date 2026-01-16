@@ -141,6 +141,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
     /** Botón para inscribir un equipo existente en una temporada */
     private JButton btnInscribirEquipo;
 
+    
     // ==================== BOTONES DE JUGADORES ====================
     
     /** Botón para ver la foto del jugador seleccionado */
@@ -2096,10 +2097,17 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         btnGoles.setFocusPainted(false);
         btnGoles.setBackground(p.isFinalizado() ? new Color(70, 70, 70) : new Color(45, 55, 140));
         btnGoles.setForeground(Color.WHITE);
+        
+
+        
 
         btnGoles.addActionListener(e -> {
+        	
             String tempNom = (String) comboTemporadasPartidos.getSelectedItem();
             Temporada t = datosFederacion.buscarTemporadaPorNombre(tempNom);
+            if (rolUsuario != Rol.ADMINISTRADOR && rolUsuario != Rol.ARBITRO) {
+            	btnGoles.setVisible(false);}
+            	
             
             if (t != null && t.getEstado().equals(Temporada.TERMINADA)) {
                 JOptionPane.showMessageDialog(this, 
@@ -3060,6 +3068,8 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 btnExportar.setVisible(false);
                 btnGestionUsuario.setVisible(false);
                 btnInscribirEquipo.setVisible(true);
+                btnFinalizarTemporada.setVisible(false);
+                btnTxema.setVisible(false);
                 break;
 
             case INVITADO:
@@ -3071,6 +3081,9 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 btnInscribirEquipo.setVisible(false);
                 btnExportar.setVisible(false);
                 btnGestionUsuario.setVisible(false);
+                btnFinalizarTemporada.setVisible(false);
+                btnTxema.setVisible(false);
+                
                 break;
         }
         
