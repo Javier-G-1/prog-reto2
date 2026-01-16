@@ -1,5 +1,4 @@
 package logica;
-
 import gestion.*;
 import java.io.File;
 import java.io.FileWriter;
@@ -38,7 +37,7 @@ public class ExportadorXMLLiga {
             carpetaLogos.mkdirs();
             carpetaJugadores.mkdirs();
             
-            GestorLog.info("Carpetas de imágenes verificadas");
+            GestorLog.info("📁 Carpetas de imágenes verificadas");
             
             // Leer XML existente o crear estructura base
             File archivoXML = new File(ARCHIVO_XML);
@@ -90,7 +89,7 @@ public class ExportadorXMLLiga {
                 writer.write(xmlExistente.toString());
             }
             
-            GestorLog.exito("Temporada exportada: " + temporada.getNombre());
+            GestorLog.exito("✅ Temporada exportada: " + temporada.getNombre());
             JOptionPane.showMessageDialog(null,
                 "✅ Temporada exportada exitosamente\n\n" +
                 "📄 Archivo: " + ARCHIVO_XML + "\n" +
@@ -101,7 +100,7 @@ public class ExportadorXMLLiga {
             return true;
             
         } catch (IOException e) {
-            GestorLog.error("Error al exportar: " + e.getMessage());
+            GestorLog.error("❌ Error al exportar: " + e.getMessage());
             JOptionPane.showMessageDialog(null,
                 "❌ Error: " + e.getMessage(),
                 "Error de exportación",
@@ -209,9 +208,20 @@ public class ExportadorXMLLiga {
         // Exportar jugadores
         xml.append("                    <jugadores>\n");
         
+        // 🔍 DEBUG: Contar jugadores con foto
+        int totalJugadores = equipo.getPlantilla().size();
+        int jugadoresConFoto = 0;
+        
         for (Jugador jugador : equipo.getPlantilla()) {
+            if (jugador.getFotoURL() != null && !jugador.getFotoURL().isEmpty()) {
+                jugadoresConFoto++;
+            }
             exportarJugador(xml, jugador, idEquipo, equipo.getNombre());
         }
+        
+        // 🔍 LOG de diagnóstico
+        GestorLog.info("📊 Equipo: " + equipo.getNombre() + " | Total: " + totalJugadores + 
+                      " | Con foto: " + jugadoresConFoto + " | Sin foto: " + (totalJugadores - jugadoresConFoto));
         
         xml.append("                    </jugadores>\n");
         
@@ -237,8 +247,17 @@ public class ExportadorXMLLiga {
         xml.append("                            <dorsal>").append(jugador.getDorsal()).append("</dorsal>\n");
         xml.append("                            <posicion>").append(escaparXML(jugador.getPosicion())).append("</posicion>\n");
         
+        // 🔍 DEBUG: Mostrar ruta original del jugador
+        String rutaOriginal = jugador.getFotoURL();
+        GestorLog.info("🖼️ Procesando foto de: " + jugador.getNombre() + 
+                      " | Ruta original: " + (rutaOriginal != null ? rutaOriginal : "NULL"));
+        
         // Foto
         String fotoUrl = copiarFotoJugador(jugador, nombreEquipo);
+        
+        // 🔍 DEBUG: Mostrar resultado final
+        GestorLog.info("   ↳ URL en XML: " + (fotoUrl.isEmpty() ? "VACÍO" : fotoUrl));
+        
         xml.append("                            <foto url=\"").append(escaparXML(fotoUrl)).append("\" />\n");
         
         xml.append("                        </jugador>\n");
@@ -251,6 +270,7 @@ public class ExportadorXMLLiga {
         String rutaOrigen = equipo.getRutaEscudo();
         
         if (rutaOrigen == null || rutaOrigen.isEmpty()) {
+            GestorLog.advertencia("⚠️ Escudo vacío para: " + equipo.getNombre());
             return "";
         }
         
@@ -258,7 +278,7 @@ public class ExportadorXMLLiga {
             File archivoOrigen = new File(rutaOrigen);
             
             if (!archivoOrigen.exists()) {
-                GestorLog.advertencia("Escudo no encontrado: " + rutaOrigen);
+                GestorLog.advertencia("❌ Escudo no encontrado: " + rutaOrigen);
                 return "";
             }
             
@@ -270,42 +290,53 @@ public class ExportadorXMLLiga {
             
             Files.copy(archivoOrigen.toPath(), archivoDestino.toPath(), StandardCopyOption.REPLACE_EXISTING);
             
+            GestorLog.info("✅ Escudo copiado: " + equipo.getNombre() + " → " + nombreNormalizado);
             return "./imagenes/imagenes_Logos/" + nombreNormalizado;
             
         } catch (IOException e) {
-            GestorLog.error("Error al copiar escudo: " + e.getMessage());
+            GestorLog.error("❌ Error al copiar escudo: " + e.getMessage());
             return "";
         }
     }
     
     /**
-     * Copia la foto de un jugador
+     * Copia la foto de un jugador y retorna la URL relativa
      */
     private String copiarFotoJugador(Jugador jugador, String nombreEquipo) {
         String rutaOrigen = jugador.getFotoURL();
         
+        // 🔍 VALIDACIÓN DETALLADA
         if (rutaOrigen == null || rutaOrigen.isEmpty()) {
-            return "";
+            GestorLog.advertencia("⚠️ Jugador sin foto: " + jugador.getNombre());
+            return ""; // Retorna vacío si no hay foto
         }
         
         try {
             File archivoOrigen = new File(rutaOrigen);
             
             if (!archivoOrigen.exists()) {
+                GestorLog.advertencia("❌ Archivo de foto no encontrado: " + rutaOrigen + " | Jugador: " + jugador.getNombre());
                 return "";
             }
             
             String extension = obtenerExtension(archivoOrigen.getName());
-            String nombreArchivo = jugador.getNombre().replace(" ", "\\ ") + extension;
+            // ⭐ CORRECCIÓN: Sin espacios escapados en el nombre del archivo
+            String nombreArchivo = normalizarNombre(jugador.getNombre()) + extension;
             
             File carpetaJugadores = new File(carpetaImagenes, "imagenes_Jugadores");
             File archivoDestino = new File(carpetaJugadores, nombreArchivo);
             
             Files.copy(archivoOrigen.toPath(), archivoDestino.toPath(), StandardCopyOption.REPLACE_EXISTING);
             
-            return nombreArchivo;
+            String urlFinal = "./imagenes/imagenes_Jugadores/" + nombreArchivo;
+            
+            GestorLog.info("✅ Foto copiada: " + jugador.getNombre() + " → " + urlFinal);
+            
+            return urlFinal;
             
         } catch (IOException e) {
+            GestorLog.error("❌ Error al copiar foto de " + jugador.getNombre() + ": " + e.getMessage());
+            e.printStackTrace();
             return "";
         }
     }
