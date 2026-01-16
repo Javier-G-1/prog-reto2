@@ -141,7 +141,6 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
     /** Botón para inscribir un equipo existente en una temporada */
     private JButton btnInscribirEquipo;
 
-    
     // ==================== BOTONES DE JUGADORES ====================
     
     /** Botón para ver la foto del jugador seleccionado */
@@ -2097,6 +2096,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         btnGoles.setFocusPainted(false);
         btnGoles.setBackground(p.isFinalizado() ? new Color(70, 70, 70) : new Color(45, 55, 140));
         btnGoles.setForeground(Color.WHITE);
+<<<<<<< HEAD
         
         // Solo mostrar el botón si el usuario tiene permisos para modificar resultados
         Usuario usuarioActualParaBotones = datosFederacion.buscarUsuario(lblUsuario.getText());
@@ -2105,11 +2105,13 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         }
 
         
+=======
+>>>>>>> parent of 8be03ec (resguardo de cambios con el setvisible)
 
         btnGoles.addActionListener(e -> {
-        	
             String tempNom = (String) comboTemporadasPartidos.getSelectedItem();
             Temporada t = datosFederacion.buscarTemporadaPorNombre(tempNom);
+<<<<<<< HEAD
             
             // Verificar permisos del usuario para modificar resultados
             Usuario usuarioActual = datosFederacion.buscarUsuario(lblUsuario.getText());
@@ -2121,6 +2123,8 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 GestorLog.advertencia("Intento de editar resultado sin permisos por usuario: " + lblUsuario.getText());
                 return;
             }
+=======
+>>>>>>> parent of 8be03ec (resguardo de cambios con el setvisible)
             
             if (t != null && t.getEstado().equals(Temporada.TERMINADA)) {
                 JOptionPane.showMessageDialog(this, 
@@ -3092,8 +3096,6 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 btnExportar.setVisible(false);
                 btnGestionUsuario.setVisible(false);
                 btnInscribirEquipo.setVisible(true);
-                btnFinalizarTemporada.setVisible(false);
-                btnTxema.setVisible(false);
                 break;
 
             case INVITADO:
@@ -3105,9 +3107,6 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 btnInscribirEquipo.setVisible(false);
                 btnExportar.setVisible(false);
                 btnGestionUsuario.setVisible(false);
-                btnFinalizarTemporada.setVisible(false);
-                btnTxema.setVisible(false);
-                
                 break;
         }
         

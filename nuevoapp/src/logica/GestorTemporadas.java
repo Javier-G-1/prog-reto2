@@ -310,13 +310,12 @@ public class GestorTemporadas {
     	    
     	    // Equipos de ejemplo
     	    String[][] equiposConJugadores = {
-    	    		{"Barcelona","Álvaro Mena","Carla Ríos","Ignacio Vela","Sofía Llorente","Mateo Cruz","Daniel Romero","Lucía Fernández","Hugo Paredes","Natalia Campos"},
-    	    		{"Granada","Carlos Muñoz","Marta Domínguez","Andrés Cortés","Lucía Palacios","Javier Molina","Paula Herrera","Sergio León","Beatriz Santos","Iván Castillo"},
-    	    		{"Sevilla","Marina Torres","Fernando Vázquez","Ana Beltrán","Rubén Márquez","Diego Navarro","Carmen Ruiz","Alejandro Gil","Laura Peña","Manuel Ortega"},
-    	    		{"Zaragoza","Miguel Ortega","Claudia Rivas","Javier Torres","Isabel Salinas","Óscar Medina","Patricia López","Raúl Sánchez","Nerea Fuentes","Adrián Blanco"},
-    	    		{"Valencia","Raúl Pérez","Andrea Delgado","Luis Navarro","Marta Ramírez","Vicente Soler","Cristina Pons","Ángel Ferrer","Silvia Moreno","David Costa"},
-    	    		{"Athletic Club","Pablo Martínez","Alicia Gómez","Daniel Reyes","Elena López","Iker Aguirre","Maite Etxeberria","Unai Bilbao","Nerea Aramburu","Jon Salazar"}
-
+    	        {"Barcelona","Álvaro Mena","Carla Ríos","Ignacio Vela","Sofía Llorente","Mateo Cruz"},
+    	        {"Granada","Carlos Muñoz","Marta Domínguez","Andrés Cortés","Lucía Palacios"},
+    	        {"Sevilla","Marina Torres","Fernando Vázquez","Ana Beltrán","Rubén Márquez"},
+    	        {"Zaragoza","Miguel Ortega","Claudia Rivas","Javier Torres","Isabel Salinas"},
+    	        {"Valencia","Raúl Pérez","Andrea Delgado","Luis Navarro","Marta Ramírez"},
+    	        {"Athletic Club","Pablo Martínez","Alicia Gómez","Daniel Reyes","Elena López"}
     	    };
     	    
     	    // Crear equipos con jugadores
