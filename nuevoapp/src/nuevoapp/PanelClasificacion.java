@@ -12,25 +12,23 @@ import gestion.DatosFederacion;
 import logica.ExportarPDF;
 
 /**
- * PanelClasificacion.
+ * PanelClasificacion - Panel de clasificación con botón de exportar PDF
  * 
- * Panel que muestra la clasificación de equipos de una temporada específica.
- * Permite seleccionar la temporada a través de un JComboBox, ver las estadísticas
- * de cada equipo y exportar la clasificación a un archivo PDF.
- * 
- * Está diseñado con JLists y modelos separados para cada columna, simulando
- * una tabla de clasificación.
- * 
+ * Muestra la tabla de clasificación y permite exportarla a PDF.
+ * La temporada se controla desde VentanaMain a través del método actualizarClasificacion(Temporada).
  */
 public class PanelClasificacion extends JPanel {
 
     private static final long serialVersionUID = 1L;
     
-    /** ComboBox para seleccionar la temporada actual */
-    private JComboBox<String> comboTemporadasClasificacion;
-    
-    /** Datos de la federación que contienen las temporadas y equipos */
+    /** Datos de la federación */
     private DatosFederacion datosFederacion;
+    
+    /** Temporada actualmente mostrada */
+    private Temporada temporadaActual;
+    
+    /** Botón para exportar a PDF */
+    private JButton btnExportarPDF;
     
     // ===== MODELOS DE COLUMNAS =====
     private DefaultListModel<Integer> dlmPosicion = new DefaultListModel<>();
@@ -57,85 +55,33 @@ public class PanelClasificacion extends JPanel {
     private JList<Integer> listPTS;
     
     /**
-     * Getter para el combo de temporadas.
-     * Permite sincronización externa o manipulación desde otra vista.
-     * 
-     * @return JComboBox con las temporadas
-     */
-    public JComboBox<String> getComboTemporadas() {
-        return comboTemporadasClasificacion;
-    }
-    
-    /**
-     * Recarga el combo de temporadas con los datos actuales.
-     * Útil cuando se crean nuevas temporadas desde otras vistas.
-     */
-    public void recargarTemporadas() {
-        if (comboTemporadasClasificacion == null || datosFederacion == null) {
-            return;
-        }
-        
-        Object seleccionActual = comboTemporadasClasificacion.getSelectedItem();
-        comboTemporadasClasificacion.removeAllItems();
-        for (Temporada t : datosFederacion.getListaTemporadas()) {
-            comboTemporadasClasificacion.addItem(t.getNombre());
-        }
-        if (seleccionActual != null) {
-            comboTemporadasClasificacion.setSelectedItem(seleccionActual);
-        }
-    }
-    
-    /**
      * Constructor del panel de clasificación.
-     * 
-     * @param datos DatosFederacion que contienen todas las temporadas y equipos
      */
     public PanelClasificacion(DatosFederacion datos) {
         this.datosFederacion = datos;
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(5, 5));
         setBackground(new Color(20, 24, 31));
+        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         
-        // Panel superior con título y selección de temporada
-        JPanel panelHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
-        panelHeader.setBackground(new Color(30, 34, 45));
-
-        JLabel lblTitulo = new JLabel("Clasificación");
-        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        lblTitulo.setForeground(Color.WHITE);
-        panelHeader.add(lblTitulo);
+        // ===== PANEL SUPERIOR CON BOTÓN EXPORTAR =====
+        JPanel panelSuperior = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 5));
+        panelSuperior.setBackground(new Color(20, 24, 31));
         
-        panelHeader.add(Box.createHorizontalStrut(20));
-        
-        JLabel lblTemp = new JLabel("Temporada:");
-        lblTemp.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblTemp.setForeground(Color.WHITE);
-        panelHeader.add(lblTemp);
-
-        comboTemporadasClasificacion = new JComboBox<>();
-        comboTemporadasClasificacion.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        for (Temporada t : datosFederacion.getListaTemporadas()) {
-            comboTemporadasClasificacion.addItem(t.getNombre());
-        }
-        comboTemporadasClasificacion.addActionListener(e -> {
-            String nombreT = (String) comboTemporadasClasificacion.getSelectedItem();
-            Temporada t = datosFederacion.buscarTemporadaPorNombre(nombreT);
-            cargarClasificacion(t);
-        });
-        panelHeader.add(comboTemporadasClasificacion);
-        add(panelHeader, BorderLayout.NORTH);
-        
-        // Botón para exportar PDF
-        JButton btnExportarPDF = new JButton("Exportar PDF");
-        btnExportarPDF.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnExportarPDF.setBackground(new Color(0, 153, 76));
+        btnExportarPDF = new JButton("📄 Exportar PDF");
+        btnExportarPDF.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnExportarPDF.setBackground(new Color(231, 76, 60));
         btnExportarPDF.setForeground(Color.WHITE);
         btnExportarPDF.setFocusPainted(false);
-        btnExportarPDF.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnExportarPDF.setBorderPainted(false);
+        btnExportarPDF.setPreferredSize(new Dimension(150, 35));
         btnExportarPDF.addActionListener(e -> exportarPDF());
-        panelHeader.add(btnExportarPDF);
         
-        // Panel central con columnas de clasificación
+        panelSuperior.add(btnExportarPDF);
+        add(panelSuperior, BorderLayout.NORTH);
+        
+        // ===== PANEL CENTRAL CON COLUMNAS =====
         JPanel panelBody = new JPanel(new GridLayout(1, 10, 0, 0)); 
+        panelBody.setBackground(new Color(20, 24, 31));
         add(panelBody, BorderLayout.CENTER);
 
         panelBody.add(crearColumna("Pos", listPosicion = new JList<>(dlmPosicion)));
@@ -148,22 +94,15 @@ public class PanelClasificacion extends JPanel {
         panelBody.add(crearColumna("GC", listGC = new JList<>(dlmGC)));
         panelBody.add(crearColumna("Dif", listDIF = new JList<>(dlmDIF)));
         panelBody.add(crearColumna("PTS", listPTS = new JList<>(dlmPTS)));
-        
-        if (comboTemporadasClasificacion.getItemCount() > 0) {
-            comboTemporadasClasificacion.setSelectedIndex(0);
-        }
     }
 
     /**
-     * Crea un panel con título y lista para una columna de la tabla de clasificación.
-     * 
-     * @param titulo Título de la columna
-     * @param lista JList que contiene los datos de la columna
-     * @return JPanel con la columna completa
+     * Crea un panel con título y lista para una columna.
      */
     private JPanel crearColumna(String titulo, JList<?> lista) {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, new Color(100, 100, 100)));
+        panel.setBackground(new Color(20, 24, 31));
+        panel.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, new Color(60, 60, 80)));
 
         JPanel panelTitulo = new JPanel();
         panelTitulo.setBackground(new Color(45, 55, 140));
@@ -175,10 +114,12 @@ public class PanelClasificacion extends JPanel {
 
         lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         lista.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        lista.setBackground(new Color(240, 240, 240));
+        lista.setBackground(new Color(30, 34, 41));
+        lista.setForeground(Color.WHITE);
 
         JScrollPane scroll = new JScrollPane(lista);
         scroll.setBorder(null);
+        scroll.setBackground(new Color(20, 24, 31));
 
         panel.add(panelTitulo, BorderLayout.NORTH);
         panel.add(scroll, BorderLayout.CENTER);
@@ -187,11 +128,29 @@ public class PanelClasificacion extends JPanel {
     }
 
     /**
-     * Carga la clasificación de la temporada especificada en los modelos de JList.
-     * 
-     * @param temporada Temporada de la cual se calculará la clasificación
+     * ⭐ MÉTODO PÚBLICO para actualizar la clasificación desde VentanaMain
+     * SOBRECARGADO: Acepta la temporada como parámetro
      */
-    public void cargarClasificacion(Temporada temporada) {
+    public void actualizarClasificacion(Temporada temporada) {
+        this.temporadaActual = temporada;
+        cargarClasificacion(temporada);
+    }
+    
+    /**
+     * ⭐ MÉTODO PÚBLICO para actualizar sin cambiar la temporada
+     * (Recalcula con la temporada actual)
+     */
+    public void actualizarClasificacion() {
+        if (temporadaActual != null) {
+            cargarClasificacion(temporadaActual);
+        }
+    }
+
+    /**
+     * Carga la clasificación de la temporada en los modelos de JList.
+     */
+    private void cargarClasificacion(Temporada temporada) {
+        // Limpiar modelos
         dlmPosicion.clear();
         dlmEquipo.clear();
         dlmPJ.clear();
@@ -203,60 +162,67 @@ public class PanelClasificacion extends JPanel {
         dlmDIF.clear();
         dlmPTS.clear();
 
-        if (temporada == null) return;
+        if (temporada == null) {
+            System.out.println("⚠️ PanelClasificacion: Temporada es null");
+            return;
+        }
         
-        Clasificacion clasificacionObjeto = CalculadoraClasificacion.calcular(temporada);
-        List<FilaClasificacion> filas = clasificacionObjeto.getFilas();
+        System.out.println("📊 Actualizando clasificación: " + temporada.getNombre());
+        
+        try {
+            Clasificacion clasificacionObjeto = CalculadoraClasificacion.calcular(temporada);
+            List<FilaClasificacion> filas = clasificacionObjeto.getFilas();
 
-        int pos = 1;
-        for (FilaClasificacion f : filas) {
-            dlmPosicion.addElement(pos++);
-            dlmEquipo.addElement(f.getEquipo());
-            dlmPJ.addElement(f.getPj());
-            dlmPG.addElement(f.getPg());
-            dlmPE.addElement(f.getPe());
-            dlmPP.addElement(f.getPp());
-            dlmGF.addElement(f.getGf());
-            dlmGC.addElement(f.getGc());
-            dlmDIF.addElement(f.getDf());
-            dlmPTS.addElement(f.getPuntos());
+            System.out.println("✅ Filas de clasificación cargadas: " + filas.size());
+
+            int pos = 1;
+            for (FilaClasificacion f : filas) {
+                dlmPosicion.addElement(pos++);
+                dlmEquipo.addElement(f.getEquipo());
+                dlmPJ.addElement(f.getPj());
+                dlmPG.addElement(f.getPg());
+                dlmPE.addElement(f.getPe());
+                dlmPP.addElement(f.getPp());
+                dlmGF.addElement(f.getGf());
+                dlmGC.addElement(f.getGc());
+                dlmDIF.addElement(f.getDf());
+                dlmPTS.addElement(f.getPuntos());
+            }
+            
+            // Forzar actualización visual
+            revalidate();
+            repaint();
+            
+        } catch (Exception e) {
+            System.err.println("❌ Error al cargar clasificación: " + e.getMessage());
+            e.printStackTrace();
         }
     }
     
     /**
-     * Exporta la clasificación de la temporada seleccionada a un archivo PDF.
-     * Muestra diálogos para seleccionar la ubicación y abre el PDF si se desea.
+     * Exporta la clasificación actual a PDF.
      */
-    private void exportarPDF() {
-        String nombreTemporada = (String) comboTemporadasClasificacion.getSelectedItem();
-        if (nombreTemporada == null || nombreTemporada.isEmpty()) {
+    public void exportarPDF() {
+        if (temporadaActual == null) {
             JOptionPane.showMessageDialog(this,
-                "No hay ninguna temporada seleccionada.",
+                "No hay ninguna temporada cargada.",
                 "Error",
                 JOptionPane.WARNING_MESSAGE);
             return;
         }
         
-        Temporada temporada = datosFederacion.buscarTemporadaPorNombre(nombreTemporada);
-        if (temporada == null) {
-            JOptionPane.showMessageDialog(this,
-                "No se pudo encontrar la temporada seleccionada.",
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
         if (dlmEquipo.isEmpty()) {
             JOptionPane.showMessageDialog(this,
-                "No hay datos de clasificación para exportar.",
-                "Error",
+                "No hay datos de clasificación para exportar.\n" +
+                "Asegúrate de que hay partidos jugados en la temporada.",
+                "Sin datos",
                 JOptionPane.WARNING_MESSAGE);
             return;
         }
         
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Guardar clasificación como PDF");
-        fileChooser.setSelectedFile(new java.io.File("Clasificacion_" + nombreTemporada + ".pdf"));
+        fileChooser.setSelectedFile(new java.io.File("Clasificacion_" + temporadaActual.getNombre() + ".pdf"));
         fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Archivos PDF", "pdf"));
         
         int resultado = fileChooser.showSaveDialog(this);
@@ -267,10 +233,10 @@ public class PanelClasificacion extends JPanel {
                 rutaArchivo += ".pdf";
             }
             
-            Clasificacion clasificacion = CalculadoraClasificacion.calcular(temporada);
+            Clasificacion clasificacion = CalculadoraClasificacion.calcular(temporadaActual);
             List<FilaClasificacion> filas = clasificacion.getFilas();
             
-            boolean exito = ExportarPDF.exportarClasificacion(temporada, filas, rutaArchivo);
+            boolean exito = ExportarPDF.exportarClasificacion(temporadaActual, filas, rutaArchivo);
             
             if (exito) {
                 int opcion = JOptionPane.showConfirmDialog(this,
