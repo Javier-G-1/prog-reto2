@@ -826,5 +826,638 @@
                 </jornada>
             </jornadas>
         </temporada>
+            <temporada id="2027">
+            <equipos>
+                <equipo id="E008">
+                    <nombre>Barcelona</nombre>
+                    <ganados>0</ganados>
+                    <perdidos>0</perdidos>
+                    <empatados>0</empatados>
+                    <golesFavor>0</golesFavor>
+                    <golesContra>0</golesContra>
+                    <jugadores>
+                        <jugador id="JU00110" equipo="E008">
+                            <nombre>Diego Pacheco</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>46</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00111" equipo="E008">
+                            <nombre>Alex Domínguez</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>47</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00112" equipo="E008">
+                            <nombre>Nico Bautista</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>48</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00113" equipo="E008">
+                            <nombre>Marcos Roldán</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>49</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00114" equipo="E008">
+                            <nombre>Joel Carrasco</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>50</dorsal>
+                            <posicion>Extremo Derecho</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00115" equipo="E008">
+                            <nombre>Adrià Soler</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>51</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00116" equipo="E008">
+                            <nombre>Marc Ferrer</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>52</dorsal>
+                            <posicion>Lateral Izquierdo</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00117" equipo="E008">
+                            <nombre>Pol Giménez</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>53</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00118" equipo="E008">
+                            <nombre>Oriol Casals</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>54</dorsal>
+                            <posicion>Extremo Izquierdo</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00119" equipo="E008">
+                            <nombre>Sergi Puig</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>55</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                    </jugadores>
+                    <escudo url="./imagenes/imagenes_Logos/BARCELONA.png" />
+                </equipo>
+                <equipo id="E009">
+                    <nombre>Granada</nombre>
+                    <ganados>0</ganados>
+                    <perdidos>0</perdidos>
+                    <empatados>0</empatados>
+                    <golesFavor>0</golesFavor>
+                    <golesContra>0</golesContra>
+                    <jugadores>
+                        <jugador id="JU00120" equipo="E009">
+                            <nombre>Alejandro Ruiz</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>1</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00121" equipo="E009">
+                            <nombre>Daniel García</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>2</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00122" equipo="E009">
+                            <nombre>Pablo Fernández</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>3</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00123" equipo="E009">
+                            <nombre>Javier López</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>4</dorsal>
+                            <posicion>Extremo Derecho</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00124" equipo="E009">
+                            <nombre>Sergio Martínez</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>5</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00125" equipo="E009">
+                            <nombre>Carlos Sánchez</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>6</dorsal>
+                            <posicion>Pivote</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00126" equipo="E009">
+                            <nombre>Marcos Pérez</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>7</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00127" equipo="E009">
+                            <nombre>Adrián Gómez</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>8</dorsal>
+                            <posicion>Lateral Izquierdo</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00128" equipo="E009">
+                            <nombre>Iván Torres</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>9</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                    </jugadores>
+                    <escudo url="./imagenes/imagenes_Logos/GRANADA.png" />
+                </equipo>
+                <equipo id="E010">
+                    <nombre>Sevilla</nombre>
+                    <ganados>0</ganados>
+                    <perdidos>0</perdidos>
+                    <empatados>0</empatados>
+                    <golesFavor>0</golesFavor>
+                    <golesContra>0</golesContra>
+                    <jugadores>
+                        <jugador id="JU00129" equipo="E010">
+                            <nombre>David Romero</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>13</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00130" equipo="E010">
+                            <nombre>Jorge Alonso</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>14</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00131" equipo="E010">
+                            <nombre>Luis Hernández</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>15</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00132" equipo="E010">
+                            <nombre>Víctor Castro</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>16</dorsal>
+                            <posicion>Lateral Izquierdo</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00133" equipo="E010">
+                            <nombre>Antonio Molina</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>17</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00134" equipo="E010">
+                            <nombre>Rubén Delgado</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>18</dorsal>
+                            <posicion>Lateral Izquierdo</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00135" equipo="E010">
+                            <nombre>Fran Ortega</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>19</dorsal>
+                            <posicion>Pivote</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00136" equipo="E010">
+                            <nombre>Mario Vega</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>20</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00137" equipo="E010">
+                            <nombre>Nacho Ramos</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>21</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                    </jugadores>
+                    <escudo url="./imagenes/imagenes_Logos/SEVILLA.png" />
+                </equipo>
+                <equipo id="E011">
+                    <nombre>Zaragoza</nombre>
+                    <ganados>0</ganados>
+                    <perdidos>0</perdidos>
+                    <empatados>0</empatados>
+                    <golesFavor>0</golesFavor>
+                    <golesContra>0</golesContra>
+                    <jugadores>
+                        <jugador id="JU00138" equipo="E011">
+                            <nombre>Miguel Rodríguez</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>10</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00139" equipo="E011">
+                            <nombre>Álvaro Navarro</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>11</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00140" equipo="E011">
+                            <nombre>Raúl Moreno</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>12</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00141" equipo="E011">
+                            <nombre>Óscar Gil</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>22</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00142" equipo="E011">
+                            <nombre>Cristian Muñoz</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>23</dorsal>
+                            <posicion>Pivote</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00143" equipo="E011">
+                            <nombre>Borja Cano</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>24</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00144" equipo="E011">
+                            <nombre>Edu Serrano</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>25</dorsal>
+                            <posicion>Lateral Derecho</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00145" equipo="E011">
+                            <nombre>Andrés Calvo</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>26</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00146" equipo="E011">
+                            <nombre>Dani Fuentes</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>27</dorsal>
+                            <posicion>Lateral Derecho</posicion>
+                            <foto url="" />
+                        </jugador>
+                    </jugadores>
+                    <escudo url="./imagenes/imagenes_Logos/ZARAGOZA.png" />
+                </equipo>
+                <equipo id="E012">
+                    <nombre>Valencia</nombre>
+                    <ganados>0</ganados>
+                    <perdidos>0</perdidos>
+                    <empatados>0</empatados>
+                    <golesFavor>0</golesFavor>
+                    <golesContra>0</golesContra>
+                    <jugadores>
+                        <jugador id="JU00147" equipo="E012">
+                            <nombre>Samuel Prieto</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>28</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00148" equipo="E012">
+                            <nombre>Héctor Vidal</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>29</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00149" equipo="E012">
+                            <nombre>Unai Aguirre</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>30</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00150" equipo="E012">
+                            <nombre>Iker Salazar</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>31</dorsal>
+                            <posicion>Pivote</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00151" equipo="E012">
+                            <nombre>Aitor Etxeberria</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>32</dorsal>
+                            <posicion>Lateral Izquierdo</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00152" equipo="E012">
+                            <nombre>Jon Aramburu</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>33</dorsal>
+                            <posicion>Lateral Derecho</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00153" equipo="E012">
+                            <nombre>Mikel Larrañaga</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>34</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00154" equipo="E012">
+                            <nombre>Ander Zubia</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>35</dorsal>
+                            <posicion>Extremo Derecho</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00155" equipo="E012">
+                            <nombre>Xabi Oroz</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>36</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                    </jugadores>
+                    <escudo url="./imagenes/imagenes_Logos/VALENCIA.png" />
+                </equipo>
+                <equipo id="E013">
+                    <nombre>Athletic Club</nombre>
+                    <ganados>0</ganados>
+                    <perdidos>0</perdidos>
+                    <empatados>0</empatados>
+                    <golesFavor>0</golesFavor>
+                    <golesContra>0</golesContra>
+                    <jugadores>
+                        <jugador id="JU00156" equipo="E013">
+                            <nombre>Gorka Echevarría</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>38</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00157" equipo="E013">
+                            <nombre>Asier Urrutia</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>39</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00158" equipo="E013">
+                            <nombre>Eneko Ibarra</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>40</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00159" equipo="E013">
+                            <nombre>Kevin Morales</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>41</dorsal>
+                            <posicion>Central</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00160" equipo="E013">
+                            <nombre>Brian Castillo</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>42</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00161" equipo="E013">
+                            <nombre>Jonathan Cruz</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>43</dorsal>
+                            <posicion>Lateral Izquierdo</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00162" equipo="E013">
+                            <nombre>Cristian León</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>44</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00163" equipo="E013">
+                            <nombre>Diego Pacheco</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>45</dorsal>
+                            <posicion>Portero</posicion>
+                            <foto url="" />
+                        </jugador>
+                        <jugador id="JU00164" equipo="E013">
+                            <nombre>Julen Mendieta</nombre>
+                            <edad>25</edad>
+                            <nacionalidad>España</nacionalidad>
+                            <altura>180 cm</altura>
+                            <peso>80 kg</peso>
+                            <dorsal>37</dorsal>
+                            <posicion>Lateral Izquierdo</posicion>
+                            <foto url="" />
+                        </jugador>
+                    </jugadores>
+                    <escudo url="./imagenes/imagenes_Logos/ATHLETIC_CLUB.png" />
+                </equipo>
+                <equipo id="E014">
+                    <nombre>_SIN_EQUIPO_</nombre>
+                    <ganados>0</ganados>
+                    <perdidos>0</perdidos>
+                    <empatados>0</empatados>
+                    <golesFavor>0</golesFavor>
+                    <golesContra>0</golesContra>
+                    <jugadores>
+                    </jugadores>
+                    <escudo url="" />
+                </equipo>
+            </equipos>
+            <jornadas>
+            </jornadas>
+        </temporada>
     </temporadas>
 </federacionBalonmano>

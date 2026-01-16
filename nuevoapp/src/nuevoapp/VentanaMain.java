@@ -1907,7 +1907,53 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         }
         
         btnCambiarEscudo.addActionListener(e -> {
-            // ... código del listener ...
+            String tempNombre = (String) comboTemporadas.getSelectedItem();
+            Temporada temp = datosFederacion.buscarTemporadaPorNombre(tempNombre);
+            
+            // Validar que sea temporada FUTURA
+            if (temp != null && !temp.getEstado().equals(Temporada.FUTURA)) {
+                JOptionPane.showMessageDialog(this,
+                    "Solo se pueden cambiar escudos en temporadas FUTURAS",
+                    "Operación no permitida",
+                    JOptionPane.WARNING_MESSAGE);
+                GestorLog.advertencia("Intento de cambiar escudo en temporada " + temp.getEstado() + ": " + tempNombre);
+                return;
+            }
+            
+            // Configurar FileChooser con filtro de imágenes
+            JFileChooser chooser = new JFileChooser();
+            chooser.setDialogTitle("Seleccionar escudo del equipo");
+            chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
+                "Imágenes (*.jpg, *.png, *.gif)", "jpg", "jpeg", "png", "gif"));
+            
+            if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                String rutaOriginal = chooser.getSelectedFile().getAbsolutePath();
+                
+                // Copiar escudo a la carpeta de la app
+                String rutaRelativa = GestorArchivos.copiarEscudo(rutaOriginal, nombreEquipo);
+                
+                if (rutaRelativa != null && equipo != null) {
+                    equipo.setRutaEscudo(rutaRelativa);
+                    
+                    // Actualizar vista
+                    actualizarVistaEquipos();
+                    
+                    // Guardar cambios
+                    GestorArchivos.guardarTodo(datosFederacion);
+                    
+                    GestorLog.exito("Escudo actualizado para: " + nombreEquipo);
+                    
+                    JOptionPane.showMessageDialog(this,
+                        "Escudo actualizado correctamente",
+                        "Éxito",
+                        JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                        "Error al copiar el escudo. Revisa los logs.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                }
+            }
         });
         panelBotones.add(btnCambiarEscudo);
 
@@ -1919,12 +1965,47 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         btnVerEscudo.setBorderPainted(false);
         btnVerEscudo.setPreferredSize(new Dimension(110, 30));
         btnVerEscudo.addActionListener(e -> {
-            Icon icon = lblEscudo.getIcon();
-            if (icon != null) {
-                ImageIcon img = new ImageIcon(((ImageIcon) icon).getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH));
-                JOptionPane.showMessageDialog(this, "", nombreEquipo, JOptionPane.INFORMATION_MESSAGE, img);
-            }
-        });
+    
+        	 if (equipo != null && equipo.getRutaEscudo() != null && !equipo.getRutaEscudo().isEmpty()) {
+        	        try {
+        	            // Cargar la imagen desde la ruta guardada
+        	            ImageIcon iconOriginal = new ImageIcon(equipo.getRutaEscudo());
+        	            
+        	            // Escalar a 400x400 para mejor visualización
+        	            ImageIcon iconGrande = new ImageIcon(
+        	                iconOriginal.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH)
+        	            );
+        	            
+        	            // Mostrar en diálogo
+        	            JOptionPane.showMessageDialog(
+        	                this,
+        	                "",
+        	                "Escudo de " + nombreEquipo,
+        	                JOptionPane.PLAIN_MESSAGE,
+        	                iconGrande
+        	            );
+        	            
+        	            GestorLog.info("Visualización de escudo: " + nombreEquipo);
+        	            
+        	        } catch (Exception ex) {
+        	            JOptionPane.showMessageDialog(
+        	                this,
+        	                "No se pudo cargar el escudo.\nRuta: " + equipo.getRutaEscudo(),
+        	                "Error al cargar imagen",
+        	                JOptionPane.ERROR_MESSAGE
+        	            );
+        	            GestorLog.error("Error al cargar escudo de " + nombreEquipo + ": " + ex.getMessage());
+        	        }
+        	    } else {
+        	        JOptionPane.showMessageDialog(
+        	            this,
+        	            "Este equipo no tiene escudo asignado",
+        	            "Sin escudo",
+        	            JOptionPane.INFORMATION_MESSAGE
+        	        );
+        	        GestorLog.advertencia("Equipo sin escudo: " + nombreEquipo);
+        	    }
+        	});
         panelBotones.add(btnVerEscudo);
 
         // Botón Eliminar Equipo
