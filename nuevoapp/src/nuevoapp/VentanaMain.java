@@ -183,6 +183,8 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
     
     /** Botón para exportar datos a XML */
     private JButton btnExportar;
+    
+    
 
     //COMBOBOX
     
@@ -216,8 +218,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
     /** Panel de la vista de partidos */
     private JPanel panelPartidos;
     
-    /** Panel de la vista de clasificación */
-    private JPanel panelClasificacion;
+    private PanelGestionTemporadas panelGestionTemporadas;
     
     /** Panel superior de controles en la vista de equipos */
     private JPanel panelSuperior;
@@ -277,6 +278,10 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
     
     /** Espaciador vertical entre componentes del menú */
     private Component verticalStrut_7;
+
+	private JButton btnTemporadas;
+
+	private Component verticalStrut_8;
 
    
     // MÉTODOS PRINCIPALES
@@ -405,6 +410,14 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         verticalStrut_3 = Box.createVerticalStrut(20);
         panelBotones.add(verticalStrut_3);
         panelBotones.add(btnEquipos);
+        btnTemporadas = new JButton("Temporadas");
+        btnTemporadas.setBorder(null);
+        btnTemporadas.setBackground(TemaColores.BOTON_PRIMARIO);
+        btnTemporadas.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnTemporadas.setForeground(TemaColores.TEXTO_PRIMARIO);
+        btnTemporadas.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnTemporadas.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        btnTemporadas.addActionListener(this);
 
         btnJugadores = new JButton("Jugadores");
         btnJugadores.setBorder(null);
@@ -421,6 +434,10 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         
         verticalStrut_4 = Box.createVerticalStrut(20);
         panelBotones.add(verticalStrut_4);
+        
+        verticalStrut_8 = Box.createVerticalStrut(20);
+        panelBotones.add(verticalStrut_8);
+        panelBotones.add(btnTemporadas);
 
         btnCerrarSesion = new JButton("Cerrar sesión");
         btnCerrarSesion.setBorder(null);
@@ -668,11 +685,13 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         panelJugadores.add(panelSuperiorJugadores, BorderLayout.NORTH);
         
         lblTemporadaJugador = new JLabel("Temporada:");
+        lblTemporadaJugador.setForeground(new Color(0, 128, 192));
         panelSuperiorJugadores.add(lblTemporadaJugador);
         comboTemporadasJugadores = new JComboBox<>();
         panelSuperiorJugadores.add(comboTemporadasJugadores);
         
         lblEquipoJugadores = new JLabel("Equipo:");
+        lblEquipoJugadores.setForeground(new Color(0, 128, 192));
         panelSuperiorJugadores.add(lblEquipoJugadores);
         comboEquiposJugadores = new JComboBox<>();
         comboEquiposJugadores.setPreferredSize(new Dimension(160, 25));
@@ -779,10 +798,12 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         comboJornadasPartidos = new JComboBox<>();
 
         lblTemporadaPartido = new JLabel("Temporada:");
+        lblTemporadaPartido.setForeground(new Color(0, 128, 192));
         panelAdminPartidos_1.add(lblTemporadaPartido);
         panelAdminPartidos_1.add(comboTemporadasPartidos);
 
         lblJornadaPartido = new JLabel("Jornada:");
+        lblJornadaPartido.setForeground(new Color(0, 128, 192));
         panelAdminPartidos_1.add(lblJornadaPartido);
         panelAdminPartidos_1.add(comboJornadasPartidos);
         panelAdminPartidos_1.revalidate();
@@ -809,6 +830,12 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
             actualizarVistaPartidos();
             actualizarIndicadorEstadoPartidos();
         });
+        
+        
+        
+        panelGestionTemporadas = new PanelGestionTemporadas(datosFederacion, this);
+        panelCards.add(panelGestionTemporadas, "temporadas");
+
 
         
  
@@ -1047,7 +1074,15 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 actualizarJugadoresPorTemporada(tempSel, equipoSel);
                 actualizarEstadoBotonesJugadores();
             }
+           
+            }
+        else if (e.getSource() == btnTemporadas) {
+            cardLayout.show(panelCards, "temporadas");
+            GestorLog.info("Navegación: Temporadas");
+            panelGestionTemporadas.cargarTemporadas();
+        
         }
+       
         else if (e.getSource() == btnPartidos) {
             cardLayout.show(panelCards, "partidos");
             GestorLog.info("Navegación: Partidos");
@@ -1779,6 +1814,38 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         ));
         panelTarjeta.setLayout(new BorderLayout(15, 10));
 
+        // ⭐ CREAR BOTÓN GESTIONAR
+        JButton btnGestionar = new JButton("Gestionar");
+        btnGestionar.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        btnGestionar.setBackground(TemaColores.ACENTO_VERDE);
+        btnGestionar.setForeground(Color.WHITE);
+        btnGestionar.setFocusPainted(false);
+        btnGestionar.setBorderPainted(false);
+        btnGestionar.setPreferredSize(new Dimension(110, 30));
+
+        if (rolUsuario != Rol.ADMINISTRADOR && rolUsuario != Rol.MANAGER) {
+            btnGestionar.setVisible(false);
+        }
+
+        btnGestionar.addActionListener(e -> {
+            String nombreTemporada = (String) comboTemporadas.getSelectedItem();
+            Temporada temporadaActual = datosFederacion.buscarTemporadaPorNombre(nombreTemporada);
+            
+            if (temporadaActual != null && equipo != null) {
+                PanelGestionJugadoresEquipo dialogo = new PanelGestionJugadoresEquipo(
+                    (Frame) SwingUtilities.getWindowAncestor(this),
+                    datosFederacion,
+                    temporadaActual,
+                    equipo
+                );
+                dialogo.setVisible(true);
+                
+                // Refrescar vista
+                actualizarVistaEquipos();
+                GestorLog.info("Gestión de jugadores completada para: " + nombreEquipo);
+            }
+        });
+
         // ===== ESCUDO =====
         JLabel lblEscudo = new JLabel();
         lblEscudo.setPreferredSize(new Dimension(90, 90));
@@ -1825,6 +1892,9 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         panelBotones.setOpaque(false);
         panelBotones.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 
+        // ⭐ AHORA SÍ AGREGAR EL BOTÓN GESTIONAR
+        panelBotones.add(btnGestionar);
+
         // Botón Cambiar Escudo
         JButton btnCambiarEscudo = new JButton("Cambiar Escudo");
         btnCambiarEscudo.setFont(new Font("Segoe UI", Font.PLAIN, 11));
@@ -1837,51 +1907,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         }
         
         btnCambiarEscudo.addActionListener(e -> {
-            String nombreTemporada = (String) comboTemporadas.getSelectedItem();
-            Temporada temporadaActual = datosFederacion.buscarTemporadaPorNombre(nombreTemporada);
-            
-            if (temporadaActual != null && !temporadaActual.getEstado().equals(Temporada.FUTURA)) {
-                JOptionPane.showMessageDialog(this, 
-                    "Solo se pueden cambiar escudos en temporadas FUTURAS", 
-                    "Error", 
-                    JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            
-            JFileChooser chooser = new JFileChooser();
-            chooser.setDialogTitle("Seleccionar escudo del equipo");
-            chooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
-                @Override
-                public boolean accept(java.io.File f) {
-                    if (f.isDirectory()) return true;
-                    String nombre = f.getName().toLowerCase();
-                    return nombre.endsWith(".jpg") || nombre.endsWith(".jpeg") || 
-                           nombre.endsWith(".png") || nombre.endsWith(".gif");
-                }
-                
-                @Override
-                public String getDescription() {
-                    return "Imágenes (*.jpg, *.png, *.gif)";
-                }
-            });
-            
-            if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                String rutaOriginal = chooser.getSelectedFile().getAbsolutePath();
-                String rutaRelativa = GestorArchivos.copiarEscudo(rutaOriginal, nombreEquipo);
-                
-                if (rutaRelativa != null && equipo != null) {
-                    equipo.setRutaEscudo(rutaRelativa);
-                    ImageIcon iconoNuevo = new ImageIcon(
-                        new ImageIcon(rutaRelativa).getImage()
-                            .getScaledInstance(90, 90, Image.SCALE_SMOOTH)
-                    );
-                    lblEscudo.setIcon(iconoNuevo);
-                    lblEscudo.setText("");
-                    GestorArchivos.guardarTodo(datosFederacion);
-                    GestorLog.exito("Escudo actualizado: " + nombreEquipo);
-                    JOptionPane.showMessageDialog(this, "Escudo actualizado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                }
-            }
+            // ... código del listener ...
         });
         panelBotones.add(btnCambiarEscudo);
 
@@ -1913,6 +1939,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         if (rolUsuario != Rol.ADMINISTRADOR && rolUsuario != Rol.MANAGER) {
             btnEliminarEquipo.setVisible(false);
         }
+
         
         btnEliminarEquipo.addActionListener(e -> {
             String tempNombre = (String) comboTemporadas.getSelectedItem();
@@ -2304,8 +2331,8 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                     }
                     if (esAdministrador) {
                         btnInscribirEquipo.setEnabled(false);
-                        btnFinalizarTemporada.setEnabled(true);  // ⭐ SOLO ADMIN
-                        btnTxema.setEnabled(true);               // ⭐ SOLO ADMIN
+                        btnFinalizarTemporada.setEnabled(true);  //  SOLO ADMIN
+                        btnTxema.setEnabled(true);               //  SOLO ADMIN
                     }
                     btnEditarJugador.setEnabled(false);
                     btnCambiarFoto.setEnabled(false);
@@ -2424,6 +2451,16 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
      *         y la temporada puede inicializarse;
      *         {@code false} en caso contrario
      */
+    /**
+     * Valida que todos los equipos REALES de una temporada tengan
+     * el número mínimo de jugadores requerido.
+     * <p>
+     * EXCLUYE el equipo fantasma "_SIN_EQUIPO_" de la validación.
+     * </p>
+     *
+     * @param temporada temporada a validar
+     * @return {@code true} si todos los equipos reales tienen jugadores suficientes
+     */
     private boolean validarJugadoresMinimosPorTemporada(Temporada temporada) {
         if (temporada == null || temporada.getEquiposParticipantes() == null) {
             return false;
@@ -2431,7 +2468,15 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         
         java.util.List<Equipo> equipos = temporada.getEquiposParticipantes();
         
-        if (equipos.isEmpty()) {
+        // Filtrar equipos reales (excluir fantasma)
+        java.util.List<Equipo> equiposReales = new java.util.ArrayList<>();
+        for (Equipo eq : equipos) {
+            if (!eq.getNombre().equals("_SIN_EQUIPO_")) {
+                equiposReales.add(eq);
+            }
+        }
+        
+        if (equiposReales.isEmpty()) {
             JOptionPane.showMessageDialog(this,
                 "No hay equipos registrados en esta temporada.",
                 "Error de validación",
@@ -2441,7 +2486,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         
         java.util.List<String> equiposInvalidos = new java.util.ArrayList<>();
         
-        for (Equipo equipo : equipos) {
+        for (Equipo equipo : equiposReales) {
             if (!equipo.tieneJugadoresSuficientes()) {
                 equiposInvalidos.add(equipo.obtenerDetalleValidacion());
             }
@@ -2733,10 +2778,13 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         Temporada t = datosFederacion.buscarTemporadaPorNombre(tempNombre);
         
         if (t != null) {
-            for (Equipo eq : t.getEquiposParticipantes()) {
-                panelTarjetasEquipo.add(crearTarjetaEquipo(eq.getNombre()));
-            }
-        }
+        	for (Equipo eq : t.getEquiposParticipantes()) {
+        	    // Saltar el equipo fantasma en la vista
+        	    if (eq.getNombre().equals("_SIN_EQUIPO_")) {
+        	        continue;
+        	    }
+        	    panelTarjetasEquipo.add(crearTarjetaEquipo(eq.getNombre()));
+        	}}
         
         panelTarjetasEquipo.revalidate();
         panelTarjetasEquipo.repaint();
@@ -2761,7 +2809,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
      * @see #comboTemporadasPartidos
      * @see PanelClasificacion#getComboTemporadas()
      */
-    private void sincronizarCombos() {
+    void sincronizarCombos() {
         Object tempSelEquipos = comboTemporadas.getSelectedItem();
         Object tempSelJugadores = comboTemporadasJugadores.getSelectedItem();
         Object tempSelPartidos = comboTemporadasPartidos.getSelectedItem();
@@ -3061,6 +3109,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 btnEditarJugador.setVisible(true);
                 btnExportar.setVisible(true);
                 btnGestionUsuario.setVisible(true);
+                btnTemporadas.setVisible(true);
                 break;
 
             case ARBITRO:
@@ -3076,6 +3125,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 btnExportar.setVisible(false);
                 btnGestionUsuario.setVisible(false);
                 btnVerFoto.setVisible(true);
+                btnTemporadas.setVisible(true);
                 break;
 
             case MANAGER:
@@ -3095,6 +3145,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 btnNuevoPart.setVisible(false);
                 btnExportar.setVisible(false);
                 btnGestionUsuario.setVisible(false);
+                btnTemporadas.setVisible(true);
                 break;
 
             case INVITADO:
@@ -3111,6 +3162,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 btnInscribirEquipo.setVisible(false);
                 btnExportar.setVisible(false);
                 btnGestionUsuario.setVisible(false);
+                btnTemporadas.setVisible(true);
                 break;
         }
         
