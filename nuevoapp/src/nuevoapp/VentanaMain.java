@@ -785,7 +785,8 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         lblJornadaPartido = new JLabel("Jornada:");
         panelAdminPartidos_1.add(lblJornadaPartido);
         panelAdminPartidos_1.add(comboJornadasPartidos);
-        
+        panelAdminPartidos_1.revalidate();
+        panelAdminPartidos_1.repaint();
         
         comboTemporadasPartidos.addActionListener(e -> {
             actualizarComboJornadas();
@@ -1995,6 +1996,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 }
             }
         }
+
         panelListaPartidos.revalidate();
         panelListaPartidos.repaint();
         
@@ -2020,6 +2022,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
      * @see DialogoResultado
      */
     private JPanel crearTarjetaPartido(Partido p) {
+    	
         JPanel card = new JPanel(new BorderLayout(20, 0));
         card.setBackground(new Color(24, 25, 50));
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 110)); // Altura aumentada
@@ -2091,9 +2094,14 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         
         panelIzquierda.add(panelEquipos, BorderLayout.CENTER);
         card.add(panelIzquierda, BorderLayout.CENTER);
+        
+        
+    
 
         // Botón de resultado
         JButton btnGoles = new JButton(p.isFinalizado() ? "Editar Resultado" : "Anotar Goles");
+        if (rolUsuario != Rol.ADMINISTRADOR && rolUsuario != Rol.ARBITRO) {
+        	btnGoles.setVisible(false);}
         btnGoles.setFocusPainted(false);
         btnGoles.setBackground(p.isFinalizado() ? new Color(70, 70, 70) : new Color(45, 55, 140));
         btnGoles.setForeground(Color.WHITE);
@@ -2105,8 +2113,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         	
             String tempNom = (String) comboTemporadasPartidos.getSelectedItem();
             Temporada t = datosFederacion.buscarTemporadaPorNombre(tempNom);
-            if (rolUsuario != Rol.ADMINISTRADOR && rolUsuario != Rol.ARBITRO) {
-            	btnGoles.setVisible(false);}
+       
             	
             
             if (t != null && t.getEstado().equals(Temporada.TERMINADA)) {
@@ -2141,6 +2148,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
 
         card.add(btnGoles, BorderLayout.EAST);
         return card;
+        
     }
     /**
      * Actualiza el indicador visual del estado de la temporada en la sección de equipos.
@@ -2264,64 +2272,61 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         Temporada t = datosFederacion.buscarTemporadaPorNombre(tempNom);
         
         if (t != null) {
+            // ⭐ CONTROL DE PERMISOS: Solo cambiar si el usuario tiene permisos
+            boolean esAdministrador = (rolUsuario == Rol.ADMINISTRADOR);
+            boolean esArbitro = (rolUsuario == Rol.ARBITRO);
+            
             switch (t.getEstado()) {
                 case Temporada.FUTURA:
                     lblEstadoTempPartidos.setText("  |  ● TEMPORADA FUTURA");
                     lblEstadoTempPartidos.setForeground(new Color(52, 152, 219));
-                    btnNuevaJor.setEnabled(true);
-                    btnNuevoPart.setEnabled(true);
-                    btnInscribirEquipo.setEnabled(true);
-                    btnFinalizarTemporada.setEnabled(false);
-                    btnTxema.setEnabled(false);
+                    
+                    if (esAdministrador || esArbitro) {
+                        btnNuevaJor.setEnabled(true);
+                        btnNuevoPart.setEnabled(true);
+                    }
+                    if (esAdministrador) {
+                        btnInscribirEquipo.setEnabled(true);
+                        btnFinalizarTemporada.setEnabled(false);
+                        btnTxema.setEnabled(false);
+                    }
                     btnEditarJugador.setEnabled(true);
                     btnCambiarFoto.setEnabled(true);
                     break;
+                    
                 case Temporada.EN_JUEGO:
                     lblEstadoTempPartidos.setText("  |  ● EN CURSO");
                     lblEstadoTempPartidos.setForeground(new Color(241, 196, 15));
-                    btnNuevaJor.setEnabled(true);
-                    btnNuevoPart.setEnabled(true);
-                    btnInscribirEquipo.setEnabled(false);
-                    btnFinalizarTemporada.setEnabled(true);
-                    btnTxema.setEnabled(true);
+                    
+                    if (esAdministrador || esArbitro) {
+                        btnNuevaJor.setEnabled(true);
+                        btnNuevoPart.setEnabled(true);
+                    }
+                    if (esAdministrador) {
+                        btnInscribirEquipo.setEnabled(false);
+                        btnFinalizarTemporada.setEnabled(true);  // ⭐ SOLO ADMIN
+                        btnTxema.setEnabled(true);               // ⭐ SOLO ADMIN
+                    }
                     btnEditarJugador.setEnabled(false);
                     btnCambiarFoto.setEnabled(false);
                     break;
+                    
                 case Temporada.TERMINADA:
                     lblEstadoTempPartidos.setText("  |  ● FINALIZADA");
                     lblEstadoTempPartidos.setForeground(new Color(231, 76, 60));
-                    btnNuevaJor.setEnabled(false);
-                    btnNuevoPart.setEnabled(false);
-                    btnInscribirEquipo.setEnabled(false);
-                    btnFinalizarTemporada.setEnabled(false);
-                    btnTxema.setEnabled(false);
+                    
+                    if (esAdministrador || esArbitro) {
+                        btnNuevaJor.setEnabled(false);
+                        btnNuevoPart.setEnabled(false);
+                    }
+                    if (esAdministrador) {
+                        btnInscribirEquipo.setEnabled(false);
+                        btnFinalizarTemporada.setEnabled(false);
+                        btnTxema.setEnabled(false);
+                    }
                     btnEditarJugador.setEnabled(false);
                     btnCambiarFoto.setEnabled(false);
                     break;
-            }
-        }
-        
-        String jorNom = (String) comboJornadasPartidos.getSelectedItem();
-        if (jorNom != null && t != null) {
-            for (Jornada j : t.getListaJornadas()) {
-                if (j.getNombre().equals(jorNom)) {
-                    JLabel lblEstadoJornada = null;
-                    for (Component c : panelAdminPartidos_1.getComponents()) {
-                        if (c instanceof JLabel && ((JLabel) c).getName() != null 
-                            && ((JLabel) c).getName().equals("lblEstadoJornada")) {
-                            lblEstadoJornada = (JLabel) c;
-                            break;
-                        }
-                    }
-                    
-                    if (lblEstadoJornada == null) {
-                        lblEstadoJornada = new JLabel();
-                        lblEstadoJornada.setName("lblEstadoJornada");
-                        lblEstadoJornada.setFont(new Font("Segoe UI", Font.BOLD, 13));
-                        panelAdminPartidos_1.add(lblEstadoJornada);
-                    }
-                    break;
-                }
             }
         }
         
@@ -3032,17 +3037,28 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         this.lblBienvenido.setText("Bienvenido, " + nombre);
         this.lblUsuario.setText("Rol: " + rol.getNombreLegible());
         
-        // Pantalla completa
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         
-        // Limpieza de seguridad
+        // ⭐ LIMPIEZA OBLIGATORIA
         ocultarTodosLosControles();
 
         // Aplicación de permisos específicos
         switch (rol) {
             case ADMINISTRADOR:
-                mostrarTodo(true);
+                habilitarNavegacionBasica();
+                panelAdminPartidos_1.setVisible(true);
+                btnNuevaTemp_1.setVisible(true);
+                btnNuevaJor.setVisible(true);
+                btnNuevoPart.setVisible(true);
+                btnFinalizarTemporada.setVisible(true);  // ⭐ ADMIN SÍ LO VE
+                btnTxema.setVisible(true);               // ⭐ ADMIN SÍ LO VE
+                btnInscribirEquipo.setVisible(true);
+                btnAgregarEquipo.setVisible(true);
+                btnAgregarJugador.setVisible(true);
+                btnCambiarEquipo.setVisible(true);
                 btnCambiarFoto.setVisible(true);
+                btnVerFoto.setVisible(true);
+                btnEditarJugador.setVisible(true);
                 btnExportar.setVisible(true);
                 btnGestionUsuario.setVisible(true);
                 break;
@@ -3052,10 +3068,14 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 panelAdminPartidos_1.setVisible(true);
                 btnNuevaJor.setVisible(true);
                 btnNuevoPart.setVisible(true);
+                btnFinalizarTemporada.setVisible(false);  // ⭐ ÁRBITRO NO LO VE
+                btnTxema.setVisible(false);               // ⭐ ÁRBITRO NO LO VE
+                btnNuevaTemp_1.setVisible(false);
+                btnInscribirEquipo.setVisible(false);
                 btnCambiarFoto.setVisible(false);
                 btnExportar.setVisible(false);
                 btnGestionUsuario.setVisible(false);
-                btnNuevaTemp_1.setVisible(false);
+                btnVerFoto.setVisible(true);
                 break;
 
             case MANAGER:
@@ -3065,29 +3085,52 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 btnCambiarFoto.setVisible(true);
                 btnAgregarJugador.setVisible(true);
                 btnCambiarEquipo.setVisible(true);
+                btnEditarJugador.setVisible(true);
+                btnInscribirEquipo.setVisible(true);
+                panelAdminPartidos_1.setVisible(true);  //  Para ver partidos
+                btnFinalizarTemporada.setVisible(false);  //  MANAGER NO LO VE
+                btnTxema.setVisible(false);               //  MANAGER NO LO VE
+                btnNuevaTemp_1.setVisible(false);
+                btnNuevaJor.setVisible(false);
+                btnNuevoPart.setVisible(false);
                 btnExportar.setVisible(false);
                 btnGestionUsuario.setVisible(false);
-                btnInscribirEquipo.setVisible(true);
-                btnFinalizarTemporada.setVisible(false);
-                btnTxema.setVisible(false);
                 break;
 
             case INVITADO:
             default:
                 habilitarNavegacionBasica();
                 btnVerFoto.setVisible(true);
-                panelAdminPartidos_1.setVisible(true);
+                panelAdminPartidos_1.setVisible(true);  //  Solo para ver
+                btnFinalizarTemporada.setVisible(false);  //  INVITADO NO LO VE
+                btnTxema.setVisible(false);               //  INVITADO NO LO VE
+                btnNuevaTemp_1.setVisible(false);
+                btnNuevaJor.setVisible(false);
+                btnNuevoPart.setVisible(false);
                 btnCambiarFoto.setVisible(false);
                 btnInscribirEquipo.setVisible(false);
                 btnExportar.setVisible(false);
                 btnGestionUsuario.setVisible(false);
-                btnFinalizarTemporada.setVisible(false);
-                btnTxema.setVisible(false);
-                
                 break;
         }
         
-        // Forzar actualización visual
+        // ⭐ FORZAR RECREACIÓN DE VISTAS
+        SwingUtilities.invokeLater(() -> {
+            actualizarVistaEquipos();
+            
+            if (comboTemporadasJugadores.getItemCount() > 0 && comboEquiposJugadores.getItemCount() > 0) {
+                String tempSel = (String) comboTemporadasJugadores.getSelectedItem();
+                String equipoSel = (String) comboEquiposJugadores.getSelectedItem();
+                if (tempSel != null && equipoSel != null) {
+                    actualizarJugadoresPorTemporada(tempSel, equipoSel);
+                }
+            }
+            
+            actualizarVistaPartidos();
+            
+            GestorLog.info(" Vistas actualizadas con permisos de: " + rol.getNombreLegible());
+        });
+        
         revalidate();
         repaint();
         
@@ -3120,7 +3163,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 "Cerrar Sesión", 
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE);
-
+        
         if (respuesta == JOptionPane.YES_OPTION) {
             // Detener el auto-guardado
             if (autoSaveTimer != null && autoSaveTimer.isRunning()) {
@@ -3133,6 +3176,12 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
             GestorArchivos.guardarTodo(datosFederacion);
             GestorLog.info("Datos guardados correctamente");
             
+            // ⭐ LIMPIEZA CRÍTICA: Limpiar todas las vistas antes de cerrar
+            limpiarTodasLasVistas();
+            
+            // ⭐ RESETEAR EL ROL
+            this.rolUsuario = null;
+            
             this.dispose();
             
             Login ventanaLogin = new Login();
@@ -3140,6 +3189,42 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
             
             GestorLog.info("Sesión cerrada correctamente");
         }
+    }
+    
+    
+    /**
+     * Limpia todas las vistas de la interfaz para resetear el estado
+     * antes de un cambio de sesión.
+     * 
+     * <p>Este método es crítico para evitar que componentes con permisos
+     * del usuario anterior permanezcan visibles para el nuevo usuario.</p>
+     */
+    private void limpiarTodasLasVistas() {
+        // Limpiar panel de equipos
+        if (panelTarjetasEquipo != null) {
+            panelTarjetasEquipo.removeAll();
+            panelTarjetasEquipo.revalidate();
+            panelTarjetasEquipo.repaint();
+        }
+        
+        // Limpiar panel de jugadores
+        if (panelTarjetasJugadores != null) {
+            panelTarjetasJugadores.removeAll();
+            panelTarjetasJugadores.revalidate();
+            panelTarjetasJugadores.repaint();
+        }
+        
+        // ⭐ CRÍTICO: Limpiar panel de partidos
+        if (panelListaPartidos != null) {
+            panelListaPartidos.removeAll();
+            panelListaPartidos.revalidate();
+            panelListaPartidos.repaint();
+        }
+        
+        // Limpiar clasificación
+      
+        
+        GestorLog.info("🧹 Todas las vistas limpiadas correctamente");
     }
     
     /**
@@ -3158,29 +3243,39 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
      * @see #despuesDelLogin(Rol, String)
      * @see #mostrarTodo(boolean)
      */
+    /**
+     * Oculta todos los controles de edición y gestión de la interfaz.
+     * 
+     * <p>Este método se usa como paso inicial antes de aplicar permisos específicos por rol.</p>
+     */
     private void ocultarTodosLosControles() {
         // Navegación principal
-     
         btnEquipos.setVisible(false);
         btnJugadores.setVisible(false);
         btnPartidos.setVisible(false);
-   
 
-        // Gestión de Partidos y Temporadas
+        // ⭐ CRÍTICO: Ocultar TODOS los botones del panel de administración
         panelAdminPartidos_1.setVisible(false);
         btnNuevaTemp_1.setVisible(false);
         btnNuevaJor.setVisible(false);
         btnNuevoPart.setVisible(false);
+        btnFinalizarTemporada.setVisible(false);  
+        btnTxema.setVisible(false);               
+        btnInscribirEquipo.setVisible(false);     
         
         // Gestión de Equipos
         btnAgregarEquipo.setVisible(false);
-        btnInscribirEquipo.setVisible(false);
         
         // Gestión de Jugadores
         btnAgregarJugador.setVisible(false);
         btnCambiarEquipo.setVisible(false);
         btnCambiarFoto.setVisible(false);
         btnVerFoto.setVisible(false);
+        btnEditarJugador.setVisible(false);  // ⭐ AGREGADO (por consistencia)
+        
+        // Botones del sistema
+        btnExportar.setVisible(false);
+        btnGestionUsuario.setVisible(false);
     }
 
     /**
