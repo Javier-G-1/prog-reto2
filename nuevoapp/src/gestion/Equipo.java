@@ -4,23 +4,24 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * CLASE: Equipo
  * <p>
  * Representa un equipo o club deportivo dentro del sistema.
- * Contiene información básica como el nombre, el escudo y
- * la plantilla de jugadores que lo componen.
- * </p>
- * <p>
- * Esta clase implementa {@link Serializable} para permitir
- * su persistencia junto al resto de datos del sistema.
+ * Cada equipo tiene un ID único e incremental que nunca se repite.
  * </p>
  */
 public class Equipo implements Serializable {
 
-    /** Identificador de versión para la serialización */
     private static final long serialVersionUID = 1L;
+    
+    /** Contador global de IDs */
+    private static AtomicInteger contadorGlobal = new AtomicInteger(1);
+    
+    /** ID único del equipo (formato: E001, E002, ...) */
+    private String id;
 
     /** Nombre del equipo */
     private String nombre;
@@ -33,15 +34,13 @@ public class Equipo implements Serializable {
 
     /**
      * Constructor principal del equipo.
-     * <p>
-     * Si la ruta del escudo es nula o está vacía, se asigna
-     * un escudo por defecto.
-     * </p>
+     * Genera automáticamente un ID único incremental.
      *
      * @param nombre nombre del equipo
      * @param rutaEscudo ruta del escudo del equipo
      */
     public Equipo(String nombre, String rutaEscudo) {
+        this.id = generarIdUnico();
         this.nombre = nombre;
         this.rutaEscudo = (rutaEscudo == null || rutaEscudo.isBlank())
                 ? "img/default_escudo.png"
@@ -51,9 +50,7 @@ public class Equipo implements Serializable {
 
     /**
      * Constructor simplificado.
-     * <p>
      * Crea un equipo asignándole un escudo por defecto.
-     * </p>
      *
      * @param nombre nombre del equipo
      */
@@ -62,11 +59,88 @@ public class Equipo implements Serializable {
     }
 
     /**
+     * Constructor completo para carga desde archivo.
+     * Actualiza el contador global si el ID cargado es mayor.
+     *
+     * @param id ID del equipo (puede ser nulo)
+     * @param nombre nombre del equipo
+     * @param rutaEscudo ruta del escudo
+     */
+    public Equipo(String id, String nombre, String rutaEscudo) {
+        this.id = (id == null || id.isBlank()) ? generarIdUnico() : id;
+        this.nombre = nombre;
+        this.rutaEscudo = (rutaEscudo == null || rutaEscudo.isBlank())
+                ? "img/default_escudo.png"
+                : rutaEscudo;
+        this.plantilla = new ArrayList<>();
+        
+        actualizarContadorSiNecesario(this.id);
+    }
+
+    /**
+     * Genera un ID único incremental.
+     * Formato: E001, E002, ...
+     *
+     * @return ID único generado
+     */
+    private String generarIdUnico() {
+        int numero = contadorGlobal.getAndIncrement();
+        return String.format("E%03d", numero);
+    }
+
+    /**
+     * Actualiza el contador global si el ID proporcionado es mayor.
+     *
+     * @param id ID del equipo a evaluar
+     */
+    private void actualizarContadorSiNecesario(String id) {
+        if (id == null || !id.startsWith("E")) return;
+
+        try {
+            int numeroId = Integer.parseInt(id.substring(1));
+            int valorActual;
+            do {
+                valorActual = contadorGlobal.get();
+                if (numeroId < valorActual) break;
+            } while (!contadorGlobal.compareAndSet(valorActual, numeroId + 1));
+        } catch (NumberFormatException e) {
+            // ID mal formado, ignorar
+        }
+    }
+
+    /**
+     * Sincroniza el contador global al cargar equipos desde almacenamiento.
+     *
+     * @param todosLosEquipos lista de todos los equipos cargados
+     */
+    public static void sincronizarContadorGlobal(java.util.List<Equipo> todosLosEquipos) {
+        if (todosLosEquipos == null || todosLosEquipos.isEmpty()) {
+            contadorGlobal.set(1);
+            return;
+        }
+
+        int maxId = 0;
+
+        for (Equipo e : todosLosEquipos) {
+            if (e.id != null && e.id.startsWith("E")) {
+                try {
+                    int numeroId = Integer.parseInt(e.id.substring(1));
+                    if (numeroId > maxId) {
+                        maxId = numeroId;
+                    }
+                } catch (NumberFormatException ex) {
+                    // Ignorar IDs mal formados
+                }
+            }
+        }
+
+        contadorGlobal.set(maxId + 1);
+        System.out.println("✓ Contador de equipos sincronizado en: E" + 
+                         String.format("%03d", maxId + 1));
+    }
+
+    /**
      * Ficha un jugador en la plantilla del equipo.
-     * <p>
-     * Valida que el jugador no sea nulo, que no esté ya en la plantilla
-     * y que su dorsal sea único dentro del equipo.
-     * </p>
      *
      * @param j jugador a fichar
      * @throws IllegalArgumentException si el jugador es nulo,
@@ -78,12 +152,10 @@ public class Equipo implements Serializable {
             throw new IllegalArgumentException("El jugador no puede ser nulo");
         }
 
-        // Verificar que el jugador no esté ya en la plantilla
         if (plantilla.contains(j)) {
             throw new IllegalArgumentException("El jugador ya está en la plantilla");
         }
 
-        // Validación de dorsal único
         if (j.getDorsal() > 0) {
             validarDorsalUnico(j.getDorsal(), j.getId());
         }
@@ -93,10 +165,6 @@ public class Equipo implements Serializable {
 
     /**
      * Valida que un dorsal no esté ocupado por otro jugador del equipo.
-     * <p>
-     * Permite excluir a un jugador concreto para facilitar
-     * modificaciones de dorsal.
-     * </p>
      *
      * @param dorsal número de dorsal a validar
      * @param idJugadorActual identificador del jugador actual
@@ -109,8 +177,6 @@ public class Equipo implements Serializable {
         }
 
         for (Jugador jugadorEnPlantilla : plantilla) {
-
-            // Permitir que el jugador mantenga su propio dorsal
             if (jugadorEnPlantilla.getId().equals(idJugadorActual)) {
                 continue;
             }
@@ -128,7 +194,7 @@ public class Equipo implements Serializable {
      * Comprueba si un dorsal está disponible en el equipo.
      *
      * @param dorsal dorsal a comprobar
-     * @return {@code true} si el dorsal está libre, {@code false} en caso contrario
+     * @return {@code true} si el dorsal está libre
      */
     public boolean dorsalDisponible(int dorsal) {
         return dorsalDisponible(dorsal, null);
@@ -138,8 +204,8 @@ public class Equipo implements Serializable {
      * Comprueba si un dorsal está disponible, excluyendo a un jugador concreto.
      *
      * @param dorsal dorsal a comprobar
-     * @param idJugadorExcluir ID del jugador a excluir de la comprobación
-     * @return {@code true} si el dorsal está libre, {@code false} en caso contrario
+     * @param idJugadorExcluir ID del jugador a excluir
+     * @return {@code true} si el dorsal está libre
      */
     public boolean dorsalDisponible(int dorsal, String idJugadorExcluir) {
         if (dorsal <= 0 || dorsal > 99) return false;
@@ -196,91 +262,25 @@ public class Equipo implements Serializable {
         plantilla.remove(j);
     }
 
-    // --- GETTERS Y SETTERS ---
-
-    /**
-     * Obtiene el nombre del equipo.
-     *
-     * @return nombre del equipo
-     */
-    public String getNombre() {
-        return nombre;
-    }
-
-    /**
-     * Modifica el nombre del equipo.
-     *
-     * @param nombre nuevo nombre
-     */
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    /**
-     * Obtiene la ruta del escudo del equipo.
-     *
-     * @return ruta del escudo
-     */
-    public String getRutaEscudo() {
-        return rutaEscudo;
-    }
-
-    /**
-     * Modifica la ruta del escudo del equipo.
-     *
-     * @param rutaEscudo nueva ruta del escudo
-     */
-    public void setRutaEscudo(String rutaEscudo) {
-        this.rutaEscudo = rutaEscudo;
-    }
-
-    /**
-     * Obtiene la plantilla completa del equipo.
-     *
-     * @return lista de jugadores del equipo
-     */
-    public List<Jugador> getPlantilla() {
-        return plantilla;
-    }
-
-    /**
-     * Representación en texto del equipo.
-     *
-     * @return nombre del equipo
-     */
-    @Override
-    public String toString() {
-        return nombre;
-    }
-    
-    
-    /** 
-     * Número mínimo de jugadores requeridos para que un equipo
-     * pueda participar en una temporada.
-     */
+    /** Número mínimo de jugadores requeridos */
     public static final int JUGADORES_MINIMOS = 9;
 
-    /** 
-     * Número recomendado de jugadores para considerar
-     * la plantilla como completa.
-     */
+    /** Número recomendado de jugadores */
     public static final int JUGADORES_RECOMENDADOS = 18;
 
     /**
-     * Comprueba si el equipo tiene el número mínimo de jugadores necesarios.
+     * Comprueba si el equipo tiene el número mínimo de jugadores.
      *
-     * @return {@code true} si la plantilla tiene al menos
-     *         {@link #JUGADORES_MINIMOS} jugadores, {@code false} en caso contrario
+     * @return {@code true} si tiene al menos {@link #JUGADORES_MINIMOS}
      */
     public boolean tieneJugadoresSuficientes() {
         return plantilla.size() >= JUGADORES_MINIMOS;
     }
 
     /**
-     * Calcula cuántos jugadores faltan para alcanzar el mínimo requerido.
+     * Calcula cuántos jugadores faltan para alcanzar el mínimo.
      *
      * @return número de jugadores faltantes, o {@code 0}
-     *         si ya se ha alcanzado el mínimo
      */
     public int jugadoresFaltantes() {
         int faltantes = JUGADORES_MINIMOS - plantilla.size();
@@ -290,20 +290,16 @@ public class Equipo implements Serializable {
     /**
      * Obtiene el número total de jugadores en la plantilla.
      *
-     * @return cantidad de jugadores del equipo
+     * @return cantidad de jugadores
      */
     public int numeroDeJugadores() {
         return plantilla.size();
     }
 
     /**
-     * Obtiene un mensaje descriptivo del estado actual de la plantilla.
-     * <p>
-     * El mensaje indica si la plantilla está completa,
-     * si ha alcanzado el mínimo o cuántos jugadores faltan.
-     * </p>
+     * Obtiene un mensaje descriptivo del estado de la plantilla.
      *
-     * @return mensaje de estado de la plantilla
+     * @return mensaje de estado
      */
     public String obtenerMensajeEstadoPlantilla() {
         int actual = plantilla.size();
@@ -326,12 +322,8 @@ public class Equipo implements Serializable {
 
     /**
      * Obtiene un mensaje detallado de validación del equipo.
-     * <p>
-     * El mensaje incluye el nombre del equipo, el número actual
-     * de jugadores y si cumple o no el mínimo requerido.
-     * </p>
      *
-     * @return mensaje de validación de la plantilla
+     * @return mensaje de validación
      */
     public String obtenerDetalleValidacion() {
         int actual = plantilla.size();
@@ -353,31 +345,40 @@ public class Equipo implements Serializable {
         }
     }
 
-    /**
-     * Comprueba la igualdad entre equipos.
-     * <p>
-     * Dos equipos se consideran iguales si tienen el mismo nombre
-     * (ignorando mayúsculas y minúsculas).
-     * </p>
-     *
-     * @param obj objeto a comparar
-     * @return {@code true} si son iguales, {@code false} en caso contrario
-     */
+    // --- GETTERS Y SETTERS ---
+
+    public String getId() { return id; }
+    
+    public void setId(String id) { 
+        this.id = id;
+        actualizarContadorSiNecesario(id);
+    }
+
+    public String getNombre() { return nombre; }
+    
+    public void setNombre(String nombre) { this.nombre = nombre; }
+
+    public String getRutaEscudo() { return rutaEscudo; }
+    
+    public void setRutaEscudo(String rutaEscudo) { this.rutaEscudo = rutaEscudo; }
+
+    public List<Jugador> getPlantilla() { return plantilla; }
+
+    @Override
+    public String toString() {
+        return nombre + " (ID: " + id + ")";
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Equipo)) return false;
         Equipo e = (Equipo) obj;
-        return nombre.equalsIgnoreCase(e.nombre);
+        return id.equals(e.id);
     }
 
-    /**
-     * Calcula el código hash del equipo.
-     *
-     * @return valor hash basado en el nombre del equipo
-     */
     @Override
     public int hashCode() {
-        return Objects.hash(nombre.toLowerCase());
+        return Objects.hash(id);
     }
 }

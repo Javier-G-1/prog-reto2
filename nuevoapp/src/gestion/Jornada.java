@@ -3,128 +3,148 @@ package gestion;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * CLASE: Jornada
  * <p>
- * Representa una jornada dentro de una temporada deportiva.
- * Contiene una lista de partidos programados y permite gestionar
- * su estado y validaciones.
+ * Representa una jornada de partidos dentro de una temporada.
+ * Cada jornada tiene un ID único e incremental que nunca se repite.
  * </p>
  */
 public class Jornada implements Serializable {
-
-    /** Identificador de versión para la serialización */
+    
     private static final long serialVersionUID = 1L;
-
+    
+    /** Contador global de IDs */
+    private static AtomicInteger contadorGlobal = new AtomicInteger(1);
+    
+    /** ID único de la jornada (formato: J001, J002, ...) */
+    private String id;
+    
     /** Nombre de la jornada */
     private String nombre;
-
-    /** Lista de partidos programados en esta jornada */
+    
+    /** Lista de partidos de la jornada */
     private List<Partido> listaPartidos;
 
     /**
-     * Constructor principal de la jornada.
+     * Constructor principal.
+     * Genera automáticamente un ID único incremental.
      *
      * @param nombre nombre de la jornada
-     * @throws IllegalArgumentException si el nombre es nulo o vacío
      */
     public Jornada(String nombre) {
-        if (nombre == null || nombre.isBlank())
-            throw new IllegalArgumentException("El nombre de la jornada no puede estar vacío.");
+        this.id = generarIdUnico();
         this.nombre = nombre;
         this.listaPartidos = new ArrayList<>();
     }
 
     /**
-     * Verifica si todos los partidos de la jornada han finalizado.
-     * <p>
-     * Útil para saber si la jornada ha terminado y mostrar avisos
-     * en la clasificación o progresión de la temporada.
-     * </p>
+     * Constructor completo para carga desde archivo.
+     * Actualiza el contador global si el ID cargado es mayor.
      *
-     * @return {@code true} si todos los partidos están finalizados,
-     *         {@code false} si alguno está pendiente o la jornada está vacía
+     * @param id ID de la jornada (puede ser nulo)
+     * @param nombre nombre de la jornada
      */
-    public boolean estaCompleta() {
-        if (listaPartidos.isEmpty()) return false;
-
-        for (Partido p : listaPartidos) {
-            if (!p.isFinalizado()) return false;
-        }
-        return true;
+    public Jornada(String id, String nombre) {
+        this.id = (id == null || id.isBlank()) ? generarIdUnico() : id;
+        this.nombre = nombre;
+        this.listaPartidos = new ArrayList<>();
+        
+        actualizarContadorSiNecesario(this.id);
     }
 
     /**
-     * Agrega un nuevo partido a la jornada.
-     * <p>
-     * Valida que el partido no sea nulo y que no exista un enfrentamiento
-     * idéntico (mismos equipos local y visitante) en la jornada.
-     * </p>
+     * Genera un ID único incremental.
+     * Formato: J001, J002, ...
      *
-     * @param p partido a agregar
-     * @throws IllegalArgumentException si el partido es nulo
-     *                                  o ya existe un enfrentamiento igual
+     * @return ID único generado
      */
-    public void agregarPartido(Partido p) {
-        if (p == null) throw new IllegalArgumentException("El partido no puede ser nulo.");
+    private String generarIdUnico() {
+        int numero = contadorGlobal.getAndIncrement();
+        return String.format("J%03d", numero);
+    }
 
-        // Evitar partidos repetidos
-        for (Partido existente : listaPartidos) {
-            boolean mismosEquipos = (existente.getEquipoLocal().equals(p.getEquipoLocal()) &&
-                                     existente.getEquipoVisitante().equals(p.getEquipoVisitante()));
-            if (mismosEquipos)
-                throw new IllegalArgumentException("Este enfrentamiento ya existe en la jornada.");
+    /**
+     * Actualiza el contador global si el ID proporcionado es mayor.
+     *
+     * @param id ID de la jornada a evaluar
+     */
+    private void actualizarContadorSiNecesario(String id) {
+        if (id == null || !id.startsWith("J")) return;
+
+        try {
+            int numeroId = Integer.parseInt(id.substring(1));
+            int valorActual;
+            do {
+                valorActual = contadorGlobal.get();
+                if (numeroId < valorActual) break;
+            } while (!contadorGlobal.compareAndSet(valorActual, numeroId + 1));
+        } catch (NumberFormatException e) {
+            // ID mal formado, ignorar
+        }
+    }
+
+    /**
+     * Sincroniza el contador global al cargar jornadas desde almacenamiento.
+     *
+     * @param todasLasJornadas lista de todas las jornadas cargadas
+     */
+    public static void sincronizarContadorGlobal(java.util.List<Jornada> todasLasJornadas) {
+        if (todasLasJornadas == null || todasLasJornadas.isEmpty()) {
+            contadorGlobal.set(1);
+            return;
         }
 
-        listaPartidos.add(p);
+        int maxId = 0;
+
+        for (Jornada j : todasLasJornadas) {
+            if (j.id != null && j.id.startsWith("J")) {
+                try {
+                    int numeroId = Integer.parseInt(j.id.substring(1));
+                    if (numeroId > maxId) {
+                        maxId = numeroId;
+                    }
+                } catch (NumberFormatException e) {
+                    // Ignorar IDs mal formados
+                }
+            }
+        }
+
+        contadorGlobal.set(maxId + 1);
+        System.out.println("✓ Contador de jornadas sincronizado en: J" + 
+                         String.format("%03d", maxId + 1));
+    }
+
+    /**
+     * Agrega un partido a la jornada.
+     *
+     * @param p partido a agregar
+     */
+    public void agregarPartido(Partido p) {
+        if (p != null) {
+            this.listaPartidos.add(p);
+        }
     }
 
     // --- GETTERS Y SETTERS ---
 
-    /**
-     * Obtiene el nombre de la jornada.
-     *
-     * @return nombre de la jornada
-     */
-    public String getNombre() {
-        return nombre;
+    public String getId() { return id; }
+    
+    public void setId(String id) { 
+        this.id = id;
+        actualizarContadorSiNecesario(id);
     }
 
-    /**
-     * Modifica el nombre de la jornada.
-     *
-     * @param nombre nuevo nombre de la jornada
-     */
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    public String getNombre() { return nombre; }
+    
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    /**
-     * Obtiene la lista de partidos programados en la jornada.
-     *
-     * @return lista de partidos
-     */
-    public List<Partido> getListaPartidos() {
-        return listaPartidos;
-    }
+    public List<Partido> getListaPartidos() { return listaPartidos; }
 
-    /**
-     * Establece la lista completa de partidos de la jornada.
-     *
-     * @param listaPartidos nueva lista de partidos
-     */
-    public void setListaPartidos(List<Partido> listaPartidos) {
-        this.listaPartidos = listaPartidos;
-    }
-
-    /**
-     * Representación en texto de la jornada.
-     *
-     * @return cadena con el nombre de la jornada
-     */
     @Override
     public String toString() {
-        return "Jornada " + nombre;
+        return nombre + " (ID: " + id + ")";
     }
 }

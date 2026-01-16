@@ -13,14 +13,10 @@ import gestion.*;
  *     <li>Crear y mantener backups automáticos.</li>
  *     <li>Normalizar rutas de imágenes de escudos y fotos de jugadores.</li>
  *     <li>Inicializar datos por defecto si no existen o están corruptos.</li>
+ *     <li>⭐ NUEVO: Sincronizar contadores de IDs únicos al cargar datos.</li>
  * </ul>
- * 
- * <p>Usa rutas relativas estandarizadas: "./imagenes/imagenes_Logos" y
- * "./imagenes/imagenes_Jugadores".</p>
  */
 public class GestorArchivos {
-	
-	 
     
     private static final String ARCHIVO_DATOS = "datos_federacion.dat";
     private static final String CARPETA_BACKUPS = "backups";
@@ -31,7 +27,7 @@ public class GestorArchivos {
     // ⭐ RUTAS RELATIVAS UNIFICADAS (con ./ al inicio)
     private static final String CARPETA_LOGOS = "./imagenes/imagenes_Logos";
     private static final String CARPETA_JUGADORES = "./imagenes/imagenes_Jugadores";
-    private static final String ARCHIVO_XML_GENERAL = "exportaciones/general.xml";
+    private static final String ARCHIVO_XML_GENERAL = "exportaciones/ligaBalonmano.xml";
     
     static {
         crearEstructuraCarpetas();
@@ -39,7 +35,6 @@ public class GestorArchivos {
     
     private static void crearEstructuraCarpetas() {
         try {
-            // Crear carpetas sin el "./" (el sistema operativo no necesita eso)
             Files.createDirectories(Paths.get(CARPETA_BACKUPS));
             Files.createDirectories(Paths.get(CARPETA_EXPORTACIONES));
             Files.createDirectories(Paths.get(CARPETA_LOGS));
@@ -135,16 +130,13 @@ public class GestorArchivos {
         }
         
         if (escudosNormalizados > 0 || fotosNormalizadas > 0) {
-            System.out.println(" URLs normalizadas: " + escudosNormalizados + 
+            System.out.println("🔧 URLs normalizadas: " + escudosNormalizados + 
                              " escudos, " + fotosNormalizadas + " fotos");
         }
     }
     
     /**
      * ⭐ NUEVO: Normaliza una ruta de imagen al formato estándar "./imagenes/..."
-     * @param rutaOriginal La ruta original (puede ser absoluta o relativa)
-     * @param esEscudo true para escudos, false para fotos de jugadores
-     * @return Ruta normalizada en formato "./imagenes/imagenes_Logos/ARCHIVO.ext"
      */
     private static String normalizarRutaImagen(String rutaOriginal, boolean esEscudo) {
         if (rutaOriginal == null || rutaOriginal.isEmpty()) {
@@ -160,13 +152,12 @@ public class GestorArchivos {
         
         // Verificar que el archivo existe
         if (!archivo.exists()) {
-            // Si no existe, intentar con rutas relativas
             archivo = new File("imagenes/imagenes_Logos/" + archivo.getName());
             if (!archivo.exists()) {
                 archivo = new File("imagenes/imagenes_Jugadores/" + archivo.getName());
                 if (!archivo.exists()) {
                     System.err.println("⚠️ Archivo no encontrado: " + rutaOriginal);
-                    return ""; // Archivo no existe
+                    return "";
                 }
             }
         }
@@ -183,10 +174,7 @@ public class GestorArchivos {
     
     /**
      * Carga los datos de la federación desde disco.
-     * Sincroniza los contadores de jugadores y normaliza rutas de imágenes.
-     * Si el archivo principal está corrupto, intenta restaurar desde el backup más reciente.
-     * 
-     * @return Objeto DatosFederacion cargado o inicializado por defecto
+     * ⭐ ACTUALIZADO: Sincroniza TODOS los contadores de IDs únicos.
      */
     public static DatosFederacion cargarTodo() {
         File archivo = new File(ARCHIVO_DATOS);
@@ -204,11 +192,11 @@ public class GestorArchivos {
             System.out.println("✓ Datos cargados correctamente desde " + ARCHIVO_DATOS);
             GestorLog.info("Datos cargados desde " + ARCHIVO_DATOS);
             
-            // ⭐ SINCRONIZAR CONTADOR DE IDs DE JUGADORES
-            sincronizarContadorJugadores(datos);
-            
-            // ⭐ NORMALIZAR RUTAS AL CARGAR (por si vienen en formato antiguo)
+            // ⭐ NORMALIZAR RUTAS AL CARGAR
             normalizarURLsImagenes(datos);
+            
+            // ⭐ SINCRONIZAR TODOS LOS CONTADORES DE IDs ÚNICOS
+            sincronizarContadores(datos);
             
             return validarYCorregirDatos(datos);
             
@@ -219,8 +207,8 @@ public class GestorArchivos {
             
             DatosFederacion backup = restaurarUltimoBackup();
             if (backup != null) {
-                sincronizarContadorJugadores(backup);
                 normalizarURLsImagenes(backup);
+                sincronizarContadores(backup);
                 return backup;
             }
             
@@ -231,35 +219,54 @@ public class GestorArchivos {
     }
     
     /**
-     * ⭐ NUEVO: Sincroniza el contador global de IDs de jugadores
+     * ⭐ NUEVO: Sincroniza TODOS los contadores globales de IDs únicos.
+     * DEBE llamarse después de cargar datos desde archivos.
      */
-    private static void sincronizarContadorJugadores(DatosFederacion datos) {
+    public static void sincronizarContadores(DatosFederacion datos) {
         if (datos == null) return;
         
-        // Recopilar TODOS los jugadores del sistema
-        java.util.List<Jugador> todosLosJugadores = new java.util.ArrayList<>();
+        System.out.println("\n🔄 Sincronizando contadores de IDs únicos...");
         
-        // De las temporadas
+        // Recolectar todas las entidades
+        java.util.List<Jugador> todosJugadores = new java.util.ArrayList<>();
+        java.util.List<Equipo> todosEquipos = new java.util.ArrayList<>();
+        java.util.List<Jornada> todasJornadas = new java.util.ArrayList<>();
+        java.util.List<Partido> todosPartidos = new java.util.ArrayList<>();
+        
         for (Temporada temp : datos.getListaTemporadas()) {
-            for (Equipo equipo : temp.getEquiposParticipantes()) {
-                todosLosJugadores.addAll(equipo.getPlantilla());
+            // Equipos
+            todosEquipos.addAll(temp.getEquiposParticipantes());
+            
+            // Jugadores de cada equipo
+            for (Equipo eq : temp.getEquiposParticipantes()) {
+                todosJugadores.addAll(eq.getPlantilla());
+            }
+            
+            // Jornadas y partidos
+            todasJornadas.addAll(temp.getListaJornadas());
+            for (Jornada jor : temp.getListaJornadas()) {
+                todosPartidos.addAll(jor.getListaPartidos());
             }
         }
         
-        // De la lista maestra (si existe)
-        if (datos.getTodosLosJugadores() != null) {
-            todosLosJugadores.addAll(datos.getTodosLosJugadores());
-        }
+        // Sincronizar cada contador
+        Jugador.sincronizarContadorGlobal(todosJugadores);
+        Equipo.sincronizarContadorGlobal(todosEquipos);
+        Jornada.sincronizarContadorGlobal(todasJornadas);
+        Partido.sincronizarContadorGlobal(todosPartidos);
         
-        // Sincronizar el contador estático
-        Jugador.sincronizarContadorGlobal(todosLosJugadores);
+        System.out.println("✅ Todos los contadores sincronizados correctamente");
+        System.out.println("   • Jugadores: " + todosJugadores.size());
+        System.out.println("   • Equipos: " + todosEquipos.size());
+        System.out.println("   • Jornadas: " + todasJornadas.size());
+        System.out.println("   • Partidos: " + todosPartidos.size() + "\n");
         
-        GestorLog.info("Contador de jugadores sincronizado - Total jugadores: " + todosLosJugadores.size());
+        GestorLog.info("Contadores sincronizados - J:" + todosJugadores.size() + 
+                      " E:" + todosEquipos.size() + 
+                      " Jor:" + todasJornadas.size() + 
+                      " P:" + todosPartidos.size());
     }
     
-    /**
-     * Crea un backup automático del archivo actual con timestamp
-     */
     private static void crearBackupAutomatico() {
         File archivoActual = new File(ARCHIVO_DATOS);
         if (!archivoActual.exists()) return;
@@ -273,7 +280,7 @@ public class GestorArchivos {
             Files.copy(archivoActual.toPath(), rutaBackup, 
                     StandardCopyOption.REPLACE_EXISTING);
             
-            System.out.println(" Backup creado: " + nombreBackup);
+            System.out.println("💾 Backup creado: " + nombreBackup);
             GestorLog.info("Backup automático creado: " + nombreBackup);
             
             limpiarBackupsAntiguos();
@@ -284,9 +291,6 @@ public class GestorArchivos {
         }
     }
     
-    /**
-     * Restaura los datos desde el backup más reciente
-     */
     private static DatosFederacion restaurarUltimoBackup() {
         try {
             File carpeta = new File(CARPETA_BACKUPS);
@@ -301,7 +305,7 @@ public class GestorArchivos {
                     Long.compare(b.lastModified(), a.lastModified()));
             
             File backupMasReciente = backups[0];
-            System.out.println(" Restaurando desde: " + backupMasReciente.getName());
+            System.out.println("📂 Restaurando desde: " + backupMasReciente.getName());
             GestorLog.info("Restaurando desde backup: " + backupMasReciente.getName());
             
             try (ObjectInputStream ois = new ObjectInputStream(
@@ -310,15 +314,12 @@ public class GestorArchivos {
             }
             
         } catch (Exception e) {
-            System.err.println(" Error al restaurar backup: " + e.getMessage());
+            System.err.println("❌ Error al restaurar backup: " + e.getMessage());
             GestorLog.error("Error al restaurar backup", e);
             return null;
         }
     }
     
-    /**
-     * Mantiene solo los 5 backups más recientes
-     */
     private static void limpiarBackupsAntiguos() {
         try {
             File carpeta = new File(CARPETA_BACKUPS);
@@ -332,22 +333,18 @@ public class GestorArchivos {
             
             for (int i = 5; i < backups.length; i++) {
                 if (backups[i].delete()) {
-                    System.out.println(" Backup antiguo eliminado: " + backups[i].getName());
+                    System.out.println("🗑️ Backup antiguo eliminado: " + backups[i].getName());
                     GestorLog.debug("Backup antiguo eliminado: " + backups[i].getName());
                 }
             }
             
         } catch (Exception e) {
-            System.err.println(" Error al limpiar backups: " + e.getMessage());
+            System.err.println("⚠️ Error al limpiar backups: " + e.getMessage());
         }
     }
     
     /**
-     * Copia un escudo de equipo al directorio estándar y devuelve su ruta relativa normalizada.
-     * 
-     * @param rutaOrigen Ruta de archivo original
-     * @param nombreEquipo Nombre del equipo
-     * @return Ruta relativa al escudo normalizado, o null si falla
+     * Copia un escudo de equipo al directorio estándar.
      */
     public static String copiarEscudo(String rutaOrigen, String nombreEquipo) {
         if (rutaOrigen == null || rutaOrigen.isEmpty() || nombreEquipo == null) {
@@ -365,30 +362,23 @@ public class GestorArchivos {
             String extension = obtenerExtension(archivoOrigen.getName());
             String nombreNormalizado = normalizarNombre(nombreEquipo) + extension;
             
-            // Ruta física sin "./" para crear el archivo
             Path rutaDestino = Paths.get("imagenes/imagenes_Logos", nombreNormalizado);
             
             Files.copy(archivoOrigen.toPath(), rutaDestino, StandardCopyOption.REPLACE_EXISTING);
             
             GestorLog.info("Escudo copiado: " + nombreEquipo + " → " + nombreNormalizado);
             
-            // ⭐ Devolver ruta relativa CON "./" para compatibilidad XML
             return "./imagenes/imagenes_Logos/" + nombreNormalizado;
             
         } catch (IOException e) {
-            System.err.println(" Error al copiar escudo: " + e.getMessage());
+            System.err.println("❌ Error al copiar escudo: " + e.getMessage());
             GestorLog.error("Error al copiar escudo de " + nombreEquipo, e);
             return null;
         }
     }
     
     /**
-     * Copia una foto de jugador al directorio estándar y devuelve su ruta relativa normalizada.
-     * 
-     * @param rutaOrigen Ruta del archivo original
-     * @param nombreJugador Nombre del jugador
-     * @param nombreEquipo Nombre del equipo
-     * @return Ruta relativa al archivo normalizado, o null si falla
+     * Copia una foto de jugador al directorio estándar.
      */
     public static String copiarFotoJugador(String rutaOrigen, String nombreJugador, String nombreEquipo) {
         if (rutaOrigen == null || rutaOrigen.isEmpty()) {
@@ -407,18 +397,16 @@ public class GestorArchivos {
             String nombreNormalizado = normalizarNombre(nombreJugador) + "_" + 
                                        normalizarNombre(nombreEquipo) + extension;
             
-            // Ruta física sin "./" para crear el archivo
             Path rutaDestino = Paths.get("imagenes/imagenes_Jugadores", nombreNormalizado);
             
             Files.copy(archivoOrigen.toPath(), rutaDestino, StandardCopyOption.REPLACE_EXISTING);
             
             GestorLog.info("Foto copiada: " + nombreJugador + " → " + nombreNormalizado);
             
-            // ⭐ Devolver ruta relativa CON "./" para compatibilidad XML
             return "./imagenes/imagenes_Jugadores/" + nombreNormalizado;
             
         } catch (IOException e) {
-            System.err.println(" Error al copiar foto: " + e.getMessage());
+            System.err.println("❌ Error al copiar foto: " + e.getMessage());
             GestorLog.error("Error al copiar foto de " + nombreJugador, e);
             return null;
         }

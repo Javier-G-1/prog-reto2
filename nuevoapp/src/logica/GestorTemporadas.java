@@ -56,7 +56,7 @@ public class GestorTemporadas {
         SincronizadorWeb.actualizarActivosServidor(datos, siguiente.getNombre());
 
         // 4. Exportación XML - ⭐ ACTUALIZADO: Exporta solo la temporada finalizada a general.xml
-        ExportadorXML exportador = new ExportadorXML(datos);
+        ExportadorXMLLiga exportador = new ExportadorXMLLiga(datos);
         boolean exportacionExitosa = exportador.exportarTemporada(actual);
         
         if (exportacionExitosa) {

@@ -19,7 +19,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import gestion.Temporada;
 
-import logica.ExportadorXML;
+import logica.ExportadorXMLLiga;
 
 /**
  * Ventana principal de la aplicación de gestión de la Federación de Balonmano.
@@ -465,7 +465,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 return;
             }
             
-            // Crear opciones dinámicas basadas en las temporadas disponibles
+            // Crear opciones dinámicas
             java.util.List<String> opcionesLista = new java.util.ArrayList<>();
             
             // Añadir opción para la temporada actual visible
@@ -480,12 +480,11 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
             // Añadir opción para exportar todas
             opcionesLista.add("Exportar todas las temporadas");
             
-            // ⭐ CORRECCIÓN: Convertir la lista a array
             String[] opciones = opcionesLista.toArray(new String[0]);
             
             int eleccion = JOptionPane.showOptionDialog(
                 this,
-                "¿Qué deseas exportar a general.xml?",
+                "¿Qué deseas exportar a ligaBalonmano.xml?",
                 "Exportar datos",
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
@@ -497,7 +496,9 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
             if (eleccion == -1) return; // Usuario canceló
 
             GestorLog.info("Iniciando exportación de datos");
-            ExportadorXML exportador = new ExportadorXML(datosFederacion);
+            
+            // ⭐ USAR EL NUEVO EXPORTADOR
+            ExportadorXMLLiga exportador = new ExportadorXMLLiga(datosFederacion);
 
             if (eleccion == 0 && temporadaActual != null) {
                 // Exportar temporada actual visible
@@ -528,7 +529,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 String mensaje = "✅ Exportación masiva completada\n\n" +
                                 "Temporadas exportadas: " + temporadasExportadas + "\n" +
                                 "Fallidas: " + temporadasFallidas + "\n" +
-                                "Archivo: general.xml";
+                                "Archivo: ligaBalonmano.xml";
                 
                 JOptionPane.showMessageDialog(this, 
                     mensaje,
@@ -539,7 +540,6 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                                temporadasFallidas + " fallidas");
             }
         });
-        
         
         
         

@@ -9,7 +9,8 @@ import java.util.*;
  *
  * <p>Reglas principales:
  * <ul>
- *     <li>Mínimo de 6 equipos para generar calendario.</li>
+ *     <li>Mínimo de 6 equipos REALES para generar calendario.</li>
+ *     <li>Excluye automáticamente el equipo fantasma "_SIN_EQUIPO_".</li>
  *     <li>Si el número de equipos es impar, se agrega un equipo fantasma "DESCANSA".</li>
  *     <li>Se generan jornadas de ida y vuelta automáticamente.</li>
  * </ul>
@@ -20,10 +21,12 @@ public class GeneradorCalendario {
     /**
      * Genera el calendario completo para la temporada especificada.
      * Crea jornadas de ida y vuelta según el sistema Round-Robin.
+     * 
+     * <p><b>⭐ IMPORTANTE:</b> Filtra automáticamente el equipo "_SIN_EQUIPO_" del calendario.</p>
      *
      * @param temp La temporada donde se generará el calendario (no nula)
      * @throws IllegalArgumentException Si la temporada es nula
-     * @throws Exception Si el número de equipos es menor al mínimo permitido (6)
+     * @throws Exception Si el número de equipos REALES es menor al mínimo permitido (6)
      */
     public static void crearCalendario(Temporada temp) throws Exception {
         if (temp == null) {
@@ -31,18 +34,30 @@ public class GeneradorCalendario {
             throw new IllegalArgumentException("La temporada no puede ser nula.");
         }
 
-        List<Equipo> participantes = new ArrayList<>(temp.getEquiposParticipantes());
+        // ⭐ FILTRAR EQUIPOS REALES (excluir "_SIN_EQUIPO_")
+        List<Equipo> todosLosEquipos = temp.getEquiposParticipantes();
+        List<Equipo> participantes = new ArrayList<>();
+        
+        for (Equipo eq : todosLosEquipos) {
+            if (!eq.getNombre().equals("_SIN_EQUIPO_")) {
+                participantes.add(eq);
+            }
+        }
 
+        GestorLog.info("Equipos filtrados para calendario: " + participantes.size() + 
+                      " (Total en temporada: " + todosLosEquipos.size() + ")");
+
+        // ⭐ VALIDACIÓN: Mínimo 6 equipos REALES
         if (participantes.size() < 6) {
             GestorLog.advertencia("Intento de generar calendario con " + participantes.size() +
-                                " equipos en " + temp.getNombre() + " (mínimo: 6)");
+                                " equipos REALES en " + temp.getNombre() + " (mínimo: 6)");
             throw new Exception("Reglamento RFBM: Se requiere un mínimo de 6 equipos para iniciar la liga.");
         }
 
         GestorLog.info("Iniciando generación de calendario: " + temp.getNombre() +
-                      " | Equipos: " + participantes.size());
+                      " | Equipos participantes: " + participantes.size());
 
-        // ⭐ CORRECCIÓN: Crear una copia independiente para rotar
+        // ⭐ Crear una copia independiente para rotar
         List<Equipo> equiposRotacion = new ArrayList<>(participantes);
 
         // Algoritmo Round-Robin (Ida)
@@ -50,13 +65,13 @@ public class GeneradorCalendario {
         if (equiposRotacion.size() % 2 != 0) {
             equiposRotacion.add(new Equipo("DESCANSA"));
             agregarDescanso = true;
-            GestorLog.info("Número impar de equipos - Se agregó equipo fantasma 'DESCANSA'");
+            GestorLog.info("Número impar de equipos - Se agregó equipo fantasma temporal 'DESCANSA'");
         }
 
         int jornadasIda = equiposRotacion.size() - 1;
         int partidosGenerados = 0;
 
-        // ⭐ CORRECCIÓN: Fijar el primer equipo y rotar el resto
+        // ⭐ Fijar el primer equipo y rotar el resto
         Equipo equipoFijo = equiposRotacion.get(0);
         List<Equipo> equiposRotativos = new ArrayList<>(equiposRotacion.subList(1, equiposRotacion.size()));
 
@@ -118,9 +133,10 @@ public class GeneradorCalendario {
         }
 
         GestorLog.exito("Calendario generado: " + temp.getNombre() +
-                      " | Equipos: " + (equiposRotacion.size() - (agregarDescanso ? 1 : 0)) +
+                      " | Equipos participantes: " + participantes.size() +
                       " | Jornadas: " + temp.getListaJornadas().size() +
                       " | Partidos: " + partidosGenerados +
-                      " | Sistema: Round-Robin");
+                      " | Sistema: Round-Robin" +
+                      (agregarDescanso ? " (con descansos)" : ""));
     }
 }

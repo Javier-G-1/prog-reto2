@@ -7,30 +7,30 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import javax.swing.JOptionPane;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
-public class ExportadorXML {
+/**
+ * EXPORTADOR XML adaptado al formato ligaBalonmano.xml
+ * 
+ * Estructura exacta del XML de referencia con IDs únicos persistentes.
+ */
+public class ExportadorXMLLiga {
     
     private DatosFederacion datosFederacion;
-    private static final String ARCHIVO_XML = "general.xml";
+    private static final String ARCHIVO_XML = "ligaBalonmano.xml";
     private File carpetaImagenes;
     
-    public ExportadorXML(DatosFederacion datos) {
+    public ExportadorXMLLiga(DatosFederacion datos) {
         this.datosFederacion = datos;
     }
     
     /**
-     * Exporta una temporada al archivo general.xml (añadiéndola si no existe)
+     * Exporta una temporada al archivo ligaBalonmano.xml
      * @param temporada La temporada a exportar
-     * @return true si la exportación fue exitosa, false en caso contrario
+     * @return true si la exportación fue exitosa
      */
     public boolean exportarTemporada(Temporada temporada) {
         try {
-            // Crear estructura de carpetas para imágenes
+            // Crear carpetas de imágenes
             carpetaImagenes = new File("imagenes");
             File carpetaLogos = new File(carpetaImagenes, "imagenes_Logos");
             File carpetaJugadores = new File(carpetaImagenes, "imagenes_Jugadores");
@@ -38,50 +38,44 @@ public class ExportadorXML {
             carpetaLogos.mkdirs();
             carpetaJugadores.mkdirs();
             
-            GestorLog.info("Carpetas de imágenes verificadas/creadas");
+            GestorLog.info("Carpetas de imágenes verificadas");
             
             // Leer XML existente o crear estructura base
             File archivoXML = new File(ARCHIVO_XML);
             StringBuilder xmlExistente = new StringBuilder();
             
             if (archivoXML.exists()) {
-                // Leer contenido existente
                 String contenido = new String(Files.readAllBytes(archivoXML.toPath()));
                 
                 // Verificar si la temporada ya existe
                 String idTemporada = generarIdTemporada(temporada.getNombre());
                 if (contenido.contains("id=\"" + idTemporada + "\"")) {
                     int respuesta = JOptionPane.showConfirmDialog(null,
-                        "⚠️ La temporada '" + temporada.getNombre() + "' ya existe en general.xml\n\n" +
+                        "⚠️ La temporada '" + temporada.getNombre() + "' ya existe en ligaBalonmano.xml\n\n" +
                         "¿Desea reemplazarla?",
                         "Temporada existente",
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.WARNING_MESSAGE);
                     
                     if (respuesta != JOptionPane.YES_OPTION) {
-                        GestorLog.info("Exportación cancelada - temporada ya existe");
+                        GestorLog.info("Exportación cancelada");
                         return false;
                     }
                     
-                    // Eliminar temporada existente del contenido
                     contenido = eliminarTemporadaExistente(contenido, idTemporada);
                 }
                 
-                // Separar antes y después de </temporadas>
                 int posicionCierre = contenido.lastIndexOf("</temporadas>");
                 
                 if (posicionCierre != -1) {
                     xmlExistente.append(contenido.substring(0, posicionCierre));
                 } else {
-                    // XML malformado, recrear estructura
-                    GestorLog.advertencia("XML malformado, recreando estructura base");
                     xmlExistente = crearEstructuraBase();
                 }
                 
             } else {
-                // Crear estructura base nueva
                 xmlExistente = crearEstructuraBase();
-                GestorLog.info("Creando nuevo archivo general.xml");
+                GestorLog.info("Creando nuevo archivo ligaBalonmano.xml");
             }
             
             // Agregar nueva temporada
@@ -89,28 +83,27 @@ public class ExportadorXML {
             
             // Cerrar tags
             xmlExistente.append("    </temporadas>\n");
-            xmlExistente.append("</federacionBalonmano>\n");
+            xmlExistente.append("</federacionBalonmano>");
             
-            // Escribir archivo completo
+            // Escribir archivo
             try (FileWriter writer = new FileWriter(archivoXML)) {
                 writer.write(xmlExistente.toString());
             }
             
-            GestorLog.exito("Temporada '" + temporada.getNombre() + "' exportada a general.xml");
+            GestorLog.exito("Temporada exportada: " + temporada.getNombre());
             JOptionPane.showMessageDialog(null,
                 "✅ Temporada exportada exitosamente\n\n" +
                 "📄 Archivo: " + ARCHIVO_XML + "\n" +
-                "📁 Temporada: " + temporada.getNombre() + "\n" +
-                "🖼️ Imágenes actualizadas en: ./imagenes/",
+                "📁 Temporada: " + temporada.getNombre(),
                 "Exportación exitosa",
                 JOptionPane.INFORMATION_MESSAGE);
             
             return true;
             
         } catch (IOException e) {
-            GestorLog.error("Error al exportar temporada: " + e.getMessage());
+            GestorLog.error("Error al exportar: " + e.getMessage());
             JOptionPane.showMessageDialog(null,
-                "❌ Error al exportar la temporada:\n" + e.getMessage(),
+                "❌ Error: " + e.getMessage(),
                 "Error de exportación",
                 JOptionPane.ERROR_MESSAGE);
             return false;
@@ -123,24 +116,22 @@ public class ExportadorXML {
     private StringBuilder crearEstructuraBase() {
         StringBuilder xml = new StringBuilder();
         xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        xml.append("<federacionBalonmano xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ");
-        xml.append("xsi:noNamespaceSchemaLocation=\"general.xsd\">\n\n");
+        xml.append("<federacionBalonmano xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n");
+        xml.append("    xsi:noNamespaceSchemaLocation=\"general.xsd\">\n\n");
         xml.append("    <temporadas>\n");
         return xml;
     }
     
     /**
-     * Elimina una temporada existente del contenido XML
+     * Elimina una temporada existente del XML
      */
     private String eliminarTemporadaExistente(String contenido, String idTemporada) {
         try {
-            // Buscar inicio de temporada
             String inicioTag = "<temporada id=\"" + idTemporada + "\">";
             int posInicio = contenido.indexOf(inicioTag);
             
             if (posInicio == -1) return contenido;
             
-            // Buscar cierre de temporada (contar niveles de anidación)
             int posActual = posInicio + inicioTag.length();
             int nivel = 1;
             
@@ -157,7 +148,6 @@ public class ExportadorXML {
                 posActual++;
             }
             
-            // Eliminar temporada completa
             String antes = contenido.substring(0, posInicio);
             String despues = contenido.substring(posActual);
             
@@ -165,13 +155,13 @@ public class ExportadorXML {
             return antes + despues;
             
         } catch (Exception e) {
-            GestorLog.error("Error al eliminar temporada existente: " + e.getMessage());
+            GestorLog.error("Error al eliminar temporada: " + e.getMessage());
             return contenido;
         }
     }
     
     /**
-     * Exporta una temporada completa al StringBuilder XML
+     * Exporta una temporada completa al XML
      */
     private void exportarTemporadaAlXML(StringBuilder xml, Temporada temporada) {
         String idTemporada = generarIdTemporada(temporada.getNombre());
@@ -181,10 +171,8 @@ public class ExportadorXML {
         // Exportar equipos
         xml.append("            <equipos>\n");
         
-        int contadorEquipo = 1;
         for (Equipo equipo : temporada.getEquiposParticipantes()) {
-            exportarEquipo(xml, equipo, contadorEquipo, temporada);
-            contadorEquipo++;
+            exportarEquipo(xml, equipo, temporada);
         }
         
         xml.append("            </equipos>\n");
@@ -192,26 +180,24 @@ public class ExportadorXML {
         // Exportar jornadas
         xml.append("            <jornadas>\n");
         
-        int contadorJornada = 1;
         for (Jornada jornada : temporada.getListaJornadas()) {
-            exportarJornada(xml, jornada, contadorJornada, temporada);
-            contadorJornada++;
+            exportarJornada(xml, jornada, temporada);
         }
         
         xml.append("            </jornadas>\n");
-        xml.append("        </temporada>\n\n");
+        xml.append("        </temporada>\n");
     }
     
     /**
      * Exporta un equipo con todos sus jugadores
      */
-    private void exportarEquipo(StringBuilder xml, Equipo equipo, int numeroEquipo, Temporada temporada) {
-        String idEquipo = String.format("E%03d", numeroEquipo);
+    private void exportarEquipo(StringBuilder xml, Equipo equipo, Temporada temporada) {
+        String idEquipo = equipo.getId();
         
         xml.append("                <equipo id=\"").append(idEquipo).append("\">\n");
         xml.append("                    <nombre>").append(escaparXML(equipo.getNombre())).append("</nombre>\n");
         
-        // Calcular estadísticas del equipo
+        // Calcular estadísticas
         EstadisticasEquipo stats = calcularEstadisticasEquipo(equipo, temporada);
         
         xml.append("                    <ganados>").append(stats.ganados).append("</ganados>\n");
@@ -223,17 +209,15 @@ public class ExportadorXML {
         // Exportar jugadores
         xml.append("                    <jugadores>\n");
         
-        int contadorJugador = 1;
         for (Jugador jugador : equipo.getPlantilla()) {
-            exportarJugador(xml, jugador, contadorJugador, idEquipo, equipo.getNombre());
-            contadorJugador++;
+            exportarJugador(xml, jugador, idEquipo, equipo.getNombre());
         }
         
         xml.append("                    </jugadores>\n");
         
-        // Escudo - Copiar imagen y generar ruta relativa
-        String rutaEscudoRelativa = copiarEscudo(equipo, numeroEquipo);
-        xml.append("                    <escudo url=\"").append(escaparXML(rutaEscudoRelativa)).append("\"/>\n");
+        // Escudo
+        String rutaEscudo = copiarEscudo(equipo);
+        xml.append("                    <escudo url=\"").append(escaparXML(rutaEscudo)).append("\" />\n");
         
         xml.append("                </equipo>\n");
     }
@@ -241,28 +225,29 @@ public class ExportadorXML {
     /**
      * Exporta un jugador
      */
-    private void exportarJugador(StringBuilder xml, Jugador jugador, int numeroJugador, String idEquipo, String nombreEquipo) {
-        String idJugador = String.format("JU%03d", numeroJugador);
+    private void exportarJugador(StringBuilder xml, Jugador jugador, String idEquipo, String nombreEquipo) {
+        String idJugador = jugador.getId();
         
         xml.append("                        <jugador id=\"").append(idJugador).append("\" equipo=\"").append(idEquipo).append("\">\n");
         xml.append("                            <nombre>").append(escaparXML(jugador.getNombre())).append("</nombre>\n");
+        xml.append("                            <edad>").append(jugador.getEdad()).append("</edad>\n");
         xml.append("                            <nacionalidad>").append(escaparXML(jugador.getNacionalidad())).append("</nacionalidad>\n");
         xml.append("                            <altura>").append(escaparXML(jugador.getAltura())).append("</altura>\n");
         xml.append("                            <peso>").append(escaparXML(jugador.getPeso())).append("</peso>\n");
         xml.append("                            <dorsal>").append(jugador.getDorsal()).append("</dorsal>\n");
         xml.append("                            <posicion>").append(escaparXML(jugador.getPosicion())).append("</posicion>\n");
         
-        // Foto - Copiar imagen y generar ruta relativa
-        String fotoUrlRelativa = copiarFotoJugador(jugador, nombreEquipo, numeroJugador);
-        xml.append("                            <foto url=\"").append(escaparXML(fotoUrlRelativa)).append("\"/>\n");
+        // Foto
+        String fotoUrl = copiarFotoJugador(jugador, nombreEquipo);
+        xml.append("                            <foto url=\"").append(escaparXML(fotoUrl)).append("\" />\n");
         
         xml.append("                        </jugador>\n");
     }
     
     /**
-     * Copia el escudo de un equipo a la carpeta de exportación
+     * Copia el escudo de un equipo
      */
-    private String copiarEscudo(Equipo equipo, int numeroEquipo) {
+    private String copiarEscudo(Equipo equipo) {
         String rutaOrigen = equipo.getRutaEscudo();
         
         if (rutaOrigen == null || rutaOrigen.isEmpty()) {
@@ -285,20 +270,18 @@ public class ExportadorXML {
             
             Files.copy(archivoOrigen.toPath(), archivoDestino.toPath(), StandardCopyOption.REPLACE_EXISTING);
             
-            GestorLog.info("Escudo copiado: " + equipo.getNombre() + " → " + nombreNormalizado);
-            
             return "./imagenes/imagenes_Logos/" + nombreNormalizado;
             
         } catch (IOException e) {
-            GestorLog.error("Error al copiar escudo de " + equipo.getNombre() + ": " + e.getMessage());
+            GestorLog.error("Error al copiar escudo: " + e.getMessage());
             return "";
         }
     }
     
     /**
-     * Copia la foto de un jugador a la carpeta de exportación
+     * Copia la foto de un jugador
      */
-    private String copiarFotoJugador(Jugador jugador, String nombreEquipo, int numeroJugador) {
+    private String copiarFotoJugador(Jugador jugador, String nombreEquipo) {
         String rutaOrigen = jugador.getFotoURL();
         
         if (rutaOrigen == null || rutaOrigen.isEmpty()) {
@@ -309,36 +292,29 @@ public class ExportadorXML {
             File archivoOrigen = new File(rutaOrigen);
             
             if (!archivoOrigen.exists()) {
-                GestorLog.advertencia("Foto no encontrada: " + rutaOrigen);
                 return "";
             }
             
             String extension = obtenerExtension(archivoOrigen.getName());
-            String nombreNormalizado = normalizarNombre(jugador.getNombre()) + "_" + 
-                                       normalizarNombre(nombreEquipo) + extension;
+            String nombreArchivo = jugador.getNombre().replace(" ", "\\ ") + extension;
             
             File carpetaJugadores = new File(carpetaImagenes, "imagenes_Jugadores");
-            File archivoDestino = new File(carpetaJugadores, nombreNormalizado);
+            File archivoDestino = new File(carpetaJugadores, nombreArchivo);
             
             Files.copy(archivoOrigen.toPath(), archivoDestino.toPath(), StandardCopyOption.REPLACE_EXISTING);
             
-            GestorLog.info("Foto copiada: " + jugador.getNombre() + " → " + nombreNormalizado);
-            
-            return "./imagenes/imagenes_Jugadores/" + nombreNormalizado;
+            return nombreArchivo;
             
         } catch (IOException e) {
-            GestorLog.error("Error al copiar foto de " + jugador.getNombre() + ": " + e.getMessage());
             return "";
         }
     }
     
     /**
-     * Normaliza un nombre para usar como nombre de archivo
+     * Normaliza un nombre para archivo
      */
     private String normalizarNombre(String nombre) {
-        return nombre.replaceAll("[^a-zA-Z0-9]", "_")
-                    .replaceAll("_+", "_")
-                    .toUpperCase();
+        return nombre.replaceAll("[^a-zA-Z0-9]", "_").toUpperCase();
     }
     
     /**
@@ -346,25 +322,20 @@ public class ExportadorXML {
      */
     private String obtenerExtension(String nombreArchivo) {
         int ultimoPunto = nombreArchivo.lastIndexOf('.');
-        if (ultimoPunto > 0) {
-            return nombreArchivo.substring(ultimoPunto);
-        }
-        return ".png";
+        return (ultimoPunto > 0) ? nombreArchivo.substring(ultimoPunto) : ".png";
     }
     
     /**
      * Exporta una jornada con todos sus partidos
      */
-    private void exportarJornada(StringBuilder xml, Jornada jornada, int numeroJornada, Temporada temporada) {
-        String idJornada = String.format("J%03d", numeroJornada);
+    private void exportarJornada(StringBuilder xml, Jornada jornada, Temporada temporada) {
+        String idJornada = jornada.getId();
         
         xml.append("                <jornada id=\"").append(idJornada).append("\">\n");
         xml.append("                    <partidos>\n");
         
-        int contadorPartido = 1;
         for (Partido partido : jornada.getListaPartidos()) {
-            exportarPartido(xml, partido, numeroJornada, contadorPartido, temporada);
-            contadorPartido++;
+            exportarPartido(xml, partido, temporada);
         }
         
         xml.append("                    </partidos>\n");
@@ -374,11 +345,10 @@ public class ExportadorXML {
     /**
      * Exporta un partido
      */
-    private void exportarPartido(StringBuilder xml, Partido partido, int numeroJornada, int numeroPartido, Temporada temporada) {
-        String idPartido = String.format("P%d_%d", numeroJornada, numeroPartido);
-        
-        String idLocal = obtenerIdEquipo(partido.getEquipoLocal(), temporada);
-        String idVisitante = obtenerIdEquipo(partido.getEquipoVisitante(), temporada);
+    private void exportarPartido(StringBuilder xml, Partido partido, Temporada temporada) {
+        String idPartido = partido.getId();
+        String idLocal = partido.getEquipoLocal().getId();
+        String idVisitante = partido.getEquipoVisitante().getId();
         
         xml.append("                        <partido id=\"").append(idPartido).append("\" ");
         xml.append("local=\"").append(idLocal).append("\" ");
@@ -394,7 +364,7 @@ public class ExportadorXML {
     }
     
     /**
-     * Calcula las estadísticas de un equipo en una temporada
+     * Calcula estadísticas de un equipo
      */
     private EstadisticasEquipo calcularEstadisticasEquipo(Equipo equipo, Temporada temporada) {
         EstadisticasEquipo stats = new EstadisticasEquipo();
@@ -434,33 +404,14 @@ public class ExportadorXML {
     }
     
     /**
-     * Obtiene el ID de un equipo en formato E00X
-     */
-    private String obtenerIdEquipo(Equipo equipo, Temporada temporada) {
-        int posicion = 1;
-        for (Equipo e : temporada.getEquiposParticipantes()) {
-            if (e.getNombre().equals(equipo.getNombre())) {
-                return String.format("E%03d", posicion);
-            }
-            posicion++;
-        }
-        return "E001";
-    }
-    
-    /**
-     * Genera un ID válido para la temporada
-     */
-    /**
-     * Genera un ID basado directamente en el nombre de la temporada
+     * Genera ID de temporada basado en el nombre
      */
     private String generarIdTemporada(String nombreTemporada) {
         if (nombreTemporada == null || nombreTemporada.isEmpty()) {
             return "temp_" + System.currentTimeMillis();
         }
         
-        // El ID de un XML no puede contener espacios. 
-        // Reemplazamos espacios por guiones bajos para que sea válido.
-        return nombreTemporada.trim().replace(" ", "_");
+        return nombreTemporada.trim().replace(" ", "_").replace("/", "_");
     }
     
     /**
@@ -477,7 +428,7 @@ public class ExportadorXML {
     }
     
     /**
-     * Clase auxiliar para almacenar estadísticas de un equipo
+     * Clase auxiliar para estadísticas
      */
     private static class EstadisticasEquipo {
         int ganados = 0;
