@@ -14,7 +14,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import gestion.Partido;
+import gestion.Usuario;
 import logica.GestorLog;
+import logica.PermisosApp;
 
 /**
  * Clase DialogoResultado.
@@ -43,6 +45,9 @@ public class DialogoResultado extends JDialog {
     /** Objeto Partido cuyo resultado se va a modificar */
     private Partido partido;
 
+    /** Usuario que intenta editar el resultado */
+    private Usuario usuario;
+
     /** Goles introducidos para el equipo local */
     private int golesL;
 
@@ -54,8 +59,9 @@ public class DialogoResultado extends JDialog {
      * 
      * @param padre La ventana padre sobre la que se centra el diálogo
      * @param p El partido cuyo resultado se va a introducir
+     * @param usuario El usuario que intenta editar el resultado
      */
-    public DialogoResultado(Frame padre, Partido p) {
+    public DialogoResultado(Frame padre, Partido p, Usuario usuario) {
         super(padre, (p == null) ? "Resultado" : "Resultado: " 
                 + p.getEquipoLocal().getNombre() + " vs " 
                 + p.getEquipoVisitante().getNombre(), true);
@@ -65,7 +71,19 @@ public class DialogoResultado extends JDialog {
             return;
         }
 
+        // Validar permisos del usuario
+        if (!PermisosApp.puedeModificarResultados(usuario)) {
+            JOptionPane.showMessageDialog(padre,
+                "No tienes permisos para editar resultados de partidos.\nSolo los usuarios con rol Árbitro o Administrador pueden hacerlo.",
+                "Acceso Denegado",
+                JOptionPane.WARNING_MESSAGE);
+          
+            dispose();
+            return;
+        }
+
         this.partido = p;
+        this.usuario = usuario;
 
         setLayout(new BorderLayout(10, 10));
         setSize(350, 200);

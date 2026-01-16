@@ -2098,6 +2098,11 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         btnGoles.setBackground(p.isFinalizado() ? new Color(70, 70, 70) : new Color(45, 55, 140));
         btnGoles.setForeground(Color.WHITE);
         
+        // Solo mostrar el botón si el usuario tiene permisos para modificar resultados
+        Usuario usuarioActualParaBotones = datosFederacion.buscarUsuario(lblUsuario.getText());
+        if (!PermisosApp.puedeModificarResultados(usuarioActualParaBotones)) {
+            btnGoles.setVisible(false);
+        }
 
         
 
@@ -2105,9 +2110,17 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         	
             String tempNom = (String) comboTemporadasPartidos.getSelectedItem();
             Temporada t = datosFederacion.buscarTemporadaPorNombre(tempNom);
-            if (rolUsuario != Rol.ADMINISTRADOR && rolUsuario != Rol.ARBITRO) {
-            	btnGoles.setVisible(false);}
-            	
+            
+            // Verificar permisos del usuario para modificar resultados
+            Usuario usuarioActual = datosFederacion.buscarUsuario(lblUsuario.getText());
+            if (!PermisosApp.puedeModificarResultados(usuarioActual)) {
+                JOptionPane.showMessageDialog(this, 
+                    "No tienes permisos para editar resultados de partidos.\nSolo los usuarios con rol Árbitro o Administrador pueden hacerlo.",
+                    "Acceso Denegado", 
+                    JOptionPane.WARNING_MESSAGE);
+                GestorLog.advertencia("Intento de editar resultado sin permisos por usuario: " + lblUsuario.getText());
+                return;
+            }
             
             if (t != null && t.getEstado().equals(Temporada.TERMINADA)) {
                 JOptionPane.showMessageDialog(this, 
@@ -2119,7 +2132,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
             }
             
             boolean eraFinalizado = p.isFinalizado();
-            DialogoResultado diag = new DialogoResultado(this, p);
+            DialogoResultado diag = new DialogoResultado(this, p, usuarioActual);
             diag.setVisible(true);
 
             if (diag.isAceptado()) {
@@ -2924,6 +2937,17 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
      */
     private void funcionTxema() {
         Temporada temp = obtenerTemporadaSeleccionada();
+        
+        // Validar permisos del usuario
+        Usuario usuarioActual = datosFederacion.buscarUsuario(lblUsuario.getText());
+        if (!PermisosApp.puedeModificarResultados(usuarioActual)) {
+            JOptionPane.showMessageDialog(this, 
+                "No tienes permisos para ejecutar simulaciones de resultados.\nSolo los usuarios con rol Árbitro o Administrador pueden hacerlo.",
+                "Acceso Denegado", 
+                JOptionPane.WARNING_MESSAGE);
+            GestorLog.advertencia("Intento de ejecutar simulación sin permisos por usuario: " + lblUsuario.getText());
+            return;
+        }
         
         // 1. Verificación inicial de seguridad
         if (temp == null) {
