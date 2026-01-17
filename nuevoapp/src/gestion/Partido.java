@@ -95,7 +95,13 @@ public class Partido implements Serializable {
      */
     private String generarIdUnico() {
         int numero = contadorGlobal.getAndIncrement();
-        return String.format("P%03d", numero);
+        return String.format("P%02d", numero); // ⭐ %02d en lugar de %03d
+    }
+    
+    
+    public static void reiniciarContador() {
+        contadorGlobal.set(1);
+        System.out.println("🔄 Contador de partidos reiniciado a P01");
     }
 
     /**
@@ -153,7 +159,12 @@ public class Partido implements Serializable {
 
         contadorGlobal.set(maxId + 1);
         System.out.println("✓ Contador de partidos sincronizado en: P" + 
-                         String.format("%03d", maxId + 1));
+                         String.format("%02d", maxId + 1)); // ⭐ %02d
+    }
+    
+    
+    public static String obtenerProximoId() {
+        return String.format("P%02d", contadorGlobal.get()); // ⭐ %02d
     }
 
     /**

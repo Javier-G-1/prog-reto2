@@ -165,10 +165,10 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
     private JButton btnNuevaJor;
     
     /** Botón para crear un nuevo partido manualmente */
-    private JButton btnNuevoPart;
+
     
     /** Botón para crear una nueva temporada */
-    private JButton btnNuevaTemp_1;
+
     
     /** Botón para finalizar la temporada actual */
     private JButton btnFinalizarTemporada;
@@ -405,19 +405,23 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 btnPartidos.setAlignmentX(Component.CENTER_ALIGNMENT);
                 btnPartidos.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
                 btnPartidos.addActionListener(this);
+                btnTemporadas = new JButton("Temporadas");
+                btnTemporadas.setBorder(null);
+                btnTemporadas.setBackground(TemaColores.BOTON_PRIMARIO);
+                btnTemporadas.setFont(new Font("Segoe UI", Font.BOLD, 14));
+                btnTemporadas.setForeground(TemaColores.TEXTO_PRIMARIO);
+                btnTemporadas.setAlignmentX(Component.CENTER_ALIGNMENT);
+                btnTemporadas.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+                btnTemporadas.addActionListener(this);
+                panelBotones.add(btnTemporadas);
+                
+                verticalStrut_4 = Box.createVerticalStrut(20);
+                panelBotones.add(verticalStrut_4);
                 panelBotones.add(btnPartidos);
         
         verticalStrut_3 = Box.createVerticalStrut(20);
         panelBotones.add(verticalStrut_3);
         panelBotones.add(btnEquipos);
-        btnTemporadas = new JButton("Temporadas");
-        btnTemporadas.setBorder(null);
-        btnTemporadas.setBackground(TemaColores.BOTON_PRIMARIO);
-        btnTemporadas.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnTemporadas.setForeground(TemaColores.TEXTO_PRIMARIO);
-        btnTemporadas.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnTemporadas.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        btnTemporadas.addActionListener(this);
 
         btnJugadores = new JButton("Jugadores");
         btnJugadores.setBorder(null);
@@ -432,12 +436,8 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         panelBotones.add(verticalStrut_2);
         panelBotones.add(btnJugadores);
         
-        verticalStrut_4 = Box.createVerticalStrut(20);
-        panelBotones.add(verticalStrut_4);
-        
         verticalStrut_8 = Box.createVerticalStrut(20);
         panelBotones.add(verticalStrut_8);
-        panelBotones.add(btnTemporadas);
 
         btnCerrarSesion = new JButton("Cerrar sesión");
         btnCerrarSesion.setBorder(null);
@@ -526,7 +526,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                     }
                 }
                 
-                String mensaje = "✅ Exportación masiva completada\n\n" +
+                String mensaje = " Exportación masiva completada\n\n" +
                                 "Temporadas exportadas: " + temporadasExportadas + "\n" +
                                 "Fallidas: " + temporadasFallidas + "\n" +
                                 "Archivo: ligaBalonmano.xml";
@@ -763,22 +763,15 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         panelAdminPartidos_1.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 10));
         panelPartidos.add(panelAdminPartidos_1, BorderLayout.NORTH);
 
-        btnNuevaTemp_1 = new JButton("+ Temporada");
-        btnNuevaTemp_1.setBorder(null);
+    
         btnNuevaJor = new JButton("+ Jornada");
-        btnNuevoPart = new JButton("+ Partido");
-
-        btnNuevaTemp_1.setBackground(new Color(0, 128, 0)); 
-        btnNuevaTemp_1.setForeground(Color.WHITE);
-        btnNuevaTemp_1.setFocusPainted(false);
-
-        btnNuevaTemp_1.addActionListener(this);
+       
+       
         btnNuevaJor.addActionListener(this);
-        btnNuevoPart.addActionListener(this);
-
-        panelAdminPartidos_1.add(btnNuevaTemp_1);
+        
+ 
         panelAdminPartidos_1.add(btnNuevaJor);
-        panelAdminPartidos_1.add(btnNuevoPart);
+     
 
         btnFinalizarTemporada = new JButton("Finalizar temporada");
         btnFinalizarTemporada.addActionListener(this);
@@ -943,7 +936,8 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
       
        
 
-        cardLayout.show(panelCards, "partidos");
+        cardLayout.show(panelCards, "temporadas");
+        panelGestionTemporadas.cargarTemporadas();
         
         sincronizarCombos();
         actualizarVistaEquipos();
@@ -1336,147 +1330,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
             }
         }
 
-        if (e.getSource() == btnNuevaTemp_1) {
-        	String nombre = JOptionPane.showInputDialog(this, "Nombre de la Temporada (ej: 2026/27):");
-            
-            if (nombre != null && !nombre.trim().isEmpty()) {
-                // ⭐ VALIDACIÓN: Verificar que no exista ya una temporada con ese nombre
-                if (datosFederacion.buscarTemporadaPorNombre(nombre) != null) {
-                    JOptionPane.showMessageDialog(this,
-                        "Ya existe una temporada con el nombre: " + nombre,
-                        "Temporada duplicada",
-                        JOptionPane.WARNING_MESSAGE);
-                    GestorLog.advertencia("Intento de crear temporada duplicada: " + nombre);
-                    return;
-                }
-                
-                GestorTemporadas gestor = new GestorTemporadas();}
-            if (nombre != null && !nombre.trim().isEmpty()) {
-                GestorTemporadas gestor = new GestorTemporadas();
-                
-                // ⭐ VALIDACIÓN: Verificar que no haya temporada EN_JUEGO
-                if (gestor.existeTemporadaEnCurso(datosFederacion)) {
-                    Temporada enCurso = gestor.obtenerTemporadaEnCurso(datosFederacion);
-                    
-                    JOptionPane.showMessageDialog(this,
-                        "No se puede crear una nueva temporada.\n\n" +
-                        "❌ Temporada en curso: " + enCurso.getNombre() + "\n\n" +
-                        "Debes finalizarla antes de crear una nueva temporada.",
-                        "Temporada en curso activa",
-                        JOptionPane.WARNING_MESSAGE);
-                    
-                    GestorLog.advertencia("Intento de crear temporada con " + enCurso.getNombre() + " EN_JUEGO");
-                    return;
-                }
-                
-                // ⭐ NUEVO: Obtener todas las temporadas finalizadas
-                java.util.List<Temporada> temporadasFinalizadas = gestor.obtenerTemporadasFinalizadas(datosFederacion);
-                Temporada temporadaOrigen = null;
-                
-                if (!temporadasFinalizadas.isEmpty()) {
-                    // Crear array de opciones incluyendo "Crear vacía"
-                    String[] opciones = new String[temporadasFinalizadas.size() + 1];
-                    opciones[0] = "--- Crear temporada vacía ---";
-                    
-                    for (int i = 0; i < temporadasFinalizadas.size(); i++) {
-                        Temporada t = temporadasFinalizadas.get(i);
-                        int equipos = t.getEquiposParticipantes().size();
-                        int jugadores = 0;
-                        for (Equipo eq : t.getEquiposParticipantes()) {
-                            jugadores += eq.getPlantilla().size();
-                        }
-                        opciones[i + 1] = t.getNombre() + " (" + equipos + " equipos, " + jugadores + " jugadores)";
-                    }
-                    
-                    String seleccion = (String) JOptionPane.showInputDialog(
-                        this,
-                        "Selecciona de qué temporada copiar los datos:\n" +
-                        "(Equipos, jugadores y configuraciones)",
-                        "Origen de datos para " + nombre,
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        opciones,
-                        opciones[opciones.length - 1] // Última temporada por defecto
-                    );
-                    
-                    if (seleccion == null) {
-                        GestorLog.info("Creación de temporada cancelada por el usuario");
-                        return;
-                    }
-                    
-                    // Si NO eligió "Crear vacía", buscar la temporada seleccionada
-                    if (!seleccion.equals(opciones[0])) {
-                        String nombreTemp = seleccion.split(" \\(")[0]; // Extraer solo el nombre
-                        temporadaOrigen = datosFederacion.buscarTemporadaPorNombre(nombreTemp);
-                        
-                        // Confirmar la copia
-                        int equipos = temporadaOrigen.getEquiposParticipantes().size();
-                        int jugadores = 0;
-                        for (Equipo eq : temporadaOrigen.getEquiposParticipantes()) {
-                            jugadores += eq.getPlantilla().size();
-                        }
-                        
-                        int confirmar = JOptionPane.showConfirmDialog(this,
-                            "Se copiarán automáticamente:\n\n" +
-                            " Equipos: " + equipos + "\n" +
-                            " Jugadores: " + jugadores + "\n\n" +
-                            "Desde: " + temporadaOrigen.getNombre() + "\n" +
-                            "Hacia: " + nombre + "\n\n" +
-                            "¿Continuar?",
-                            "Confirmar creación de temporada",
-                            JOptionPane.YES_NO_OPTION,
-                            JOptionPane.INFORMATION_MESSAGE);
-                        
-                        if (confirmar != JOptionPane.YES_OPTION) {
-                            GestorLog.info("Creación de temporada cancelada por el usuario");
-                            return;
-                        }
-                    }
-                }
-                
-                // ⭐ Crear la temporada con el origen seleccionado (o null para vacía)
-                boolean creada = gestor.crearTemporadaFutura(nombre, datosFederacion, temporadaOrigen);
-                
-                if (creada) {
-                    sincronizarCombos();
-                    actualizarVistaEquipos();
-                    actualizarIndicadorEstadoTemporada();
-                    
-                    // Mostrar resumen final
-                    Temporada nuevaCreada = datosFederacion.buscarTemporadaPorNombre(nombre);
-                    if (nuevaCreada != null) {
-                        int equiposFinales = nuevaCreada.getEquiposParticipantes().size();
-                        int jugadoresFinales = 0;
-                        for (Equipo eq : nuevaCreada.getEquiposParticipantes()) {
-                            jugadoresFinales += eq.getPlantilla().size();
-                        }
-                        
-                        String mensaje;
-                        if (temporadaOrigen != null) {
-                            mensaje = "Temporada " + nombre + " creada con éxito.\n\n" +
-                                      " " + equiposFinales + " equipos inscritos\n" +
-                                      " " + jugadoresFinales + " jugadores fichados\n\n" +
-                                      "Copiados desde: " + temporadaOrigen.getNombre();
-                        } else {
-                            mensaje = equiposFinales > 0 
-                                ? "Temporada " + nombre + " creada con éxito.\n\n" +
-                                  " " + equiposFinales + " equipos inscritos\n" +
-                                  " " + jugadoresFinales + " jugadores fichados"
-                                : "Temporada " + nombre + " creada con éxito.\n\n" +
-                                  " Temporada vacía (sin equipos)";
-                        }
-                        
-                        JOptionPane.showMessageDialog(this, mensaje, 
-                            "Temporada creada", JOptionPane.INFORMATION_MESSAGE);
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(this,
-                        "No se pudo crear la temporada. Revisa los logs.",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }
+    
 
         else if (e.getSource() == btnNuevaJor) {
             Temporada t = obtenerTemporadaSeleccionada();
@@ -1533,12 +1387,9 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 GestorLog.error("Error al generar calendario para " + t.getNombre() + ": " + ex.getMessage());
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error de Validación", JOptionPane.ERROR_MESSAGE);
             }
-        } // <--- Llave de cierre que faltaba
+        } 
 
-        else if (e.getSource() == btnNuevoPart) {
-            GestorLog.info("Iniciando creación de partido manual");
-            crearDialogoNuevoPartido();
-        }
+      
 
         else if (e.getSource() == btnInscribirEquipo) {
             GestorLog.info("Iniciando proceso de inscripción de equipo");
@@ -2128,136 +1979,126 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
      * 
      * @see Partido
      * @see DialogoResultado
-     */
-    private JPanel crearTarjetaPartido(Partido p) {
-    	
-        JPanel card = new JPanel(new BorderLayout(20, 0));
-        card.setBackground(new Color(24, 25, 50));
-        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 110)); // Altura aumentada
-        card.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(60, 60, 80), 1),
-            BorderFactory.createEmptyBorder(10, 10, 10, 10)
-        ));
-       
-        JPanel panelIzquierda = new JPanel(new BorderLayout(10, 0));
-        panelIzquierda.setOpaque(false);
-        
-        // Indicador de estado del partido
-        JLabel lblEstadoPartido = new JLabel("●");
-        lblEstadoPartido.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        if (p.isFinalizado()) {
-            lblEstadoPartido.setForeground(new Color(231, 76, 60));
-            lblEstadoPartido.setToolTipText("Partido Finalizado");
-        } else {
-            lblEstadoPartido.setForeground(new Color(52, 152, 219));
-            lblEstadoPartido.setToolTipText("Partido Pendiente");
-        }
-        panelIzquierda.add(lblEstadoPartido, BorderLayout.WEST);
-
-        // Panel de equipos con etiquetas LOCAL/VISITANTE
-        JPanel panelEquipos = new JPanel();
-        panelEquipos.setLayout(new BoxLayout(panelEquipos, BoxLayout.Y_AXIS));
-        panelEquipos.setOpaque(false);
-        
-        // Fila 1: EQUIPO LOCAL con icono
-        JPanel filaLocal = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
-        filaLocal.setOpaque(false);
-        
-        JLabel lblIconoLocal = new JLabel("🏠");
-        lblIconoLocal.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        filaLocal.add(lblIconoLocal);
-        
-        JLabel lblLocal = new JLabel(p.getEquipoLocal().getNombre());
-        lblLocal.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        lblLocal.setForeground(new Color(100, 181, 246));
-        filaLocal.add(lblLocal);
-        
-        panelEquipos.add(filaLocal);
-        panelEquipos.add(Box.createVerticalStrut(5));
-        
-        // Fila 2: RESULTADO
-        String resultado = p.isFinalizado() ? 
-            p.getGolesLocal() + " - " + p.getGolesVisitante() : "vs";
-        JLabel lblResultado = new JLabel(resultado);
-        lblResultado.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        lblResultado.setForeground(Color.WHITE);
-        lblResultado.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panelEquipos.add(lblResultado);
-        panelEquipos.add(Box.createVerticalStrut(5));
-        
-        // Fila 3: EQUIPO VISITANTE con icono
-        JPanel filaVisitante = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
-        filaVisitante.setOpaque(false);
-        
-        JLabel lblIconoVisitante = new JLabel("✈️");
-        lblIconoVisitante.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        filaVisitante.add(lblIconoVisitante);
-        
-        JLabel lblVisitante = new JLabel(p.getEquipoVisitante().getNombre());
-        lblVisitante.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        lblVisitante.setForeground(new Color(255, 183, 77));
-        filaVisitante.add(lblVisitante);
-        
-        panelEquipos.add(filaVisitante);
-        
-        panelIzquierda.add(panelEquipos, BorderLayout.CENTER);
-        card.add(panelIzquierda, BorderLayout.CENTER);
-        
-        
+/**
+ * Crea una tarjeta visual para mostrar la información de un partido.
+ * Diseño HORIZONTAL: Local - Resultado - Visitante
+ */
+private JPanel crearTarjetaPartido(Partido p) {
     
-
-        // Botón de resultado
-        JButton btnGoles = new JButton(p.isFinalizado() ? "Editar Resultado" : "Anotar Goles");
-        if (rolUsuario != Rol.ADMINISTRADOR && rolUsuario != Rol.ARBITRO) {
-        	btnGoles.setVisible(false);}
-        btnGoles.setFocusPainted(false);
-        btnGoles.setBackground(p.isFinalizado() ? new Color(70, 70, 70) : new Color(45, 55, 140));
-        btnGoles.setForeground(Color.WHITE);
-        
-
-        
-
-        btnGoles.addActionListener(e -> {
-        	
-            String tempNom = (String) comboTemporadasPartidos.getSelectedItem();
-            Temporada t = datosFederacion.buscarTemporadaPorNombre(tempNom);
-       
-            	
-            
-            if (t != null && t.getEstado().equals(Temporada.TERMINADA)) {
-                JOptionPane.showMessageDialog(this, 
-                    "No se pueden modificar resultados de temporadas FINALIZADAS",
-                    "Operación no permitida", 
-                    JOptionPane.WARNING_MESSAGE);
-                GestorLog.advertencia("Intento de modificar resultado en temporada FINALIZADA: " + tempNom);
-                return;
-            }
-            
-            boolean eraFinalizado = p.isFinalizado();
-            DialogoResultado diag = new DialogoResultado(this, p);
-            diag.setVisible(true);
-
-            if (diag.isAceptado()) {
-                String accion = eraFinalizado ? "Resultado editado" : "Resultado registrado";
-                GestorLog.exito(accion + ": " + p.getEquipoLocal().getNombre() + " " + 
-                              p.getGolesLocal() + " - " + p.getGolesVisitante() + " " + 
-                              p.getEquipoVisitante().getNombre() + " | Temporada: " + tempNom);
-                
-                actualizarVistaPartidos();
-                actualizarIndicadorEstadoPartidos();
-                
-                // ⭐ ACTUALIZAR CLASIFICACIÓN EN TIEMPO REAL
-                if (panelClasificacionObjeto != null && t != null) {
-                    panelClasificacionObjeto.actualizarClasificacion(t);
-                }
-
-            }
-        });
-
-        card.add(btnGoles, BorderLayout.EAST);
-        return card;
-        
+    JPanel card = new JPanel(new BorderLayout(20, 0));
+    card.setBackground(new Color(24, 25, 50));
+    card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80)); // Altura reducida
+    card.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(new Color(60, 60, 80), 1),
+        BorderFactory.createEmptyBorder(10, 15, 10, 15)
+    ));
+   
+    // ===== INDICADOR DE ESTADO =====
+    JLabel lblEstadoPartido = new JLabel("●");
+    lblEstadoPartido.setFont(new Font("Segoe UI", Font.BOLD, 24));
+    if (p.isFinalizado()) {
+        lblEstadoPartido.setForeground(new Color(231, 76, 60));
+        lblEstadoPartido.setToolTipText("Partido Finalizado");
+    } else {
+        lblEstadoPartido.setForeground(new Color(52, 152, 219));
+        lblEstadoPartido.setToolTipText("Partido Pendiente");
     }
+    card.add(lblEstadoPartido, BorderLayout.WEST);
+
+    // ===== PANEL CENTRAL: EQUIPOS Y RESULTADO EN HORIZONTAL =====
+    JPanel panelCentral = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
+    panelCentral.setOpaque(false);
+    
+    // EQUIPO LOCAL (con icono)
+    JPanel panelLocal = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+    panelLocal.setOpaque(false);
+    
+    JLabel lblNombreLocal = new JLabel(p.getEquipoLocal().getNombre());
+    lblNombreLocal.setFont(new Font("Segoe UI", Font.BOLD, 15));
+    lblNombreLocal.setForeground(new Color(100, 181, 246)); // Azul claro
+    panelLocal.add(lblNombreLocal);
+    
+    JLabel lblIconoLocal = new JLabel("🏠");
+    lblIconoLocal.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+    panelLocal.add(lblIconoLocal);
+    
+    panelCentral.add(panelLocal);
+    
+    // RESULTADO (centrado y destacado)
+    String resultado = p.isFinalizado() ? 
+        p.getGolesLocal() + " - " + p.getGolesVisitante() : "vs";
+    
+    JLabel lblResultado = new JLabel(resultado);
+    lblResultado.setFont(new Font("Segoe UI", Font.BOLD, 20));
+    lblResultado.setForeground(Color.WHITE);
+    lblResultado.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+    panelCentral.add(lblResultado);
+    
+    // EQUIPO VISITANTE (con icono)
+    JPanel panelVisitante = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+    panelVisitante.setOpaque(false);
+    
+    JLabel lblIconoVisitante = new JLabel("✈️");
+    lblIconoVisitante.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+    panelVisitante.add(lblIconoVisitante);
+    
+    JLabel lblNombreVisitante = new JLabel(p.getEquipoVisitante().getNombre());
+    lblNombreVisitante.setFont(new Font("Segoe UI", Font.BOLD, 15));
+    lblNombreVisitante.setForeground(new Color(255, 183, 77)); // Naranja
+    panelVisitante.add(lblNombreVisitante);
+    
+    panelCentral.add(panelVisitante);
+    
+    card.add(panelCentral, BorderLayout.CENTER);
+
+    // ===== BOTÓN DE ACCIÓN =====
+    JButton btnGoles = new JButton(p.isFinalizado() ? "Editar Resultado" : "Anotar Goles");
+    
+    if (rolUsuario != Rol.ADMINISTRADOR && rolUsuario != Rol.ARBITRO) {
+        btnGoles.setVisible(false);
+    }
+    
+    btnGoles.setFocusPainted(false);
+    btnGoles.setBackground(p.isFinalizado() ? new Color(70, 70, 70) : new Color(45, 55, 140));
+    btnGoles.setForeground(Color.WHITE);
+    btnGoles.setPreferredSize(new Dimension(140, 35));
+
+    btnGoles.addActionListener(e -> {
+        String tempNom = (String) comboTemporadasPartidos.getSelectedItem();
+        Temporada t = datosFederacion.buscarTemporadaPorNombre(tempNom);
+        
+        if (t != null && t.getEstado().equals(Temporada.TERMINADA)) {
+            JOptionPane.showMessageDialog(this, 
+                "No se pueden modificar resultados de temporadas FINALIZADAS",
+                "Operación no permitida", 
+                JOptionPane.WARNING_MESSAGE);
+            GestorLog.advertencia("Intento de modificar resultado en temporada FINALIZADA: " + tempNom);
+            return;
+        }
+        
+        boolean eraFinalizado = p.isFinalizado();
+        DialogoResultado diag = new DialogoResultado(this, p);
+        diag.setVisible(true);
+
+        if (diag.isAceptado()) {
+            String accion = eraFinalizado ? "Resultado editado" : "Resultado registrado";
+            GestorLog.exito(accion + ": " + p.getEquipoLocal().getNombre() + " " + 
+                          p.getGolesLocal() + " - " + p.getGolesVisitante() + " " + 
+                          p.getEquipoVisitante().getNombre() + " | Temporada: " + tempNom);
+            
+            actualizarVistaPartidos();
+            actualizarIndicadorEstadoPartidos();
+            
+            // Actualizar clasificación en tiempo real
+            if (panelClasificacionObjeto != null && t != null) {
+                panelClasificacionObjeto.actualizarClasificacion(t);
+            }
+        }
+    });
+
+    card.add(btnGoles, BorderLayout.EAST);
+    return card;
+}
     /**
      * Actualiza el indicador visual del estado de la temporada en la sección de equipos.
      * 
@@ -2391,7 +2232,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                     
                     if (esAdministrador || esArbitro) {
                         btnNuevaJor.setEnabled(true);
-                        btnNuevoPart.setEnabled(true);
+             
                     }
                     if (esAdministrador) {
                         btnInscribirEquipo.setEnabled(true);
@@ -2408,7 +2249,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                     
                     if (esAdministrador || esArbitro) {
                         btnNuevaJor.setEnabled(true);
-                        btnNuevoPart.setEnabled(true);
+                     
                     }
                     if (esAdministrador) {
                         btnInscribirEquipo.setEnabled(false);
@@ -2425,7 +2266,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                     
                     if (esAdministrador || esArbitro) {
                         btnNuevaJor.setEnabled(false);
-                        btnNuevoPart.setEnabled(false);
+                 
                     }
                     if (esAdministrador) {
                         btnInscribirEquipo.setEnabled(false);
@@ -3176,9 +3017,9 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
             case ADMINISTRADOR:
                 habilitarNavegacionBasica();
                 panelAdminPartidos_1.setVisible(true);
-                btnNuevaTemp_1.setVisible(true);
+               
                 btnNuevaJor.setVisible(true);
-                btnNuevoPart.setVisible(true);
+              
                 btnFinalizarTemporada.setVisible(true);  // ⭐ ADMIN SÍ LO VE
                 btnTxema.setVisible(true);               // ⭐ ADMIN SÍ LO VE
                 btnInscribirEquipo.setVisible(true);
@@ -3196,11 +3037,11 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
             case ARBITRO:
                 habilitarNavegacionBasica();
                 panelAdminPartidos_1.setVisible(true);
-                btnNuevaJor.setVisible(true);
-                btnNuevoPart.setVisible(true);
+               
+            
                 btnFinalizarTemporada.setVisible(false);  // ⭐ ÁRBITRO NO LO VE
                 btnTxema.setVisible(false);               // ⭐ ÁRBITRO NO LO VE
-                btnNuevaTemp_1.setVisible(false);
+                
                 btnInscribirEquipo.setVisible(false);
                 btnCambiarFoto.setVisible(false);
                 btnExportar.setVisible(false);
@@ -3221,9 +3062,9 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 panelAdminPartidos_1.setVisible(true);  //  Para ver partidos
                 btnFinalizarTemporada.setVisible(false);  //  MANAGER NO LO VE
                 btnTxema.setVisible(false);               //  MANAGER NO LO VE
-                btnNuevaTemp_1.setVisible(false);
+              
                 btnNuevaJor.setVisible(false);
-                btnNuevoPart.setVisible(false);
+               
                 btnExportar.setVisible(false);
                 btnGestionUsuario.setVisible(false);
                 btnTemporadas.setVisible(true);
@@ -3236,10 +3077,9 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 panelAdminPartidos_1.setVisible(true);  //  Solo para ver
                 btnFinalizarTemporada.setVisible(false);  //  INVITADO NO LO VE
                 btnTxema.setVisible(false);               //  INVITADO NO LO VE
-                btnNuevaTemp_1.setVisible(false);
+              
                 btnNuevaJor.setVisible(false);
-                btnNuevoPart.setVisible(false);
-                btnCambiarFoto.setVisible(false);
+                               btnCambiarFoto.setVisible(false);
                 btnInscribirEquipo.setVisible(false);
                 btnExportar.setVisible(false);
                 btnGestionUsuario.setVisible(false);
@@ -3256,6 +3096,11 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 String equipoSel = (String) comboEquiposJugadores.getSelectedItem();
                 if (tempSel != null && equipoSel != null) {
                     actualizarJugadoresPorTemporada(tempSel, equipoSel);
+                }
+                if (rol == Rol.ADMINISTRADOR) {
+                    panelGestionTemporadas.setBotonNuevaTemporadaVisible(true);
+                } else {
+                    panelGestionTemporadas.setBotonNuevaTemporadaVisible(false);
                 }
             }
             
@@ -3389,9 +3234,9 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
 
         // ⭐ CRÍTICO: Ocultar TODOS los botones del panel de administración
         panelAdminPartidos_1.setVisible(false);
-        btnNuevaTemp_1.setVisible(false);
+    
         btnNuevaJor.setVisible(false);
-        btnNuevoPart.setVisible(false);
+     
         btnFinalizarTemporada.setVisible(false);  
         btnTxema.setVisible(false);               
         btnInscribirEquipo.setVisible(false);     
@@ -3455,9 +3300,9 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         
         // Paneles y botones de administración
         panelAdminPartidos_1.setVisible(estado);
-        btnNuevaTemp_1.setVisible(estado);
+    
         btnNuevaJor.setVisible(estado);
-        btnNuevoPart.setVisible(estado);
+
         
         // Botones de equipos
         btnAgregarEquipo.setVisible(estado);

@@ -189,10 +189,10 @@ public class PanelGestionUsuarios extends JPanel {
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         panelBotones.setOpaque(false);
         
-        btnCrearUsuario = crearBoton("➕ Crear Usuario", new Color(39, 174, 96));
-        btnEditarRol = crearBoton("🔄 Cambiar Rol", new Color(52, 152, 219));
-        btnCambiarPassword = crearBoton("🔑 Cambiar Contraseña", new Color(241, 196, 15));
-        btnEliminarUsuario = crearBoton("🗑️ Eliminar", new Color(231, 76, 60));
+        btnCrearUsuario = crearBoton(" Crear Usuario", new Color(39, 174, 96));
+        btnEditarRol = crearBoton(" Cambiar Rol", new Color(52, 152, 219));
+        btnCambiarPassword = crearBoton(" Cambiar Contraseña", new Color(241, 196, 15));
+        btnEliminarUsuario = crearBoton("🗑 Eliminar", new Color(231, 76, 60));
         
         btnCrearUsuario.addActionListener(e -> crearNuevoUsuario());
         btnEditarRol.addActionListener(e -> cambiarRolUsuario());

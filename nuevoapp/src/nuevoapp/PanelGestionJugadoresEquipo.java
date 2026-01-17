@@ -60,7 +60,7 @@ public class PanelGestionJugadoresEquipo extends JDialog {
         panelMensaje.setLayout(new BoxLayout(panelMensaje, BoxLayout.Y_AXIS));
         panelMensaje.setOpaque(false);
         
-        JLabel lblIcono = new JLabel("🔒");
+        JLabel lblIcono = new JLabel("");
         lblIcono.setFont(new Font("Segoe UI", Font.PLAIN, 80));
         lblIcono.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelMensaje.add(lblIcono);

@@ -13,6 +13,7 @@ import java.util.*;
  *     <li>Excluye automáticamente el equipo fantasma "_SIN_EQUIPO_".</li>
  *     <li>Si el número de equipos es impar, se agrega un equipo fantasma "DESCANSA".</li>
  *     <li>Se generan jornadas de ida y vuelta automáticamente.</li>
+ *     <li>⭐ Los IDs de jornadas se reinician (J001) para cada temporada.</li>
  * </ul>
  * </p>
  */
@@ -22,7 +23,12 @@ public class GeneradorCalendario {
      * Genera el calendario completo para la temporada especificada.
      * Crea jornadas de ida y vuelta según el sistema Round-Robin.
      * 
-     * <p><b>⭐ IMPORTANTE:</b> Filtra automáticamente el equipo "_SIN_EQUIPO_" del calendario.</p>
+     * <p><b>⭐ IMPORTANTE:</b> 
+     * <ul>
+     *   <li>Filtra automáticamente el equipo "_SIN_EQUIPO_" del calendario.</li>
+     *   <li>Reinicia los IDs de jornadas a J001 para cada temporada.</li>
+     * </ul>
+     * </p>
      *
      * @param temp La temporada donde se generará el calendario (no nula)
      * @throws IllegalArgumentException Si la temporada es nula
@@ -33,6 +39,12 @@ public class GeneradorCalendario {
             GestorLog.error("Intento de generar calendario con temporada nula");
             throw new IllegalArgumentException("La temporada no puede ser nula.");
         }
+
+        // ⭐ CRÍTICO: Reiniciar contadores de IDs para esta nueva temporada
+        Jornada.reiniciarContador();
+        Partido.reiniciarContador(); // También reiniciar partidos si existe este método
+        
+        GestorLog.info("🔄 IDs reiniciados para nueva temporada: " + temp.getNombre());
 
         // ⭐ FILTRAR EQUIPOS REALES (excluir "_SIN_EQUIPO_")
         List<Equipo> todosLosEquipos = temp.getEquiposParticipantes();
@@ -55,7 +67,8 @@ public class GeneradorCalendario {
         }
 
         GestorLog.info("Iniciando generación de calendario: " + temp.getNombre() +
-                      " | Equipos participantes: " + participantes.size());
+                      " | Equipos participantes: " + participantes.size() +
+                      " | Próximo ID de jornada: " + Jornada.obtenerProximoId());
 
         // ⭐ Crear una copia independiente para rotar
         List<Equipo> equiposRotacion = new ArrayList<>(participantes);
@@ -78,6 +91,8 @@ public class GeneradorCalendario {
         // Generar jornadas de IDA
         for (int i = 0; i < jornadasIda; i++) {
             Jornada j = new Jornada("Jornada " + (i + 1));
+            
+            GestorLog.info("📅 Creando: " + j.getNombre() + " con ID: " + j.getId());
             
             // ⭐ EMPAREJAMIENTO: El equipo fijo juega contra el primero de los rotativos
             Equipo rival = equiposRotativos.get(0);
@@ -125,6 +140,8 @@ public class GeneradorCalendario {
         List<Jornada> ida = new ArrayList<>(temp.getListaJornadas());
         for (Jornada jIda : ida) {
             Jornada jVuelta = new Jornada("Vuelta - " + jIda.getNombre());
+            GestorLog.info("📅 Creando: " + jVuelta.getNombre() + " con ID: " + jVuelta.getId());
+            
             for (Partido p : jIda.getListaPartidos()) {
                 jVuelta.agregarPartido(new Partido(p.getEquipoVisitante(), p.getEquipoLocal()));
                 partidosGenerados++;
@@ -132,11 +149,13 @@ public class GeneradorCalendario {
             temp.agregarJornada(jVuelta);
         }
 
-        GestorLog.exito("Calendario generado: " + temp.getNombre() +
+        GestorLog.exito("✅ Calendario generado: " + temp.getNombre() +
                       " | Equipos participantes: " + participantes.size() +
                       " | Jornadas: " + temp.getListaJornadas().size() +
                       " | Partidos: " + partidosGenerados +
                       " | Sistema: Round-Robin" +
-                      (agregarDescanso ? " (con descansos)" : ""));
+                      (agregarDescanso ? " (con descansos)" : "") +
+                      " | IDs: " + temp.getListaJornadas().get(0).getId() + " a " + 
+                      temp.getListaJornadas().get(temp.getListaJornadas().size() - 1).getId());
     }
 }

@@ -43,7 +43,7 @@ public class PanelGestionTemporadas extends JPanel {
         JPanel panelSuperior = new JPanel(new BorderLayout(10, 10));
         panelSuperior.setBackground(new Color(20, 24, 31));
         
-        JLabel lblTitulo = new JLabel("📅 GESTIÓN DE TEMPORADAS");
+        JLabel lblTitulo = new JLabel(" GESTIÓN DE TEMPORADAS");
         lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 20));
         lblTitulo.setForeground(Color.WHITE);
         panelSuperior.add(lblTitulo, BorderLayout.WEST);
@@ -73,7 +73,7 @@ public class PanelGestionTemporadas extends JPanel {
         
         add(scrollPane, BorderLayout.CENTER);
     }
-    
+   
     /**
      * Carga y muestra todas las temporadas
      */
@@ -149,7 +149,7 @@ public class PanelGestionTemporadas extends JPanel {
             numJugadores += eq.getPlantilla().size();
         }
         
-        JLabel lblStats = new JLabel(String.format("👥 %d equipos  |  ⚽ %d jornadas  |  🏃 %d jugadores", 
+        JLabel lblStats = new JLabel(String.format(" %d equipos  |   %d jornadas  |   %d jugadores", 
             numEquipos, numJornadas, numJugadores));
         lblStats.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         lblStats.setForeground(new Color(180, 180, 180));
@@ -303,17 +303,17 @@ public class PanelGestionTemporadas extends JPanel {
                 
                 String mensaje;
                 if (temporadaOrigen != null) {
-                    mensaje = "✅ Temporada " + nombre + " creada con éxito.\n\n" +
-                              "📊 " + equiposFinales + " equipos inscritos\n" +
-                              "👥 " + jugadoresFinales + " jugadores fichados\n\n" +
-                              "📋 Copiados desde: " + temporadaOrigen.getNombre();
+                    mensaje = " Temporada " + nombre + " creada con éxito.\n\n" +
+                              " " + equiposFinales + " equipos inscritos\n" +
+                              " " + jugadoresFinales + " jugadores fichados\n\n" +
+                              " Copiados desde: " + temporadaOrigen.getNombre();
                 } else {
                     mensaje = equiposFinales > 0 
-                        ? "✅ Temporada " + nombre + " creada con éxito.\n\n" +
-                          "📊 " + equiposFinales + " equipos inscritos\n" +
-                          "👥 " + jugadoresFinales + " jugadores fichados"
-                        : "✅ Temporada " + nombre + " creada con éxito.\n\n" +
-                          "📋 Temporada vacía (sin equipos)";
+                        ? " Temporada " + nombre + " creada con éxito.\n\n" +
+                          " " + equiposFinales + " equipos inscritos\n" +
+                          " " + jugadoresFinales + " jugadores fichados"
+                        : " Temporada " + nombre + " creada con éxito.\n\n" +
+                          " Temporada vacía (sin equipos)";
                 }
                 
                 JOptionPane.showMessageDialog(this, mensaje, 
@@ -374,11 +374,11 @@ public class PanelGestionTemporadas extends JPanel {
      */
     private void verDetallesTemporada(Temporada temp) {
         StringBuilder detalles = new StringBuilder();
-        detalles.append("📅 TEMPORADA: ").append(temp.getNombre()).append("\n\n");
-        detalles.append("📊 Estado: ").append(temp.getEstado()).append("\n\n");
+        detalles.append(" TEMPORADA: ").append(temp.getNombre()).append("\n\n");
+        detalles.append(" Estado: ").append(temp.getEstado()).append("\n\n");
         
         detalles.append("═══════════════════════════════════\n");
-        detalles.append("👥 EQUIPOS PARTICIPANTES (").append(temp.getEquiposParticipantes().size()).append(")\n");
+        detalles.append(" EQUIPOS PARTICIPANTES (").append(temp.getEquiposParticipantes().size()).append(")\n");
         detalles.append("═══════════════════════════════════\n");
         for (Equipo eq : temp.getEquiposParticipantes()) {
             if (!eq.getNombre().equals("_SIN_EQUIPO_")) {
@@ -388,7 +388,7 @@ public class PanelGestionTemporadas extends JPanel {
         }
         
         detalles.append("\n═══════════════════════════════════\n");
-        detalles.append("⚽ JORNADAS (").append(temp.getListaJornadas().size()).append(")\n");
+        detalles.append(" JORNADAS (").append(temp.getListaJornadas().size()).append(")\n");
         detalles.append("═══════════════════════════════════\n");
         
         int partidosJugados = 0;
@@ -412,7 +412,7 @@ public class PanelGestionTemporadas extends JPanel {
         }
         
         detalles.append("\n═══════════════════════════════════\n");
-        detalles.append("📈 RESUMEN\n");
+        detalles.append("  RESUMEN\n");
         detalles.append("═══════════════════════════════════\n");
         detalles.append("Partidos jugados: ").append(partidosJugados).append("\n");
         detalles.append("Partidos pendientes: ").append(partidosPendientes).append("\n");
@@ -433,4 +433,12 @@ public class PanelGestionTemporadas extends JPanel {
         
         GestorLog.info("Detalles visualizados: " + temp.getNombre());
     }
+
+	
+
+		 public void setBotonNuevaTemporadaVisible(boolean visible) {
+		        btnNuevaTemporada.setVisible(visible);
+		    }
+		
+	
 }

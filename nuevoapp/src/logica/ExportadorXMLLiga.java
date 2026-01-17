@@ -162,6 +162,9 @@ public class ExportadorXMLLiga {
     /**
      * Exporta una temporada completa al XML
      */
+    /**
+     * Exporta una temporada completa al XML
+     */
     private void exportarTemporadaAlXML(StringBuilder xml, Temporada temporada) {
         String idTemporada = generarIdTemporada(temporada.getNombre());
         
@@ -171,6 +174,12 @@ public class ExportadorXMLLiga {
         xml.append("            <equipos>\n");
         
         for (Equipo equipo : temporada.getEquiposParticipantes()) {
+            // ⭐ FILTRAR EL EQUIPO FANTASMA
+            if (equipo.getNombre().equals("_SIN_EQUIPO_")) {
+                GestorLog.info("⏭️ Saltando equipo fantasma en exportación XML");
+                continue; // Saltar este equipo
+            }
+            
             exportarEquipo(xml, equipo, temporada);
         }
         

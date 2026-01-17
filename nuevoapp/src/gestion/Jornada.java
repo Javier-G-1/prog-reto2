@@ -3,17 +3,17 @@ package gestion;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * CLASE: Jornada
  * <p>
  * Representa una jornada de partidos dentro de una temporada.
- * Cada jornada tiene un ID único e incremental que nunca se repite.
+ * Cada jornada tiene un ID único e incremental que se reinicia por temporada.
  * </p>
  */
 public class Jornada implements Serializable {
-    
     private static final long serialVersionUID = 1L;
     
     /** Contador global de IDs */
@@ -63,7 +63,7 @@ public class Jornada implements Serializable {
      */
     private String generarIdUnico() {
         int numero = contadorGlobal.getAndIncrement();
-        return String.format("J%03d", numero);
+        return String.format("J%02d", numero); // ⭐ %02d en lugar de %03d
     }
 
     /**
@@ -84,6 +84,18 @@ public class Jornada implements Serializable {
         } catch (NumberFormatException e) {
             // ID mal formado, ignorar
         }
+    }
+
+    /**
+     * ⭐ NUEVO: Reinicia el contador de IDs para una nueva temporada.
+     * <p>
+     * Este método debe llamarse al inicio de la generación de cada calendario
+     * para que las jornadas empiecen desde J001.
+     * </p>
+     */
+    public static void reiniciarContador() {
+        contadorGlobal.set(1);
+        System.out.println("🔄 Contador de jornadas reiniciado a J01");
     }
 
     /**
@@ -114,9 +126,17 @@ public class Jornada implements Serializable {
 
         contadorGlobal.set(maxId + 1);
         System.out.println("✓ Contador de jornadas sincronizado en: J" + 
-                         String.format("%03d", maxId + 1));
+                         String.format("%02d", maxId + 1)); // ⭐ %02d
     }
-
+    
+    /**
+     * ⭐ NUEVO: Obtiene el próximo ID que se generará (para debugging).
+     *
+     * @return próximo ID como cadena
+     */
+    public static String obtenerProximoId() {
+        return String.format("J%02d", contadorGlobal.get()); // ⭐ %02d
+    }
     /**
      * Agrega un partido a la jornada.
      *
@@ -146,5 +166,18 @@ public class Jornada implements Serializable {
     @Override
     public String toString() {
         return nombre + " (ID: " + id + ")";
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Jornada jornada = (Jornada) o;
+        return Objects.equals(id, jornada.id);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

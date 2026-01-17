@@ -81,9 +81,20 @@ public class ExportarPDF {
             BaseColor colorFondoClaro = BaseColor.WHITE;
             BaseColor colorFondoOscuro = new BaseColor(240, 240, 240);
             
+            // ⭐ FILTRAR el equipo fantasma "_SIN_EQUIPO_"
+            int posicionReal = 1;
             for (int i = 0; i < filas.size(); i++) {
                 FilaClasificacion fila = filas.get(i);
-                BaseColor colorFondo = (i % 2 == 0) ? colorFondoClaro : colorFondoOscuro;
+                
+                // ⭐ SALTAR el equipo fantasma
+                if (fila.getEquipo().equals("_SIN_EQUIPO_")) {
+                    continue;
+                }
+                
+                // ⭐ ASIGNAR LA POSICIÓN REAL (sin contar el fantasma)
+                fila.setPosicion(posicionReal);
+                
+                BaseColor colorFondo = ((posicionReal - 1) % 2 == 0) ? colorFondoClaro : colorFondoOscuro;
                 
                 agregarCelda(tabla, String.valueOf(fila.getPosicion()), fuenteDatos, colorFondo, Element.ALIGN_CENTER);
                 agregarCelda(tabla, fila.getEquipo(), fuenteDatos, colorFondo, Element.ALIGN_LEFT);
@@ -95,6 +106,9 @@ public class ExportarPDF {
                 agregarCelda(tabla, String.valueOf(fila.getGf()), fuenteDatos, colorFondo, Element.ALIGN_CENTER);
                 agregarCelda(tabla, String.valueOf(fila.getGc()), fuenteDatos, colorFondo, Element.ALIGN_CENTER);
                 agregarCelda(tabla, fila.getDifFormateada(), fuenteDatos, colorFondo, Element.ALIGN_CENTER);
+                
+                // ⭐ INCREMENTAR posición solo para equipos reales
+                posicionReal++;
             }
             
             documento.add(tabla);
