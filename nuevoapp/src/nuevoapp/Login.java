@@ -11,75 +11,29 @@ import logica.GestorArchivos;
 import logica.GestorLog;
 
 /**
- * Clase Login.
- * 
- * Representa la ventana de inicio de sesión del sistema de la 
- * Real Federación Española de Balonmano. Permite al usuario autenticarse
- * con un usuario registrado o entrar como invitado.
- * 
- * Incluye validación de campos, interacción con la base de datos de usuarios,
- * inicialización de usuarios predeterminados y registro de eventos.
- * 
- * Implementa ActionListener para la gestión de eventos de botones y campos
- * y FocusListener para seleccionar automáticamente el contenido de los campos al enfocar.
- * 
-
+ * Clase Login con opción de registro de nuevos usuarios.
  */
 public class Login extends JFrame implements ActionListener, FocusListener {
 
     private static final long serialVersionUID = 1L;
 
-    /** Panel principal del JFrame */
     private JPanel contentPane;
-
-    /** Campo de texto para el nombre de usuario */
     private JTextField txtUsuario;
-
-    /** Campo de contraseña */
     private JPasswordField pwdContra;
-
-    /** Botón para iniciar sesión */
     private JButton btnIniciarSesion;
-
-    /** Botón para entrar como invitado */
     private JButton btnInvitado;
-
-    /** Etiqueta del logo */
+    private JButton btnRegistrarse;
     private JLabel lblLogo;
-
-    /** Etiqueta de usuario */
     private JLabel lblUsuario;
-
-    /** Etiqueta de contraseña */
     private JLabel lblContra;
-
-    /** Panel del logo */
     private JPanel logoPanel;
-
-    /** Panel principal de sesión */
     private JPanel panelSesion;
-
-    /** Panel del campo usuario */
     private JPanel panelUsuario;
-
-    /** Panel del campo contraseña */
     private JPanel panelContra;
-
-    /** Panel de los botones de acción */
     private JPanel panelBotones;
-
-    /** Ventana principal que se abre después del login */
     private static VentanaMain newVentanaPrincipal;
-
-    /** Datos de la federación cargados desde archivos */
     private DatosFederacion datosFederacion;
 
-    /**
-     * Método principal para iniciar la aplicación.
-     * Crea una instancia de Login y la hace visible.
-     * 
-     * @param args Argumentos de línea de comandos
-     */
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
@@ -91,31 +45,22 @@ public class Login extends JFrame implements ActionListener, FocusListener {
         });
     }
 
-    /**
-     * Constructor de la clase Login.
-     * Inicializa los componentes de la interfaz, carga los datos de la
-     * federación y establece los usuarios predeterminados si es necesario.
-     */
     public Login() {
-        // Cargar datos del sistema
         this.datosFederacion = GestorArchivos.cargarTodo();
         inicializarUsuariosPredeterminados();
         
-        // Configuración de la ventana
         setResizable(false);
         ImageIcon icono = new ImageIcon(getClass().getResource("/assets/icono.png"));
         setIconImage(icono.getImage());
         setTitle("Real Federación Española de Balonmano");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(800, 150, 616, 450); 
+        setBounds(800, 150, 616, 480); 
         
-        // Configuración del panel principal
         contentPane = new JPanel();
         contentPane.setBackground(Color.WHITE);
         contentPane.setLayout(new BorderLayout(0, 0));
         setContentPane(contentPane);
 
-        // Panel de logo
         logoPanel = new JPanel();
         logoPanel.setBackground(new Color(0, 0, 64)); 
         contentPane.add(logoPanel, BorderLayout.NORTH);
@@ -130,7 +75,6 @@ public class Login extends JFrame implements ActionListener, FocusListener {
         }
         logoPanel.add(lblLogo);
 
-        // Panel de sesión
         panelSesion = new JPanel();
         panelSesion.setBackground(new Color(0, 0, 51)); 
         panelSesion.setLayout(new BoxLayout(panelSesion, BoxLayout.Y_AXIS));
@@ -147,7 +91,6 @@ public class Login extends JFrame implements ActionListener, FocusListener {
 
         panelSesion.add(Box.createVerticalStrut(30));
 
-        // Panel usuario
         panelUsuario = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panelUsuario.setOpaque(false);
         lblUsuario = new JLabel("Usuario: ");
@@ -158,7 +101,6 @@ public class Login extends JFrame implements ActionListener, FocusListener {
         panelUsuario.add(txtUsuario);
         panelSesion.add(panelUsuario);
 
-        // Panel contraseña
         panelContra = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panelContra.setOpaque(false);
         lblContra = new JLabel("Contraseña: ");
@@ -170,27 +112,29 @@ public class Login extends JFrame implements ActionListener, FocusListener {
         panelContra.add(pwdContra);
         panelSesion.add(panelContra);
 
-        // Panel botones
-        panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         panelBotones.setOpaque(false);
         
         btnIniciarSesion = new JButton("Entrar");
         btnIniciarSesion.addActionListener(this);
         btnIniciarSesion.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
+        btnRegistrarse = new JButton("Registrarse");
+        btnRegistrarse.addActionListener(this);
+        btnRegistrarse.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnRegistrarse.setBackground(new Color(52, 152, 219));
+        btnRegistrarse.setForeground(Color.WHITE);
+        
         btnInvitado = new JButton("Invitado");
         btnInvitado.addActionListener(this);
         btnInvitado.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
         panelBotones.add(btnIniciarSesion);
+        panelBotones.add(btnRegistrarse);
         panelBotones.add(btnInvitado);
         panelSesion.add(panelBotones);
     }
     
-    /**
-     * Inicializa los usuarios predeterminados si no existen en la base de datos.
-     * Usuarios: admin, invitado, árbitro y manager.
-     */
     private void inicializarUsuariosPredeterminados() {
         if (datosFederacion.buscarUsuario("admin") == null) {
             datosFederacion.getListaUsuarios().add(
@@ -224,15 +168,110 @@ public class Login extends JFrame implements ActionListener, FocusListener {
             if (usuarioInvitado != null) {
                 ejecutarLogin(usuarioInvitado);
             }
+        } else if (obj == btnRegistrarse) {
+            mostrarDialogoRegistro();
         } else if (obj == btnIniciarSesion || obj == pwdContra) {
             validarAcceso(); 
         }
     }
-
+    
     /**
-     * Valida los datos ingresados por el usuario y realiza el login si son correctos.
-     * Muestra mensajes de error en caso de campos vacíos o credenciales incorrectas.
+     * Muestra el diálogo de registro de nuevo usuario
      */
+    private void mostrarDialogoRegistro() {
+        JDialog dialogoRegistro = new JDialog(this, "Registro de Usuario", true);
+        dialogoRegistro.setSize(400, 300);
+        dialogoRegistro.setLocationRelativeTo(this);
+        dialogoRegistro.setLayout(new BorderLayout(10, 10));
+        
+        JPanel panelCampos = new JPanel(new GridLayout(4, 2, 10, 10));
+        panelCampos.setBorder(new EmptyBorder(20, 20, 10, 20));
+        
+        JLabel lblNombreReal = new JLabel("Nombre completo:");
+        JTextField txtNombreReal = new JTextField();
+        
+        JLabel lblNuevoUsuario = new JLabel("Nombre de usuario:");
+        JTextField txtNuevoUsuario = new JTextField();
+        
+        JLabel lblNuevaContra = new JLabel("Contraseña:");
+        JPasswordField txtNuevaContra = new JPasswordField();
+        
+        JLabel lblConfirmarContra = new JLabel("Confirmar contraseña:");
+        JPasswordField txtConfirmarContra = new JPasswordField();
+        
+        panelCampos.add(lblNombreReal);
+        panelCampos.add(txtNombreReal);
+        panelCampos.add(lblNuevoUsuario);
+        panelCampos.add(txtNuevoUsuario);
+        panelCampos.add(lblNuevaContra);
+        panelCampos.add(txtNuevaContra);
+        panelCampos.add(lblConfirmarContra);
+        panelCampos.add(txtConfirmarContra);
+        
+        dialogoRegistro.add(panelCampos, BorderLayout.CENTER);
+        
+        JPanel panelBotonesRegistro = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        JButton btnConfirmar = new JButton("Registrar");
+        JButton btnCancelar = new JButton("Cancelar");
+        
+        btnConfirmar.addActionListener(e -> {
+            String nombreReal = txtNombreReal.getText().trim();
+            String nuevoUsuario = txtNuevoUsuario.getText().trim();
+            String nuevaContra = new String(txtNuevaContra.getPassword());
+            String confirmarContra = new String(txtConfirmarContra.getPassword());
+            
+            // Validaciones
+            if (nombreReal.isEmpty() || nuevoUsuario.isEmpty() || nuevaContra.isEmpty()) {
+                JOptionPane.showMessageDialog(dialogoRegistro, 
+                    "Todos los campos son obligatorios", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            if (!nuevaContra.equals(confirmarContra)) {
+                JOptionPane.showMessageDialog(dialogoRegistro, 
+                    "Las contraseñas no coinciden", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            if (datosFederacion.buscarUsuario(nuevoUsuario) != null) {
+                JOptionPane.showMessageDialog(dialogoRegistro, 
+                    "El nombre de usuario ya existe", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Crear usuario con rol INVITADO por defecto
+            Usuario nuevoUser = new Usuario(nombreReal, nuevoUsuario, nuevaContra, Rol.INVITADO);
+            datosFederacion.getListaUsuarios().add(nuevoUser);
+            GestorArchivos.guardarTodo(datosFederacion);
+            
+            GestorLog.exito("Nuevo usuario registrado: " + nuevoUsuario + " (" + nombreReal + ")");
+            
+            JOptionPane.showMessageDialog(dialogoRegistro, 
+                "¡Usuario registrado con éxito!\n\n" +
+                "Usuario: " + nuevoUsuario + "\n" +
+                "Rol inicial: Invitado\n\n" +
+                "El administrador podrá cambiar tu rol si es necesario.", 
+                "Registro exitoso", 
+                JOptionPane.INFORMATION_MESSAGE);
+            
+            dialogoRegistro.dispose();
+        });
+        
+        btnCancelar.addActionListener(e -> dialogoRegistro.dispose());
+        
+        panelBotonesRegistro.add(btnConfirmar);
+        panelBotonesRegistro.add(btnCancelar);
+        dialogoRegistro.add(panelBotonesRegistro, BorderLayout.SOUTH);
+        
+        dialogoRegistro.setVisible(true);
+    }
+
     private void validarAcceso() {
         String userText = txtUsuario.getText().trim();
         char[] passText = pwdContra.getPassword();
@@ -259,11 +298,6 @@ public class Login extends JFrame implements ActionListener, FocusListener {
         txtUsuario.requestFocus();
     }
 
-    /**
-     * Ejecuta el login mostrando la ventana principal y pasando el rol y nombre del usuario.
-     * 
-     * @param usuario Usuario que ha iniciado sesión correctamente
-     */
     private void ejecutarLogin(Usuario usuario) {
         this.dispose(); 
         

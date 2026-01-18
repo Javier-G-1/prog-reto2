@@ -9,57 +9,41 @@ import java.util.ArrayList;
 import java.util.List;
 import gestion.*;
 import logica.GestorLog;
+import logica.GestorArchivos;
 
 /**
- * PanelGestionUsuarios.
+ * PanelGestionUsuarios - Panel completo de administración de usuarios.
  * 
- * Panel de administración de usuarios del sistema.
- * Permite:
- * - Crear nuevos usuarios
+ * Permite al ADMINISTRADOR:
+ * - Ver todos los usuarios registrados (incluyendo los que se registran desde el login)
  * - Cambiar roles de usuarios existentes
- * - Cambiar contraseña
- * - Eliminar usuarios
+ * - Cambiar contraseñas
+ * - Eliminar usuarios (excepto protegidos)
+ * - Crear nuevos usuarios manualmente
  * 
- * Algunos usuarios están protegidos y no se pueden eliminar ni modificar
- * su rol (ej: admin, invitado, árbitro, manager).
- * 
- * La información de usuarios se obtiene de un objeto DatosFederacion.
- * La tabla muestra todos los usuarios con sus roles y estado protegido.
- * 
- * Renderiza colores diferentes en la tabla según el rol.
- * Registra acciones de administración en GestorLog.
- * 
+ * Los usuarios protegidos (admin, invitado, árbitro, manager) no pueden ser eliminados
+ * ni se puede cambiar su rol, pero sí su contraseña.
  */
 public class PanelGestionUsuarios extends JPanel {
     
     private static final long serialVersionUID = 1L;
-    /** Datos de la federación que contienen usuarios */
+    
     private DatosFederacion datosFederacion;
-    
-    /** Tabla principal de usuarios */
     private JTable tablaUsuarios;
-    
-    /** Modelo de la tabla */
     private DefaultTableModel modeloTabla;
     
-    /** Botones de acción */
     private JButton btnCrearUsuario;
     private JButton btnEditarRol;
     private JButton btnEliminarUsuario;
     private JButton btnCambiarPassword;
+    private JButton btnRefrescar;
     
-    /** Label que muestra total de usuarios */
     private JLabel lblTotalUsuarios;
     
-    /** Lista de usuarios protegidos */
     private static final String[] USUARIOS_PROTEGIDOS = {
         "admin", "invitado", "arbitro", "manager"
     };
     
-    /**
-     * Constructor del panel de gestión de usuarios
-     * @param datos DatosFederacion que contiene la lista de usuarios
-     */
     public PanelGestionUsuarios(DatosFederacion datos) {
         this.datosFederacion = datos;
         
@@ -72,64 +56,61 @@ public class PanelGestionUsuarios extends JPanel {
         cargarUsuarios();
     }
     
-    /**
-     * Inicializa los usuarios predeterminados (admin, invitado, árbitro, manager)
-     * si no existen en la lista de usuarios
-     */
     private void inicializarUsuariosPredeterminados() {
         List<Usuario> usuarios = datosFederacion.getListaUsuarios();
         
-        // Admin
         if (datosFederacion.buscarUsuario("admin") == null) {
             usuarios.add(new Usuario("Administrador", "admin", "123", Rol.ADMINISTRADOR));
         }
-        
-        // Invitado
         if (datosFederacion.buscarUsuario("invitado") == null) {
             usuarios.add(new Usuario("Usuario Invitado", "invitado", "123", Rol.INVITADO));
         }
-        
-        // Árbitro
         if (datosFederacion.buscarUsuario("arbitro") == null) {
             usuarios.add(new Usuario("Árbitro Principal", "arbitro", "123", Rol.ARBITRO));
         }
-        
-        // Manager
         if (datosFederacion.buscarUsuario("manager") == null) {
             usuarios.add(new Usuario("Manager Principal", "manager", "123", Rol.MANAGER));
         }
     }
     
-    
-    /**
-     * Crea la interfaz visual del panel
-     * - Panel superior con título y total de usuarios
-     * - Tabla de usuarios con renderizado por rol
-     * - Panel de botones de acción
-     */
     private void crearInterfaz() {
-        // ===== PANEL SUPERIOR =====
+        // Panel superior
         JPanel panelSuperior = new JPanel(new BorderLayout(10, 10));
         panelSuperior.setOpaque(false);
         
-        JLabel lblTitulo = new JLabel("Gestión de Usuarios");
+        JLabel lblTitulo = new JLabel("👥 Gestión de Usuarios");
         lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 24));
         lblTitulo.setForeground(Color.WHITE);
         panelSuperior.add(lblTitulo, BorderLayout.WEST);
         
+        JPanel panelInfo = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        panelInfo.setOpaque(false);
+        
         lblTotalUsuarios = new JLabel();
         lblTotalUsuarios.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         lblTotalUsuarios.setForeground(new Color(180, 180, 180));
-        panelSuperior.add(lblTotalUsuarios, BorderLayout.EAST);
+        
+        btnRefrescar = new JButton("🔄 Refrescar");
+        btnRefrescar.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        btnRefrescar.setBackground(new Color(52, 152, 219));
+        btnRefrescar.setForeground(Color.WHITE);
+        btnRefrescar.setFocusPainted(false);
+        btnRefrescar.setBorderPainted(false);
+        btnRefrescar.addActionListener(e -> cargarUsuarios());
+        
+        panelInfo.add(lblTotalUsuarios);
+        panelInfo.add(Box.createHorizontalStrut(15));
+        panelInfo.add(btnRefrescar);
+        panelSuperior.add(panelInfo, BorderLayout.EAST);
         
         add(panelSuperior, BorderLayout.NORTH);
         
-        // ===== TABLA DE USUARIOS =====
+        // Tabla de usuarios
         String[] columnas = {"Usuario", "Nombre Real", "Rol", "Protegido"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Tabla no editable directamente
+                return false;
             }
         };
         
@@ -141,13 +122,11 @@ public class PanelGestionUsuarios extends JPanel {
         tablaUsuarios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tablaUsuarios.setGridColor(new Color(60, 60, 80));
         
-        // Estilo del encabezado
         JTableHeader header = tablaUsuarios.getTableHeader();
         header.setBackground(new Color(45, 55, 140));
         header.setForeground(Color.WHITE);
         header.setFont(new Font("Segoe UI", Font.BOLD, 14));
         
-        // Renderizador personalizado para colores según rol
         tablaUsuarios.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value,
@@ -185,13 +164,13 @@ public class PanelGestionUsuarios extends JPanel {
         scrollTabla.getViewport().setBackground(new Color(30, 34, 41));
         add(scrollTabla, BorderLayout.CENTER);
         
-        // ===== PANEL DE BOTONES =====
+        // Panel de botones
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         panelBotones.setOpaque(false);
         
-        btnCrearUsuario = crearBoton(" Crear Usuario", new Color(39, 174, 96));
-        btnEditarRol = crearBoton(" Cambiar Rol", new Color(52, 152, 219));
-        btnCambiarPassword = crearBoton(" Cambiar Contraseña", new Color(241, 196, 15));
+        btnCrearUsuario = crearBoton("➕ Crear Usuario", new Color(39, 174, 96));
+        btnEditarRol = crearBoton("🔄 Cambiar Rol", new Color(52, 152, 219));
+        btnCambiarPassword = crearBoton("🔐 Cambiar Contraseña", new Color(241, 196, 15));
         btnEliminarUsuario = crearBoton("🗑 Eliminar", new Color(231, 76, 60));
         
         btnCrearUsuario.addActionListener(e -> crearNuevoUsuario());
@@ -207,12 +186,6 @@ public class PanelGestionUsuarios extends JPanel {
         add(panelBotones, BorderLayout.SOUTH);
     }
     
-    /**
-     * Crea un botón con estilo personalizado
-     * @param texto Texto del botón
-     * @param color Color de fondo principal
-     * @return JButton con estilo aplicado
-     */
     private JButton crearBoton(String texto, Color color) {
         JButton btn = new JButton(texto);
         btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
@@ -223,7 +196,6 @@ public class PanelGestionUsuarios extends JPanel {
         btn.setPreferredSize(new Dimension(180, 40));
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
-        // Efecto hover
         btn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -240,7 +212,7 @@ public class PanelGestionUsuarios extends JPanel {
     }
     
     /**
-     * Carga todos los usuarios en la tabla
+     * Carga todos los usuarios (incluyendo los registrados desde el login)
      */
     public void cargarUsuarios() {
         modeloTabla.setRowCount(0);
@@ -258,15 +230,10 @@ public class PanelGestionUsuarios extends JPanel {
             });
         }
         
-        lblTotalUsuarios.setText("Total: " + usuarios.size() + " usuarios");
+        lblTotalUsuarios.setText("📊 Total: " + usuarios.size() + " usuarios");
         GestorLog.info("Usuarios cargados en tabla: " + usuarios.size());
     }
     
-    /**
-     * Comprueba si un usuario está protegido
-     * @param nombreUsuario Nombre del usuario
-     * @return true si está protegido
-     */
     private boolean esUsuarioProtegido(String nombreUsuario) {
         for (String protegido : USUARIOS_PROTEGIDOS) {
             if (protegido.equalsIgnoreCase(nombreUsuario)) {
@@ -276,9 +243,6 @@ public class PanelGestionUsuarios extends JPanel {
         return false;
     }
     
-    /**
-     * Muestra el diálogo para crear un nuevo usuario
-     */
     private void crearNuevoUsuario() {
         DialogoCrearUsuario dialogo = new DialogoCrearUsuario((JFrame) SwingUtilities.getWindowAncestor(this));
         dialogo.setVisible(true);
@@ -289,7 +253,6 @@ public class PanelGestionUsuarios extends JPanel {
             String password = dialogo.getPassword();
             Rol rol = dialogo.getRol();
             
-            // Validar que no existe ya
             if (datosFederacion.buscarUsuario(nombreUsuario) != null) {
                 JOptionPane.showMessageDialog(this,
                     "Ya existe un usuario con ese nombre de usuario",
@@ -299,9 +262,9 @@ public class PanelGestionUsuarios extends JPanel {
                 return;
             }
             
-            // Crear usuario
             Usuario nuevoUsuario = new Usuario(nombreReal, nombreUsuario, password, rol);
             datosFederacion.getListaUsuarios().add(nuevoUsuario);
+            GestorArchivos.guardarTodo(datosFederacion);
             
             cargarUsuarios();
             GestorLog.exito("Usuario creado: " + nombreUsuario + " | Rol: " + rol.getNombreLegible());
@@ -313,9 +276,6 @@ public class PanelGestionUsuarios extends JPanel {
         }
     }
     
-    /**
-     * Cambia el rol del usuario seleccionado
-     */
     private void cambiarRolUsuario() {
         int filaSeleccionada = tablaUsuarios.getSelectedRow();
         
@@ -332,7 +292,6 @@ public class PanelGestionUsuarios extends JPanel {
         
         if (usuario == null) return;
         
-        // Validar usuarios protegidos
         if (esUsuarioProtegido(nombreUsuario)) {
             JOptionPane.showMessageDialog(this,
                 "No se puede cambiar el rol de usuarios protegidos del sistema",
@@ -342,8 +301,7 @@ public class PanelGestionUsuarios extends JPanel {
             return;
         }
         
-        // Mostrar diálogo de selección de rol
-        Rol[] rolesDisponibles = {Rol.INVITADO, Rol.ARBITRO, Rol.MANAGER};
+        Rol[] rolesDisponibles = {Rol.INVITADO, Rol.ARBITRO, Rol.MANAGER, Rol.ADMINISTRADOR};
         String[] nombresRoles = new String[rolesDisponibles.length];
         
         for (int i = 0; i < rolesDisponibles.length; i++) {
@@ -362,7 +320,6 @@ public class PanelGestionUsuarios extends JPanel {
         
         if (rolSeleccionado == null) return;
         
-        // Buscar el Rol correspondiente
         Rol nuevoRol = null;
         for (Rol r : rolesDisponibles) {
             if (r.getNombreLegible().equals(rolSeleccionado)) {
@@ -374,6 +331,7 @@ public class PanelGestionUsuarios extends JPanel {
         if (nuevoRol != null && nuevoRol != usuario.getRol()) {
             Rol rolAnterior = usuario.getRol();
             usuario.setRol(nuevoRol);
+            GestorArchivos.guardarTodo(datosFederacion);
             
             cargarUsuarios();
             GestorLog.exito("Rol actualizado: " + nombreUsuario + 
@@ -386,9 +344,6 @@ public class PanelGestionUsuarios extends JPanel {
         }
     }
     
-    /**
-     * Cambia la contraseña del usuario seleccionado
-     */
     private void cambiarPasswordUsuario() {
         int filaSeleccionada = tablaUsuarios.getSelectedRow();
         
@@ -439,6 +394,7 @@ public class PanelGestionUsuarios extends JPanel {
             }
             
             usuario.setContrasena(pass1);
+            GestorArchivos.guardarTodo(datosFederacion);
             GestorLog.exito("Contraseña actualizada para: " + nombreUsuario);
             
             JOptionPane.showMessageDialog(this,
@@ -448,9 +404,6 @@ public class PanelGestionUsuarios extends JPanel {
         }
     }
     
-    /**
-     * Elimina el usuario seleccionado
-     */
     private void eliminarUsuario() {
         int filaSeleccionada = tablaUsuarios.getSelectedRow();
         
@@ -467,7 +420,6 @@ public class PanelGestionUsuarios extends JPanel {
         
         if (usuario == null) return;
         
-        // Validar usuarios protegidos
         if (esUsuarioProtegido(nombreUsuario)) {
             JOptionPane.showMessageDialog(this,
                 "No se pueden eliminar los usuarios protegidos del sistema:\n" +
@@ -478,7 +430,6 @@ public class PanelGestionUsuarios extends JPanel {
             return;
         }
         
-        // Confirmación
         int confirmar = JOptionPane.showConfirmDialog(this,
             "¿Estás seguro de eliminar al usuario?\n\n" +
             "Usuario: " + usuario.getNombreReal() + "\n" +
@@ -491,6 +442,7 @@ public class PanelGestionUsuarios extends JPanel {
         
         if (confirmar == JOptionPane.YES_OPTION) {
             datosFederacion.getListaUsuarios().remove(usuario);
+            GestorArchivos.guardarTodo(datosFederacion);
             
             cargarUsuarios();
             GestorLog.exito("Usuario eliminado: " + nombreUsuario + " | Rol: " + usuario.getRol().getNombreLegible());
@@ -503,23 +455,19 @@ public class PanelGestionUsuarios extends JPanel {
     }
 }
 
-/**
- * Diálogo modal para crear un nuevo usuario
- */
 class DialogoCrearUsuario extends JDialog {
     
-    private boolean aceptado = false;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private boolean aceptado = false;
     private JTextField txtNombreUsuario;
     private JTextField txtNombreReal;
     private JPasswordField txtPassword;
     private JPasswordField txtPasswordConfirm;
     private JComboBox<String> comboRol;
     
-    
-    /**
-     * Constructor del diálogo
-     * @param parent JFrame padre
-     */
     public DialogoCrearUsuario(JFrame parent) {
         super(parent, "Crear Nuevo Usuario", true);
         
@@ -548,7 +496,7 @@ class DialogoCrearUsuario extends JDialog {
         
         panel.add(new JLabel("Rol:"));
         comboRol = new JComboBox<>(new String[]{
-            "Invitado", "Árbitro", "Manager"
+            "Invitado", "Árbitro", "Manager", "Administrador"
         });
         panel.add(comboRol);
         
@@ -569,11 +517,6 @@ class DialogoCrearUsuario extends JDialog {
         add(panel);
     }
     
-    
-    /**
-     * Valida los campos ingresados por el usuario
-     * @return true si son válidos
-     */
     private boolean validar() {
         if (txtNombreUsuario.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "El nombre de usuario no puede estar vacío");
@@ -601,24 +544,17 @@ class DialogoCrearUsuario extends JDialog {
         return true;
     }
     
-    /** @return true si el usuario presionó Aceptar */
     public boolean isAceptado() { return aceptado; }
-    
-    /** @return Nombre de usuario ingresado */
     public String getNombreUsuario() { return txtNombreUsuario.getText().trim(); }
-    
-    /** @return Nombre real ingresado */
     public String getNombreReal() { return txtNombreReal.getText().trim(); }
-    
-    /** @return Contraseña ingresada */
     public String getPassword() { return new String(txtPassword.getPassword()); }
     
-    /** @return Rol seleccionado */
     public Rol getRol() {
         String seleccion = (String) comboRol.getSelectedItem();
         switch (seleccion) {
             case "Árbitro": return Rol.ARBITRO;
             case "Manager": return Rol.MANAGER;
+            case "Administrador": return Rol.ADMINISTRADOR;
             default: return Rol.INVITADO;
         }
     }

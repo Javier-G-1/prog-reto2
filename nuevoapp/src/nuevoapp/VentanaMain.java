@@ -2736,9 +2736,6 @@ private JPanel crearTarjetaPartido(Partido p) {
         Object tempSelJugadores = comboTemporadasJugadores.getSelectedItem();
         Object tempSelPartidos = comboTemporadasPartidos.getSelectedItem();
         
-        Object tempSelClasificacion = null;
-       
-        
         JComboBox[] combosTemp = {
             comboTemporadas, 
             comboTemporadasJugadores, 
@@ -2753,14 +2750,20 @@ private JPanel crearTarjetaPartido(Partido p) {
             }
         }
         
-      
-        
-        comboTemporadas.setSelectedItem(tempSelEquipos);
-        comboTemporadasJugadores.setSelectedItem(tempSelJugadores);
-        comboTemporadasPartidos.setSelectedItem(tempSelPartidos);
+        // ⭐ SELECCIONAR LA ÚLTIMA TEMPORADA POR DEFECTO
+        if (!datosFederacion.getListaTemporadas().isEmpty()) {
+            int ultimoIndice = datosFederacion.getListaTemporadas().size() - 1;
+            String ultimaTemporada = datosFederacion.getListaTemporadas().get(ultimoIndice).getNombre();
+            
+            // Seleccionar última temporada en todos los combos
+            comboTemporadas.setSelectedItem(ultimaTemporada);
+            comboTemporadasJugadores.setSelectedItem(ultimaTemporada);
+            comboTemporadasPartidos.setSelectedItem(ultimaTemporada);
+        }
 
         actualizarComboEquipos();
     }
+
 
     /**
      * Actualiza el estado general de la interfaz según el estado de la temporada seleccionada.
@@ -2881,7 +2884,7 @@ private JPanel crearTarjetaPartido(Partido p) {
     /**
      * Función de desarrollo "Txema" que simula resultados automáticos para todos los partidos pendientes.
      * 
-     * <p><b>⚠️ SOLO PARA DESARROLLO/TESTING</b></p>
+     * <p><b> SOLO PARA DESARROLLO/TESTING</b></p>
      * 
      * <p>Este método:</p>
      * <ul>
@@ -2900,39 +2903,36 @@ private JPanel crearTarjetaPartido(Partido p) {
     private void funcionTxema() {
         Temporada temp = obtenerTemporadaSeleccionada();
         
-        // 1. Verificación inicial de seguridad
         if (temp == null) {
             GestorLog.advertencia("No hay una temporada seleccionada para ejecutar la simulación.");
             return;
         }
 
-        // 2. Validaciones previas
         if (!validarJugadoresMinimosPorTemporada(temp)) {
             return;
         }
 
-        // 3. Simulación de resultados
         Random random = new Random();
+        boolean huboCambios = false;
         
-        // Solo entramos si hay partidos pendientes
-        if (!todosLosPartidosFinalizados(temp)) {
-            for (Jornada j : temp.getListaJornadas()) {
-                for (Partido p : j.getListaPartidos()) {
-                    if (!p.isFinalizado()) {
-                        // Genera goles entre 1 y 50
-                        int golesLocal = random.nextInt(50) + 1;
-                        int golesVisitante = random.nextInt(50) + 1;
-                        
-                        p.setGolesLocal(golesLocal);
-                        p.setGolesVisitante(golesVisitante);
-                        p.setFinalizado(true);
-                    }
+        for (Jornada j : temp.getListaJornadas()) {
+            for (Partido p : j.getListaPartidos()) {
+                if (!p.isFinalizado()) {
+                    int golesLocal = random.nextInt(50) + 1;
+                    int golesVisitante = random.nextInt(50) + 1;
+                    
+                    p.setGolesLocal(golesLocal);
+                    p.setGolesVisitante(golesVisitante);
+                    p.setFinalizado(true);
+                    huboCambios = true;
                 }
             }
-            
-            // 4. Actualización de la interfaz (solo si hubo cambios)
-   
-            actualizarVistaPartidos();
+        }
+        
+        if (huboCambios) {
+            //  FORZAR ACTUALIZACIÓN COMPLETA DE LA VISTA
+            actualizarComboJornadas(); // Refresca el combo de jornadas
+            actualizarVistaPartidos(); // Actualiza la lista de partidos
             actualizarIndicadorEstadoPartidos();
             
             if (panelClasificacionObjeto != null) {
@@ -2940,8 +2940,18 @@ private JPanel crearTarjetaPartido(Partido p) {
             }
             
             GestorLog.exito("Función Txema ejecutada: Resultados aleatorios generados en " + temp.getNombre());
+            
+            JOptionPane.showMessageDialog(this,
+                "✅ Se han generado resultados aleatorios para todos los partidos pendientes.\n\n" +
+                "Cambia de jornada para ver los resultados actualizados.",
+                "Simulación completada",
+                JOptionPane.INFORMATION_MESSAGE);
         } else {
             GestorLog.info("Todos los partidos ya estaban finalizados en " + temp.getNombre());
+            JOptionPane.showMessageDialog(this,
+                "ℹ️ Todos los partidos ya están finalizados en esta temporada.",
+                "Sin cambios",
+                JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -3017,11 +3027,9 @@ private JPanel crearTarjetaPartido(Partido p) {
             case ADMINISTRADOR:
                 habilitarNavegacionBasica();
                 panelAdminPartidos_1.setVisible(true);
-               
                 btnNuevaJor.setVisible(true);
-              
-                btnFinalizarTemporada.setVisible(true);  // ⭐ ADMIN SÍ LO VE
-                btnTxema.setVisible(true);               // ⭐ ADMIN SÍ LO VE
+                btnFinalizarTemporada.setVisible(true);
+                btnTxema.setVisible(true);
                 btnInscribirEquipo.setVisible(true);
                 btnAgregarEquipo.setVisible(true);
                 btnAgregarJugador.setVisible(true);
@@ -3037,11 +3045,8 @@ private JPanel crearTarjetaPartido(Partido p) {
             case ARBITRO:
                 habilitarNavegacionBasica();
                 panelAdminPartidos_1.setVisible(true);
-               
-            
-                btnFinalizarTemporada.setVisible(false);  // ⭐ ÁRBITRO NO LO VE
-                btnTxema.setVisible(false);               // ⭐ ÁRBITRO NO LO VE
-                
+                btnFinalizarTemporada.setVisible(false);
+                btnTxema.setVisible(false);
                 btnInscribirEquipo.setVisible(false);
                 btnCambiarFoto.setVisible(false);
                 btnExportar.setVisible(false);
@@ -3059,12 +3064,10 @@ private JPanel crearTarjetaPartido(Partido p) {
                 btnCambiarEquipo.setVisible(true);
                 btnEditarJugador.setVisible(true);
                 btnInscribirEquipo.setVisible(true);
-                panelAdminPartidos_1.setVisible(true);  //  Para ver partidos
-                btnFinalizarTemporada.setVisible(false);  //  MANAGER NO LO VE
-                btnTxema.setVisible(false);               //  MANAGER NO LO VE
-              
+                panelAdminPartidos_1.setVisible(true);
+                btnFinalizarTemporada.setVisible(false);
+                btnTxema.setVisible(false);
                 btnNuevaJor.setVisible(false);
-               
                 btnExportar.setVisible(false);
                 btnGestionUsuario.setVisible(false);
                 btnTemporadas.setVisible(true);
@@ -3074,12 +3077,11 @@ private JPanel crearTarjetaPartido(Partido p) {
             default:
                 habilitarNavegacionBasica();
                 btnVerFoto.setVisible(true);
-                panelAdminPartidos_1.setVisible(true);  //  Solo para ver
-                btnFinalizarTemporada.setVisible(false);  //  INVITADO NO LO VE
-                btnTxema.setVisible(false);               //  INVITADO NO LO VE
-              
+                panelAdminPartidos_1.setVisible(true);
+                btnFinalizarTemporada.setVisible(false);
+                btnTxema.setVisible(false);
                 btnNuevaJor.setVisible(false);
-                               btnCambiarFoto.setVisible(false);
+                btnCambiarFoto.setVisible(false);
                 btnInscribirEquipo.setVisible(false);
                 btnExportar.setVisible(false);
                 btnGestionUsuario.setVisible(false);
@@ -3087,8 +3089,11 @@ private JPanel crearTarjetaPartido(Partido p) {
                 break;
         }
         
-        // ⭐ FORZAR RECREACIÓN DE VISTAS
+        // ⭐ FORZAR RECREACIÓN DE VISTAS CON ÚLTIMA TEMPORADA
         SwingUtilities.invokeLater(() -> {
+            // Sincronizar combos primero (selecciona última temporada)
+            sincronizarCombos();
+            
             actualizarVistaEquipos();
             
             if (comboTemporadasJugadores.getItemCount() > 0 && comboEquiposJugadores.getItemCount() > 0) {
@@ -3105,6 +3110,26 @@ private JPanel crearTarjetaPartido(Partido p) {
             }
             
             actualizarVistaPartidos();
+            
+            // ⭐ NAVEGACIÓN AUTOMÁTICA SEGÚN ROL
+            switch (rol) {
+                case ADMINISTRADOR:
+                case INVITADO:
+                    cardLayout.show(panelCards, "temporadas");
+                    panelGestionTemporadas.cargarTemporadas();
+                    GestorLog.info("Navegación inicial → Temporadas");
+                    break;
+                    
+                case ARBITRO:
+                    cardLayout.show(panelCards, "partidos");
+                    GestorLog.info("Navegación inicial → Partidos (Árbitro)");
+                    break;
+                    
+                case MANAGER:
+                    cardLayout.show(panelCards, "equipos");
+                    GestorLog.info("Navegación inicial → Equipos (Manager)");
+                    break;
+            }
             
             GestorLog.info(" Vistas actualizadas con permisos de: " + rol.getNombreLegible());
         });

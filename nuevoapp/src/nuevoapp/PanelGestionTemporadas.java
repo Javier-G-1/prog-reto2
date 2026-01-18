@@ -10,10 +10,15 @@ import logica.*;
 /**
  * Panel de gestión completa de temporadas.
  * Muestra todas las temporadas con sus estados y permite crear nuevas.
+ * ⭐ ACTUALIZADO: Usa TemaColores para consistencia visual
  */
 public class PanelGestionTemporadas extends JPanel {
     
-    private DatosFederacion datosFederacion;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private DatosFederacion datosFederacion;
     private VentanaMain ventanaPrincipal;
     
     private JPanel panelTarjetas;
@@ -28,7 +33,7 @@ public class PanelGestionTemporadas extends JPanel {
         this.ventanaPrincipal = ventana;
         
         setLayout(new BorderLayout(10, 10));
-        setBackground(new Color(20, 24, 31));
+        setBackground(TemaColores.FONDO_PRINCIPAL);
         setBorder(new EmptyBorder(10, 10, 10, 10));
         
         inicializarComponentes();
@@ -41,16 +46,16 @@ public class PanelGestionTemporadas extends JPanel {
     private void inicializarComponentes() {
         // Panel superior con título y botón
         JPanel panelSuperior = new JPanel(new BorderLayout(10, 10));
-        panelSuperior.setBackground(new Color(20, 24, 31));
+        panelSuperior.setBackground(TemaColores.FONDO_PRINCIPAL);
         
-        JLabel lblTitulo = new JLabel(" GESTIÓN DE TEMPORADAS");
+        JLabel lblTitulo = new JLabel("🏆 GESTIÓN DE TEMPORADAS");
         lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        lblTitulo.setForeground(Color.WHITE);
+        lblTitulo.setForeground(TemaColores.TEXTO_PRIMARIO);
         panelSuperior.add(lblTitulo, BorderLayout.WEST);
         
         btnNuevaTemporada = new JButton("➕ Nueva Temporada");
-        btnNuevaTemporada.setBackground(new Color(46, 204, 113));
-        btnNuevaTemporada.setForeground(Color.WHITE);
+        btnNuevaTemporada.setBackground(TemaColores.ACENTO_VERDE);
+        btnNuevaTemporada.setForeground(TemaColores.TEXTO_PRIMARIO);
         btnNuevaTemporada.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnNuevaTemporada.setFocusPainted(false);
         btnNuevaTemporada.setBorderPainted(false);
@@ -63,7 +68,7 @@ public class PanelGestionTemporadas extends JPanel {
         // Panel central con tarjetas de temporadas
         panelTarjetas = new JPanel();
         panelTarjetas.setLayout(new BoxLayout(panelTarjetas, BoxLayout.Y_AXIS));
-        panelTarjetas.setBackground(new Color(30, 34, 41));
+        panelTarjetas.setBackground(TemaColores.FONDO_SECUNDARIO);
         
         scrollPane = new JScrollPane(panelTarjetas);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -85,7 +90,7 @@ public class PanelGestionTemporadas extends JPanel {
         if (temporadas.isEmpty()) {
             JLabel lblVacio = new JLabel("No hay temporadas creadas. Crea una nueva temporada para comenzar.");
             lblVacio.setFont(new Font("Segoe UI", Font.ITALIC, 14));
-            lblVacio.setForeground(new Color(150, 150, 150));
+            lblVacio.setForeground(TemaColores.TEXTO_TERCIARIO);
             lblVacio.setAlignmentX(Component.CENTER_ALIGNMENT);
             lblVacio.setBorder(new EmptyBorder(50, 20, 50, 20));
             panelTarjetas.add(lblVacio);
@@ -102,13 +107,14 @@ public class PanelGestionTemporadas extends JPanel {
     
     /**
      * Crea una tarjeta visual para una temporada
+     * ⭐ CORREGIDO: Excluye equipo fantasma del conteo + Usa TemaColores
      */
     private JPanel crearTarjetaTemporada(Temporada temp) {
         JPanel tarjeta = new JPanel(new BorderLayout(15, 10));
         tarjeta.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
-        tarjeta.setBackground(new Color(24, 25, 50));
+        tarjeta.setBackground(TemaColores.FONDO_TARJETA);
         tarjeta.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(60, 60, 80), 2),
+            BorderFactory.createLineBorder(TemaColores.BORDE_NORMAL, 2),
             BorderFactory.createEmptyBorder(15, 20, 15, 20)
         ));
         
@@ -120,39 +126,46 @@ public class PanelGestionTemporadas extends JPanel {
         // Nombre de la temporada
         JLabel lblNombre = new JLabel(temp.getNombre());
         lblNombre.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        lblNombre.setForeground(Color.WHITE);
+        lblNombre.setForeground(TemaColores.TEXTO_PRIMARIO);
         panelInfo.add(lblNombre);
         panelInfo.add(Box.createVerticalStrut(5));
         
-        // Estado
+        // Estado con colores del tema
         JLabel lblEstado = new JLabel("● " + temp.getEstado());
         lblEstado.setFont(new Font("Segoe UI", Font.BOLD, 14));
         switch (temp.getEstado()) {
             case Temporada.FUTURA:
-                lblEstado.setForeground(new Color(52, 152, 219));
+                lblEstado.setForeground(TemaColores.ESTADO_FUTURA);
                 break;
             case Temporada.EN_JUEGO:
-                lblEstado.setForeground(new Color(241, 196, 15));
+                lblEstado.setForeground(TemaColores.ESTADO_EN_CURSO);
                 break;
             case Temporada.TERMINADA:
-                lblEstado.setForeground(new Color(231, 76, 60));
+                lblEstado.setForeground(TemaColores.ESTADO_FINALIZADA);
                 break;
         }
         panelInfo.add(lblEstado);
         panelInfo.add(Box.createVerticalStrut(10));
         
-        // Estadísticas
-        int numEquipos = temp.getEquiposParticipantes().size();
-        int numJornadas = temp.getListaJornadas().size();
+        // ⭐ ESTADÍSTICAS CORREGIDAS: Excluir equipo fantasma
+        int numEquipos = 0;
         int numJugadores = 0;
+        
         for (Equipo eq : temp.getEquiposParticipantes()) {
+            // Saltar el equipo fantasma
+            if (eq.getNombre().equals("_SIN_EQUIPO_")) {
+                continue;
+            }
+            numEquipos++;
             numJugadores += eq.getPlantilla().size();
         }
+        
+        int numJornadas = temp.getListaJornadas().size();
         
         JLabel lblStats = new JLabel(String.format(" %d equipos  |   %d jornadas  |   %d jugadores", 
             numEquipos, numJornadas, numJugadores));
         lblStats.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblStats.setForeground(new Color(180, 180, 180));
+        lblStats.setForeground(TemaColores.TEXTO_TERCIARIO);
         panelInfo.add(lblStats);
         
         tarjeta.add(panelInfo, BorderLayout.CENTER);
@@ -164,8 +177,8 @@ public class PanelGestionTemporadas extends JPanel {
         
         JButton btnVerClasificacion = new JButton("📊 Ver Clasificación");
         btnVerClasificacion.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnVerClasificacion.setBackground(new Color(52, 152, 219));
-        btnVerClasificacion.setForeground(Color.WHITE);
+        btnVerClasificacion.setBackground(TemaColores.ACENTO_AZUL);
+        btnVerClasificacion.setForeground(TemaColores.TEXTO_PRIMARIO);
         btnVerClasificacion.setFocusPainted(false);
         btnVerClasificacion.setBorderPainted(false);
         btnVerClasificacion.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -174,8 +187,8 @@ public class PanelGestionTemporadas extends JPanel {
         
         JButton btnDetalles = new JButton("🔍 Ver Detalles");
         btnDetalles.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnDetalles.setBackground(new Color(155, 89, 182));
-        btnDetalles.setForeground(Color.WHITE);
+        btnDetalles.setBackground(new Color(155, 89, 182)); // Morado (no está en TemaColores)
+        btnDetalles.setForeground(TemaColores.TEXTO_PRIMARIO);
         btnDetalles.setFocusPainted(false);
         btnDetalles.setBorderPainted(false);
         btnDetalles.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -192,7 +205,7 @@ public class PanelGestionTemporadas extends JPanel {
     }
     
     /**
-     * Crea una nueva temporada con el flujo completo
+     * ⭐ CORRECCIÓN: Validar orden de temporadas y evitar múltiples EN_JUEGO
      */
     private void crearNuevaTemporada() {
         String nombre = JOptionPane.showInputDialog(this, "Nombre de la Temporada (ej: 2026/27):");
@@ -213,18 +226,40 @@ public class PanelGestionTemporadas extends JPanel {
         
         GestorTemporadas gestor = new GestorTemporadas();
         
-        // Validar que no haya temporada EN_JUEGO
+        // ⭐ VALIDACIÓN 1: No puede haber temporada EN_JUEGO
         if (gestor.existeTemporadaEnCurso(datosFederacion)) {
             Temporada enCurso = gestor.obtenerTemporadaEnCurso(datosFederacion);
             
             JOptionPane.showMessageDialog(this,
-                "No se puede crear una nueva temporada.\n\n" +
-                "❌ Temporada en curso: " + enCurso.getNombre() + "\n\n" +
+                " No se puede crear una nueva temporada.\n\n" +
+                "Temporada en curso: " + enCurso.getNombre() + "\n\n" +
                 "Debes finalizarla antes de crear una nueva temporada.",
                 "Temporada en curso activa",
                 JOptionPane.WARNING_MESSAGE);
             
             GestorLog.advertencia("Intento de crear temporada con " + enCurso.getNombre() + " EN_JUEGO");
+            return;
+        }
+        
+        // ⭐ VALIDACIÓN 2: Solo puede haber una temporada FUTURA a la vez
+        int temporadasFuturas = 0;
+        Temporada tempFuturaExistente = null;
+        for (Temporada t : datosFederacion.getListaTemporadas()) {
+            if (t.getEstado().equals(Temporada.FUTURA)) {
+                temporadasFuturas++;
+                tempFuturaExistente = t;
+            }
+        }
+        
+        if (temporadasFuturas > 0) {
+            JOptionPane.showMessageDialog(this,
+                " Ya existe una temporada FUTURA pendiente de iniciar.\n\n" +
+                "Temporada futura: " + tempFuturaExistente.getNombre() + "\n\n" +
+                "Debes iniciarla (crear jornadas) antes de crear una nueva temporada futura.",
+                "Temporada futura existente",
+                JOptionPane.WARNING_MESSAGE);
+            
+            GestorLog.advertencia("Intento de crear segunda temporada FUTURA con " + tempFuturaExistente.getNombre() + " pendiente");
             return;
         }
         
@@ -238,11 +273,17 @@ public class PanelGestionTemporadas extends JPanel {
             
             for (int i = 0; i < temporadasFinalizadas.size(); i++) {
                 Temporada t = temporadasFinalizadas.get(i);
-                int equipos = t.getEquiposParticipantes().size();
+                
+                // ⭐ Contar equipos reales (sin fantasma)
+                int equipos = 0;
                 int jugadores = 0;
                 for (Equipo eq : t.getEquiposParticipantes()) {
-                    jugadores += eq.getPlantilla().size();
+                    if (!eq.getNombre().equals("_SIN_EQUIPO_")) {
+                        equipos++;
+                        jugadores += eq.getPlantilla().size();
+                    }
                 }
+                
                 opciones[i + 1] = t.getNombre() + " (" + equipos + " equipos, " + jugadores + " jugadores)";
             }
             
@@ -265,16 +306,20 @@ public class PanelGestionTemporadas extends JPanel {
                 String nombreTemp = seleccion.split(" \\(")[0];
                 temporadaOrigen = datosFederacion.buscarTemporadaPorNombre(nombreTemp);
                 
-                int equipos = temporadaOrigen.getEquiposParticipantes().size();
+                // ⭐ Contar equipos reales para el mensaje de confirmación
+                int equipos = 0;
                 int jugadores = 0;
                 for (Equipo eq : temporadaOrigen.getEquiposParticipantes()) {
-                    jugadores += eq.getPlantilla().size();
+                    if (!eq.getNombre().equals("_SIN_EQUIPO_")) {
+                        equipos++;
+                        jugadores += eq.getPlantilla().size();
+                    }
                 }
                 
                 int confirmar = JOptionPane.showConfirmDialog(this,
                     "Se copiarán automáticamente:\n\n" +
-                    "✅ Equipos: " + equipos + "\n" +
-                    "✅ Jugadores: " + jugadores + "\n\n" +
+                    " Equipos: " + equipos + "\n" +
+                    " Jugadores: " + jugadores + "\n\n" +
                     "Desde: " + temporadaOrigen.getNombre() + "\n" +
                     "Hacia: " + nombre + "\n\n" +
                     "¿Continuar?",
@@ -295,10 +340,14 @@ public class PanelGestionTemporadas extends JPanel {
         if (creada) {
             Temporada nuevaCreada = datosFederacion.buscarTemporadaPorNombre(nombre);
             if (nuevaCreada != null) {
-                int equiposFinales = nuevaCreada.getEquiposParticipantes().size();
+                // ⭐ Contar equipos reales (sin fantasma)
+                int equiposFinales = 0;
                 int jugadoresFinales = 0;
                 for (Equipo eq : nuevaCreada.getEquiposParticipantes()) {
-                    jugadoresFinales += eq.getPlantilla().size();
+                    if (!eq.getNombre().equals("_SIN_EQUIPO_")) {
+                        equiposFinales++;
+                        jugadoresFinales += eq.getPlantilla().size();
+                    }
                 }
                 
                 String mensaje;
@@ -370,7 +419,7 @@ public class PanelGestionTemporadas extends JPanel {
     }
     
     /**
-     * Muestra detalles completos de una temporada
+     * ⭐ CORRECCIÓN: Mostrar detalles sin contar equipo fantasma
      */
     private void verDetallesTemporada(Temporada temp) {
         StringBuilder detalles = new StringBuilder();
@@ -378,8 +427,18 @@ public class PanelGestionTemporadas extends JPanel {
         detalles.append(" Estado: ").append(temp.getEstado()).append("\n\n");
         
         detalles.append("═══════════════════════════════════\n");
-        detalles.append(" EQUIPOS PARTICIPANTES (").append(temp.getEquiposParticipantes().size()).append(")\n");
+        
+        // ⭐ Contar equipos reales
+        int equiposReales = 0;
+        for (Equipo eq : temp.getEquiposParticipantes()) {
+            if (!eq.getNombre().equals("_SIN_EQUIPO_")) {
+                equiposReales++;
+            }
+        }
+        
+        detalles.append(" EQUIPOS PARTICIPANTES (").append(equiposReales).append(")\n");
         detalles.append("═══════════════════════════════════\n");
+        
         for (Equipo eq : temp.getEquiposParticipantes()) {
             if (!eq.getNombre().equals("_SIN_EQUIPO_")) {
                 detalles.append("  • ").append(eq.getNombre())
@@ -411,17 +470,17 @@ public class PanelGestionTemporadas extends JPanel {
                    .append(" | Pendientes: ").append(pendientes).append("\n");
         }
         
-        detalles.append("\n═══════════════════════════════════\n");
-        detalles.append("  RESUMEN\n");
+        detalles.append("\n══════════════════════════════════\n");
+        detalles.append(" RESUMEN\n");
         detalles.append("═══════════════════════════════════\n");
-        detalles.append("Partidos jugados: ").append(partidosJugados).append("\n");
-        detalles.append("Partidos pendientes: ").append(partidosPendientes).append("\n");
+        detalles.append(" Partidos jugados: ").append(partidosJugados).append("\n");
+        detalles.append(" Partidos pendientes: ").append(partidosPendientes).append("\n");
         
         JTextArea textArea = new JTextArea(detalles.toString());
         textArea.setEditable(false);
         textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        textArea.setBackground(new Color(30, 34, 41));
-        textArea.setForeground(Color.WHITE);
+        textArea.setBackground(TemaColores.FONDO_SECUNDARIO);
+        textArea.setForeground(TemaColores.TEXTO_PRIMARIO);
         textArea.setBorder(new EmptyBorder(10, 10, 10, 10));
         
         JScrollPane scroll = new JScrollPane(textArea);
@@ -434,11 +493,11 @@ public class PanelGestionTemporadas extends JPanel {
         GestorLog.info("Detalles visualizados: " + temp.getNombre());
     }
 
-	
-
-		 public void setBotonNuevaTemporadaVisible(boolean visible) {
-		        btnNuevaTemporada.setVisible(visible);
-		    }
-		
-	
+    /**
+     * Controla la visibilidad del botón de nueva temporada
+     * (usado por VentanaMain según el rol del usuario)
+     */
+    public void setBotonNuevaTemporadaVisible(boolean visible) {
+        btnNuevaTemporada.setVisible(visible);
+    }
 }
