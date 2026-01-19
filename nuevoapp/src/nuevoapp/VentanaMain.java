@@ -465,6 +465,20 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 return;
             }
             
+            // ⭐ VERIFICAR DIRECTORIO WEB ANTES DE CONTINUAR
+            if (!SincronizadorWeb.verificarDirectorioWeb()) {
+                int continuar = JOptionPane.showConfirmDialog(this,
+                    "⚠ No se encontró el directorio del sitio web.\n\n" +
+                    "¿Deseas exportar solo el XML local sin sincronizar?",
+                    "Directorio web no encontrado",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+                
+                if (continuar != JOptionPane.YES_OPTION) {
+                    return;
+                }
+            }
+            
             // Crear opciones dinámicas
             java.util.List<String> opcionesLista = new java.util.ArrayList<>();
             
@@ -497,19 +511,25 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
 
             GestorLog.info("Iniciando exportación de datos");
             
+            // ⭐ DECLARAR VARIABLES DE SEGUIMIENTO
+            boolean exportacionExitosa = false;
+            String ultimaTemporada = null;
+            
             // ⭐ USAR EL NUEVO EXPORTADOR
             ExportadorXMLLiga exportador = new ExportadorXMLLiga(datosFederacion);
 
             if (eleccion == 0 && temporadaActual != null) {
                 // Exportar temporada actual visible
-                exportador.exportarTemporada(temporadaActual);
+                exportacionExitosa = exportador.exportarTemporada(temporadaActual);
+                ultimaTemporada = temporadaActual.getNombre();
                 
             } else if (eleccion == (temporadaActual != null ? 1 : 0)) {
                 // Seleccionar temporada específica
                 Temporada temporadaSeleccionada = mostrarDialogoSeleccionTemporada();
                 
                 if (temporadaSeleccionada != null) {
-                    exportador.exportarTemporada(temporadaSeleccionada);
+                    exportacionExitosa = exportador.exportarTemporada(temporadaSeleccionada);
+                    ultimaTemporada = temporadaSeleccionada.getNombre();
                 }
                 
             } else {
@@ -521,10 +541,13 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                     boolean exito = exportador.exportarTemporada(temp);
                     if (exito) {
                         temporadasExportadas++;
+                        ultimaTemporada = temp.getNombre();
                     } else {
                         temporadasFallidas++;
                     }
                 }
+                
+                exportacionExitosa = (temporadasExportadas > 0);
                 
                 String mensaje = " Exportación masiva completada\n\n" +
                                 "Temporadas exportadas: " + temporadasExportadas + "\n" +
@@ -538,6 +561,15 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 
                 GestorLog.exito("Exportación masiva: " + temporadasExportadas + " exitosas, " + 
                                temporadasFallidas + " fallidas");
+            }
+            
+            // ⭐ SINCRONIZAR CON EL SITIO WEB
+            if (exportacionExitosa && ultimaTemporada != null) {
+                if (SincronizadorWeb.verificarDirectorioWeb()) {
+                    SincronizadorWeb.sincronizarConWeb(datosFederacion, ultimaTemporada);
+                } else {
+                    GestorLog.advertencia("⚠️ Exportación completada pero sin sincronización web");
+                }
             }
         });
         
