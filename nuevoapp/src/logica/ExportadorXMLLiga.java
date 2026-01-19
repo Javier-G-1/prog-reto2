@@ -37,7 +37,7 @@ public class ExportadorXMLLiga {
             carpetaLogos.mkdirs();
             carpetaJugadores.mkdirs();
             
-            GestorLog.info("📁 Carpetas de imágenes verificadas");
+            GestorLog.info(" Carpetas de imágenes verificadas");
             
             // Leer XML existente o crear estructura base
             File archivoXML = new File(ARCHIVO_XML);
@@ -50,7 +50,7 @@ public class ExportadorXMLLiga {
                 String idTemporada = generarIdTemporada(temporada.getNombre());
                 if (contenido.contains("id=\"" + idTemporada + "\"")) {
                     int respuesta = JOptionPane.showConfirmDialog(null,
-                        "⚠️ La temporada '" + temporada.getNombre() + "' ya existe en ligaBalonmano.xml\n\n" +
+                        " La temporada '" + temporada.getNombre() + "' ya existe en ligaBalonmano.xml\n\n" +
                         "¿Desea reemplazarla?",
                         "Temporada existente",
                         JOptionPane.YES_NO_OPTION,
@@ -91,18 +91,18 @@ public class ExportadorXMLLiga {
             
             GestorLog.exito("✅ Temporada exportada: " + temporada.getNombre());
             JOptionPane.showMessageDialog(null,
-                "✅ Temporada exportada exitosamente\n\n" +
-                "📄 Archivo: " + ARCHIVO_XML + "\n" +
-                "📁 Temporada: " + temporada.getNombre(),
+                " Temporada exportada exitosamente\n\n" +
+                " Archivo: " + ARCHIVO_XML + "\n" +
+                " Temporada: " + temporada.getNombre(),
                 "Exportación exitosa",
                 JOptionPane.INFORMATION_MESSAGE);
             
             return true;
             
         } catch (IOException e) {
-            GestorLog.error("❌ Error al exportar: " + e.getMessage());
+            GestorLog.error(" Error al exportar: " + e.getMessage());
             JOptionPane.showMessageDialog(null,
-                "❌ Error: " + e.getMessage(),
+                " Error: " + e.getMessage(),
                 "Error de exportación",
                 JOptionPane.ERROR_MESSAGE);
             return false;
