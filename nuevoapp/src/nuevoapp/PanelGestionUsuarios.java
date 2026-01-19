@@ -242,7 +242,29 @@ public class PanelGestionUsuarios extends JPanel {
         }
         return false;
     }
-    
+
+    // ⭐ AGREGAR AQUÍ LA CONSTANTE Y EL MÉTODO
+    /**
+     * Lista de administradores fijos del sistema (no se puede cambiar su rol)
+     */
+    private static final String[] ADMINISTRADORES_SISTEMA = {
+        "admin", "arbitro", "manager"
+    };
+
+    /**
+     * Verifica si un usuario es uno de los 3 administradores del sistema.
+     */
+    private boolean esAdministradorSistema(String nombreUsuario) {
+        for (String adminSistema : ADMINISTRADORES_SISTEMA) {
+            if (adminSistema.equalsIgnoreCase(nombreUsuario)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+        // ... resto del código
     private void crearNuevoUsuario() {
         DialogoCrearUsuario dialogo = new DialogoCrearUsuario((JFrame) SwingUtilities.getWindowAncestor(this));
         dialogo.setVisible(true);
@@ -252,6 +274,21 @@ public class PanelGestionUsuarios extends JPanel {
             String nombreReal = dialogo.getNombreReal();
             String password = dialogo.getPassword();
             Rol rol = dialogo.getRol();
+            
+            // ⭐ BLOQUEAR CREACIÓN DE ADMINISTRADORES
+            if (rol == Rol.ADMINISTRADOR) {
+                JOptionPane.showMessageDialog(this,
+                    " No se pueden crear más administradores.\n\n" +
+                    "El sistema ya tiene los 3 administradores predeterminados:\n" +
+                    " admin\n" +
+                    " arbitro\n" +
+                    " manager\n\n" +
+                    "Estos son los únicos usuarios con permisos de administrador.",
+                    "Creación de administrador bloqueada",
+                    JOptionPane.ERROR_MESSAGE);
+                GestorLog.advertencia("Intento de crear usuario con rol ADMINISTRADOR: " + nombreUsuario);
+                return;
+            }
             
             if (datosFederacion.buscarUsuario(nombreUsuario) != null) {
                 JOptionPane.showMessageDialog(this,
@@ -276,6 +313,7 @@ public class PanelGestionUsuarios extends JPanel {
         }
     }
     
+    
     private void cambiarRolUsuario() {
         int filaSeleccionada = tablaUsuarios.getSelectedRow();
         
@@ -292,25 +330,36 @@ public class PanelGestionUsuarios extends JPanel {
         
         if (usuario == null) return;
         
-        if (esUsuarioProtegido(nombreUsuario)) {
+        // ⭐ BLOQUEAR CAMBIO DE ROL EN ADMINISTRADORES DEL SISTEMA
+        if (esAdministradorSistema(nombreUsuario)) {
             JOptionPane.showMessageDialog(this,
-                "No se puede cambiar el rol de usuarios protegidos del sistema",
-                "Usuario protegido",
+                "No se puede cambiar el rol de los administradores del sistema.\n\n" +
+                "Los usuarios 'admin', 'arbitro' y 'manager' mantienen\n" +
+                "permanentemente el rol de ADMINISTRADOR.",
+                "Usuario del sistema protegido",
                 JOptionPane.WARNING_MESSAGE);
-            GestorLog.advertencia("Intento de cambiar rol de usuario protegido: " + nombreUsuario);
+            GestorLog.advertencia("Intento de cambiar rol de administrador del sistema: " + nombreUsuario);
             return;
         }
         
-        Rol[] rolesDisponibles = {Rol.INVITADO, Rol.ARBITRO, Rol.MANAGER, Rol.ADMINISTRADOR};
-        String[] nombresRoles = new String[rolesDisponibles.length];
+        // ⭐ FILTRAR ROLES DISPONIBLES: NO permitir crear más ADMINISTRADORES
+        Rol[] rolesDisponibles;
+        String[] nombresRoles;
         
-        for (int i = 0; i < rolesDisponibles.length; i++) {
-            nombresRoles[i] = rolesDisponibles[i].getNombreLegible();
+        if (usuario.getRol() == Rol.ADMINISTRADOR) {
+            // Si ya es admin (creado manualmente), puede cambiar a otros roles
+            rolesDisponibles = new Rol[]{Rol.INVITADO, Rol.ARBITRO, Rol.MANAGER};
+            nombresRoles = new String[]{"Invitado", "Árbitro", "Manager"};
+        } else {
+            // Si NO es admin, NO puede convertirse en admin
+            rolesDisponibles = new Rol[]{Rol.INVITADO, Rol.ARBITRO, Rol.MANAGER};
+            nombresRoles = new String[]{"Invitado", "Árbitro", "Manager"};
         }
         
         String rolSeleccionado = (String) JOptionPane.showInputDialog(
             this,
-            "Selecciona el nuevo rol para: " + usuario.getNombreReal(),
+            "Selecciona el nuevo rol para: " + usuario.getNombreReal() + 
+            "\n\n⚠️ No se pueden crear más administradores del sistema.",
             "Cambiar Rol",
             JOptionPane.QUESTION_MESSAGE,
             null,
@@ -343,7 +392,6 @@ public class PanelGestionUsuarios extends JPanel {
                 JOptionPane.INFORMATION_MESSAGE);
         }
     }
-    
     private void cambiarPasswordUsuario() {
         int filaSeleccionada = tablaUsuarios.getSelectedRow();
         
@@ -495,8 +543,9 @@ class DialogoCrearUsuario extends JDialog {
         panel.add(txtPasswordConfirm);
         
         panel.add(new JLabel("Rol:"));
+        // ⭐ ELIMINAR "Administrador" de las opciones
         comboRol = new JComboBox<>(new String[]{
-            "Invitado", "Árbitro", "Manager", "Administrador"
+            "Invitado", "Árbitro", "Manager"
         });
         panel.add(comboRol);
         
@@ -554,8 +603,9 @@ class DialogoCrearUsuario extends JDialog {
         switch (seleccion) {
             case "Árbitro": return Rol.ARBITRO;
             case "Manager": return Rol.MANAGER;
-            case "Administrador": return Rol.ADMINISTRADOR;
             default: return Rol.INVITADO;
+            // ⭐ ADMINISTRADOR eliminado - ya no es opción
         }
     }
+
 }

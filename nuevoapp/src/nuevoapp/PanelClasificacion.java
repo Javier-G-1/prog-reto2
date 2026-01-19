@@ -148,6 +148,7 @@ public class PanelClasificacion extends JPanel {
 
     /**
      * Carga la clasificación de la temporada en los modelos de JList.
+     * ⭐ EXCLUYE el equipo fantasma "_SIN_EQUIPO_"
      */
     private void cargarClasificacion(Temporada temporada) {
         // Limpiar modelos
@@ -163,11 +164,11 @@ public class PanelClasificacion extends JPanel {
         dlmPTS.clear();
 
         if (temporada == null) {
-            System.out.println("⚠️ PanelClasificacion: Temporada es null");
+            System.out.println("⚠PanelClasificacion: Temporada es null");
             return;
         }
         
-        System.out.println("📊 Actualizando clasificación: " + temporada.getNombre());
+        System.out.println(" Actualizando clasificación: " + temporada.getNombre());
         
         try {
             Clasificacion clasificacionObjeto = CalculadoraClasificacion.calcular(temporada);
@@ -175,8 +176,15 @@ public class PanelClasificacion extends JPanel {
 
             System.out.println("✅ Filas de clasificación cargadas: " + filas.size());
 
+            // ⭐ FILTRAR el equipo fantasma "_SIN_EQUIPO_"
             int pos = 1;
             for (FilaClasificacion f : filas) {
+                // ⭐ SALTAR el equipo fantasma
+                if (f.getEquipo().equals("_SIN_EQUIPO_")) {
+                    continue;
+                }
+                
+                // Solo agregar equipos reales
                 dlmPosicion.addElement(pos++);
                 dlmEquipo.addElement(f.getEquipo());
                 dlmPJ.addElement(f.getPj());
@@ -202,6 +210,9 @@ public class PanelClasificacion extends JPanel {
     /**
      * Exporta la clasificación actual a PDF.
      */
+    /**
+     * Exporta la clasificación actual a PDF directamente en la carpeta de Descargas.
+     */
     public void exportarPDF() {
         if (temporadaActual == null) {
             JOptionPane.showMessageDialog(this,
@@ -220,47 +231,48 @@ public class PanelClasificacion extends JPanel {
             return;
         }
         
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Guardar clasificación como PDF");
-        fileChooser.setSelectedFile(new java.io.File("Clasificacion_" + temporadaActual.getNombre() + ".pdf"));
-        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Archivos PDF", "pdf"));
+        // ⭐ OBTENER LA RUTA DE DESCARGAS
+        String carpetaDescargas = System.getProperty("user.home") + "/Downloads";
+        String nombreArchivo = "Clasificacion_" + temporadaActual.getNombre() + ".pdf";
+        String rutaArchivo = carpetaDescargas + "/" + nombreArchivo;
         
-        int resultado = fileChooser.showSaveDialog(this);
+        // ⭐ SI EL ARCHIVO YA EXISTE, agregar un número
+        java.io.File archivo = new java.io.File(rutaArchivo);
+        int contador = 1;
+        while (archivo.exists()) {
+            nombreArchivo = "Clasificacion_" + temporadaActual.getNombre() + "_(" + contador + ").pdf";
+            rutaArchivo = carpetaDescargas + "/" + nombreArchivo;
+            archivo = new java.io.File(rutaArchivo);
+            contador++;
+        }
         
-        if (resultado == JFileChooser.APPROVE_OPTION) {
-            String rutaArchivo = fileChooser.getSelectedFile().getAbsolutePath();
-            if (!rutaArchivo.toLowerCase().endsWith(".pdf")) {
-                rutaArchivo += ".pdf";
-            }
+        Clasificacion clasificacion = CalculadoraClasificacion.calcular(temporadaActual);
+        List<FilaClasificacion> filas = clasificacion.getFilas();
+        
+        boolean exito = ExportarPDF.exportarClasificacion(temporadaActual, filas, rutaArchivo);
+        
+        if (exito) {
+            int opcion = JOptionPane.showConfirmDialog(this,
+                "PDF exportado correctamente en:\n" + rutaArchivo + "\n\n¿Deseas abrir el archivo?",
+                "Éxito",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE);
             
-            Clasificacion clasificacion = CalculadoraClasificacion.calcular(temporadaActual);
-            List<FilaClasificacion> filas = clasificacion.getFilas();
-            
-            boolean exito = ExportarPDF.exportarClasificacion(temporadaActual, filas, rutaArchivo);
-            
-            if (exito) {
-                int opcion = JOptionPane.showConfirmDialog(this,
-                    "PDF exportado correctamente en:\n" + rutaArchivo + "\n\n¿Deseas abrir el archivo?",
-                    "Éxito",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.INFORMATION_MESSAGE);
-                
-                if (opcion == JOptionPane.YES_OPTION) {
-                    try {
-                        java.awt.Desktop.getDesktop().open(new java.io.File(rutaArchivo));
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(this,
-                            "No se pudo abrir el PDF automáticamente.\nÁbrelo manualmente desde:\n" + rutaArchivo,
-                            "Información",
-                            JOptionPane.INFORMATION_MESSAGE);
-                    }
+            if (opcion == JOptionPane.YES_OPTION) {
+                try {
+                    java.awt.Desktop.getDesktop().open(new java.io.File(rutaArchivo));
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this,
+                        "No se pudo abrir el PDF automáticamente.\nÁbrelo manualmente desde:\n" + rutaArchivo,
+                        "Información",
+                        JOptionPane.INFORMATION_MESSAGE);
                 }
-            } else {
-                JOptionPane.showMessageDialog(this,
-                    "Error al exportar el PDF. Verifica los permisos de escritura.",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
             }
+        } else {
+            JOptionPane.showMessageDialog(this,
+                "Error al exportar el PDF. Verifica los permisos de escritura.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
         }
     }
 }

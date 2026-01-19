@@ -284,8 +284,8 @@ public class SincronizadorWeb {
         File directorioWeb = new File(RUTA_WEB_BASE);
         
         if (!directorioWeb.exists()) {
-            GestorLog.error("❌ No se encontró el directorio del sitio web: " + RUTA_WEB_BASE);
-            GestorLog.info("💡 Asegúrate de que la estructura LM_Grupo2/HTML/ existe en el directorio padre");
+            GestorLog.error(" No se encontró el directorio del sitio web: " + RUTA_WEB_BASE);
+            GestorLog.info("Asegúrate de que la estructura LM_Grupo2/HTML/ existe en el directorio padre");
             return false;
         }
         
