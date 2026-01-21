@@ -44,7 +44,7 @@ public class GeneradorCalendario {
         Jornada.reiniciarContador();
         Partido.reiniciarContador(); // También reiniciar partidos si existe este método
         
-        GestorLog.info("🔄 IDs reiniciados para nueva temporada: " + temp.getNombre());
+        GestorLog.info(" IDs reiniciados para nueva temporada: " + temp.getNombre());
 
         // ⭐ FILTRAR EQUIPOS REALES (excluir "_SIN_EQUIPO_")
         List<Equipo> todosLosEquipos = temp.getEquiposParticipantes();
@@ -92,7 +92,7 @@ public class GeneradorCalendario {
         for (int i = 0; i < jornadasIda; i++) {
             Jornada j = new Jornada("Jornada " + (i + 1));
             
-            GestorLog.info("📅 Creando: " + j.getNombre() + " con ID: " + j.getId());
+            GestorLog.info(" Creando: " + j.getNombre() + " con ID: " + j.getId());
             
             // ⭐ EMPAREJAMIENTO: El equipo fijo juega contra el primero de los rotativos
             Equipo rival = equiposRotativos.get(0);
@@ -140,7 +140,7 @@ public class GeneradorCalendario {
         List<Jornada> ida = new ArrayList<>(temp.getListaJornadas());
         for (Jornada jIda : ida) {
             Jornada jVuelta = new Jornada("Vuelta - " + jIda.getNombre());
-            GestorLog.info("📅 Creando: " + jVuelta.getNombre() + " con ID: " + jVuelta.getId());
+            GestorLog.info(" Creando: " + jVuelta.getNombre() + " con ID: " + jVuelta.getId());
             
             for (Partido p : jIda.getListaPartidos()) {
                 jVuelta.agregarPartido(new Partido(p.getEquipoVisitante(), p.getEquipoLocal()));
@@ -149,7 +149,7 @@ public class GeneradorCalendario {
             temp.agregarJornada(jVuelta);
         }
 
-        GestorLog.exito("✅ Calendario generado: " + temp.getNombre() +
+        GestorLog.exito(" Calendario generado: " + temp.getNombre() +
                       " | Equipos participantes: " + participantes.size() +
                       " | Jornadas: " + temp.getListaJornadas().size() +
                       " | Partidos: " + partidosGenerados +

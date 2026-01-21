@@ -73,13 +73,13 @@ public class GestorArchivos {
             try (ObjectOutputStream oos = new ObjectOutputStream(
                     new FileOutputStream(ARCHIVO_DATOS))) {
                 oos.writeObject(datos);
-                System.out.println("💾 SISTEMA: Datos guardados correctamente en " + ARCHIVO_DATOS);
+                System.out.println(" SISTEMA: Datos guardados correctamente en " + ARCHIVO_DATOS);
                 GestorLog.info("Datos guardados en " + ARCHIVO_DATOS);
                 return true;
             }
             
         } catch (IOException e) {
-            System.err.println("❌ ERROR al guardar los datos: " + e.getMessage());
+            System.err.println(" ERROR al guardar los datos: " + e.getMessage());
             GestorLog.error("Error al guardar datos", e);
             e.printStackTrace();
             return false;
@@ -130,7 +130,7 @@ public class GestorArchivos {
         }
         
         if (escudosNormalizados > 0 || fotosNormalizadas > 0) {
-            System.out.println("🔧 URLs normalizadas: " + escudosNormalizados + 
+            System.out.println(" URLs normalizadas: " + escudosNormalizados + 
                              " escudos, " + fotosNormalizadas + " fotos");
         }
     }
@@ -156,7 +156,7 @@ public class GestorArchivos {
             if (!archivo.exists()) {
                 archivo = new File("imagenes/imagenes_Jugadores/" + archivo.getName());
                 if (!archivo.exists()) {
-                    System.err.println("⚠️ Archivo no encontrado: " + rutaOriginal);
+                    System.err.println(" Archivo no encontrado: " + rutaOriginal);
                     return "";
                 }
             }
@@ -180,7 +180,7 @@ public class GestorArchivos {
         File archivo = new File(ARCHIVO_DATOS);
         
         if (!archivo.exists()) {
-            System.out.println("→ No se encontró " + ARCHIVO_DATOS + ". Creando sistema nuevo...");
+            System.out.println(" No se encontró " + ARCHIVO_DATOS + ". Creando sistema nuevo...");
             GestorLog.info("Primera ejecución - Creando sistema nuevo");
             return inicializarDatosPorDefecto();
         }
@@ -189,7 +189,7 @@ public class GestorArchivos {
                 new FileInputStream(ARCHIVO_DATOS))) {
             
             DatosFederacion datos = (DatosFederacion) ois.readObject();
-            System.out.println("✓ Datos cargados correctamente desde " + ARCHIVO_DATOS);
+            System.out.println(" Datos cargados correctamente desde " + ARCHIVO_DATOS);
             GestorLog.info("Datos cargados desde " + ARCHIVO_DATOS);
             
             // ⭐ NORMALIZAR RUTAS AL CARGAR
@@ -201,7 +201,7 @@ public class GestorArchivos {
             return validarYCorregirDatos(datos);
             
         } catch (IOException | ClassNotFoundException e) {
-            System.err.println("✗ ERROR al cargar datos: " + e.getMessage());
+            System.err.println(" ERROR al cargar datos: " + e.getMessage());
             GestorLog.error("Error al cargar " + ARCHIVO_DATOS, e);
             System.out.println("→ Intentando recuperar desde backup...");
             
@@ -212,7 +212,7 @@ public class GestorArchivos {
                 return backup;
             }
             
-            System.out.println("⚠ No hay backups disponibles. Iniciando sistema limpio.");
+            System.out.println(" No hay backups disponibles. Iniciando sistema limpio.");
             GestorLog.advertencia("Sistema iniciado sin datos (archivo corrupto y sin backups)");
             return inicializarDatosPorDefecto();
         }
@@ -225,7 +225,7 @@ public class GestorArchivos {
     public static void sincronizarContadores(DatosFederacion datos) {
         if (datos == null) return;
         
-        System.out.println("\n🔄 Sincronizando contadores de IDs únicos...");
+        System.out.println("\n Sincronizando contadores de IDs únicos...");
         
         // Recolectar todas las entidades
         java.util.List<Jugador> todosJugadores = new java.util.ArrayList<>();
@@ -255,7 +255,7 @@ public class GestorArchivos {
         Jornada.sincronizarContadorGlobal(todasJornadas);
         Partido.sincronizarContadorGlobal(todosPartidos);
         
-        System.out.println("✅ Todos los contadores sincronizados correctamente");
+        System.out.println(" Todos los contadores sincronizados correctamente");
         System.out.println("   • Jugadores: " + todosJugadores.size());
         System.out.println("   • Equipos: " + todosEquipos.size());
         System.out.println("   • Jornadas: " + todasJornadas.size());
@@ -280,7 +280,7 @@ public class GestorArchivos {
             Files.copy(archivoActual.toPath(), rutaBackup, 
                     StandardCopyOption.REPLACE_EXISTING);
             
-            System.out.println("💾 Backup creado: " + nombreBackup);
+            System.out.println(" Backup creado: " + nombreBackup);
             GestorLog.info("Backup automático creado: " + nombreBackup);
             
             limpiarBackupsAntiguos();
@@ -305,7 +305,7 @@ public class GestorArchivos {
                     Long.compare(b.lastModified(), a.lastModified()));
             
             File backupMasReciente = backups[0];
-            System.out.println("📂 Restaurando desde: " + backupMasReciente.getName());
+            System.out.println(" Restaurando desde: " + backupMasReciente.getName());
             GestorLog.info("Restaurando desde backup: " + backupMasReciente.getName());
             
             try (ObjectInputStream ois = new ObjectInputStream(
@@ -314,7 +314,7 @@ public class GestorArchivos {
             }
             
         } catch (Exception e) {
-            System.err.println("❌ Error al restaurar backup: " + e.getMessage());
+            System.err.println(" Error al restaurar backup: " + e.getMessage());
             GestorLog.error("Error al restaurar backup", e);
             return null;
         }
@@ -333,13 +333,13 @@ public class GestorArchivos {
             
             for (int i = 5; i < backups.length; i++) {
                 if (backups[i].delete()) {
-                    System.out.println("🗑️ Backup antiguo eliminado: " + backups[i].getName());
+                    System.out.println(" Backup antiguo eliminado: " + backups[i].getName());
                     GestorLog.debug("Backup antiguo eliminado: " + backups[i].getName());
                 }
             }
             
         } catch (Exception e) {
-            System.err.println("⚠️ Error al limpiar backups: " + e.getMessage());
+            System.err.println(" Error al limpiar backups: " + e.getMessage());
         }
     }
     
@@ -371,7 +371,7 @@ public class GestorArchivos {
             return "./imagenes/imagenes_Logos/" + nombreNormalizado;
             
         } catch (IOException e) {
-            System.err.println("❌ Error al copiar escudo: " + e.getMessage());
+            System.err.println(" Error al copiar escudo: " + e.getMessage());
             GestorLog.error("Error al copiar escudo de " + nombreEquipo, e);
             return null;
         }
@@ -406,7 +406,7 @@ public class GestorArchivos {
             return "./imagenes/imagenes_Jugadores/" + nombreNormalizado;
             
         } catch (IOException e) {
-            System.err.println("❌ Error al copiar foto: " + e.getMessage());
+            System.err.println(" Error al copiar foto: " + e.getMessage());
             GestorLog.error("Error al copiar foto de " + nombreJugador, e);
             return null;
         }

@@ -406,7 +406,12 @@ public class PanelGestionJugadoresEquipo extends JDialog {
      * Renderer personalizado para mostrar jugadores con más información
      */
     private class JugadorRenderer extends DefaultListCellRenderer {
-        @Override
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		@Override
         public Component getListCellRendererComponent(JList<?> list, Object value,
                                                       int index, boolean isSelected, boolean cellHasFocus) {
             JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);

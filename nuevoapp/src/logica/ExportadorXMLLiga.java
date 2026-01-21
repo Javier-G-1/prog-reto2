@@ -18,8 +18,18 @@ public class ExportadorXMLLiga {
     private static final String ARCHIVO_XML = "ligaBalonmano.xml";
     private File carpetaImagenes;
     
+    // ⭐ NUEVA VARIABLE: Controla si ya se preguntó por reemplazar
+    private Boolean reemplazarTodas = null;
+    
     public ExportadorXMLLiga(DatosFederacion datos) {
         this.datosFederacion = datos;
+    }
+    
+    /**
+     * Reinicia el estado de confirmación para exportaciones múltiples
+     */
+    public void reiniciarConfirmacion() {
+        this.reemplazarTodas = null;
     }
     
     /**
@@ -37,7 +47,7 @@ public class ExportadorXMLLiga {
             carpetaLogos.mkdirs();
             carpetaJugadores.mkdirs();
             
-            GestorLog.info(" Carpetas de imágenes verificadas");
+            GestorLog.info("📁 Carpetas de imágenes verificadas");
             
             // Leer XML existente o crear estructura base
             File archivoXML = new File(ARCHIVO_XML);
@@ -49,15 +59,22 @@ public class ExportadorXMLLiga {
                 // Verificar si la temporada ya existe
                 String idTemporada = generarIdTemporada(temporada.getNombre());
                 if (contenido.contains("id=\"" + idTemporada + "\"")) {
-                    int respuesta = JOptionPane.showConfirmDialog(null,
-                        " La temporada '" + temporada.getNombre() + "' ya existe en ligaBalonmano.xml\n\n" +
-                        "¿Desea reemplazarla?",
-                        "Temporada existente",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.WARNING_MESSAGE);
                     
-                    if (respuesta != JOptionPane.YES_OPTION) {
-                        GestorLog.info("Exportación cancelada");
+                    // ⭐ NUEVA LÓGICA: Solo preguntar si no se ha decidido antes
+                    if (reemplazarTodas == null) {
+                        int respuesta = JOptionPane.showConfirmDialog(null,
+                            "⚠️ Una o más temporadas ya existen en ligaBalonmano.xml\n\n" +
+                            "¿Desea reemplazar todas las temporadas existentes?",
+                            "Temporadas existentes",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.WARNING_MESSAGE);
+                        
+                        reemplazarTodas = (respuesta == JOptionPane.YES_OPTION);
+                    }
+                    
+                    // Si el usuario dijo NO, cancelar esta exportación
+                    if (!reemplazarTodas) {
+                        GestorLog.info(" Saltando temporada: " + temporada.getNombre());
                         return false;
                     }
                     
@@ -74,7 +91,7 @@ public class ExportadorXMLLiga {
                 
             } else {
                 xmlExistente = crearEstructuraBase();
-                GestorLog.info("Creando nuevo archivo ligaBalonmano.xml");
+                GestorLog.info("📄 Creando nuevo archivo ligaBalonmano.xml");
             }
             
             // Agregar nueva temporada
@@ -90,17 +107,11 @@ public class ExportadorXMLLiga {
             }
             
             GestorLog.exito("✅ Temporada exportada: " + temporada.getNombre());
-            JOptionPane.showMessageDialog(null,
-                " Temporada exportada exitosamente\n\n" +
-                " Archivo: " + ARCHIVO_XML + "\n" +
-                " Temporada: " + temporada.getNombre(),
-                "Exportación exitosa",
-                JOptionPane.INFORMATION_MESSAGE);
             
             return true;
             
         } catch (IOException e) {
-            GestorLog.error(" Error al exportar: " + e.getMessage());
+            GestorLog.error("❌ Error al exportar: " + e.getMessage());
             JOptionPane.showMessageDialog(null,
                 " Error: " + e.getMessage(),
                 "Error de exportación",
@@ -150,18 +161,15 @@ public class ExportadorXMLLiga {
             String antes = contenido.substring(0, posInicio);
             String despues = contenido.substring(posActual);
             
-            GestorLog.info("Temporada existente eliminada del XML");
+            GestorLog.info("🗑️ Temporada existente eliminada del XML");
             return antes + despues;
             
         } catch (Exception e) {
-            GestorLog.error("Error al eliminar temporada: " + e.getMessage());
+            GestorLog.error("❌ Error al eliminar temporada: " + e.getMessage());
             return contenido;
         }
     }
     
-    /**
-     * Exporta una temporada completa al XML
-     */
     /**
      * Exporta una temporada completa al XML
      */
@@ -217,20 +225,9 @@ public class ExportadorXMLLiga {
         // Exportar jugadores
         xml.append("                    <jugadores>\n");
         
-        // 🔍 DEBUG: Contar jugadores con foto
-        int totalJugadores = equipo.getPlantilla().size();
-        int jugadoresConFoto = 0;
-        
         for (Jugador jugador : equipo.getPlantilla()) {
-            if (jugador.getFotoURL() != null && !jugador.getFotoURL().isEmpty()) {
-                jugadoresConFoto++;
-            }
             exportarJugador(xml, jugador, idEquipo, equipo.getNombre());
         }
-        
-        // 🔍 LOG de diagnóstico
-        GestorLog.info("📊 Equipo: " + equipo.getNombre() + " | Total: " + totalJugadores + 
-                      " | Con foto: " + jugadoresConFoto + " | Sin foto: " + (totalJugadores - jugadoresConFoto));
         
         xml.append("                    </jugadores>\n");
         
@@ -256,17 +253,8 @@ public class ExportadorXMLLiga {
         xml.append("                            <dorsal>").append(jugador.getDorsal()).append("</dorsal>\n");
         xml.append("                            <posicion>").append(escaparXML(jugador.getPosicion())).append("</posicion>\n");
         
-        // 🔍 DEBUG: Mostrar ruta original del jugador
-        String rutaOriginal = jugador.getFotoURL();
-        GestorLog.info("🖼️ Procesando foto de: " + jugador.getNombre() + 
-                      " | Ruta original: " + (rutaOriginal != null ? rutaOriginal : "NULL"));
-        
         // Foto
         String fotoUrl = copiarFotoJugador(jugador, nombreEquipo);
-        
-        // 🔍 DEBUG: Mostrar resultado final
-        GestorLog.info("   ↳ URL en XML: " + (fotoUrl.isEmpty() ? "VACÍO" : fotoUrl));
-        
         xml.append("                            <foto url=\"").append(escaparXML(fotoUrl)).append("\" />\n");
         
         xml.append("                        </jugador>\n");
@@ -279,7 +267,6 @@ public class ExportadorXMLLiga {
         String rutaOrigen = equipo.getRutaEscudo();
         
         if (rutaOrigen == null || rutaOrigen.isEmpty()) {
-            GestorLog.advertencia("⚠️ Escudo vacío para: " + equipo.getNombre());
             return "";
         }
         
@@ -287,7 +274,6 @@ public class ExportadorXMLLiga {
             File archivoOrigen = new File(rutaOrigen);
             
             if (!archivoOrigen.exists()) {
-                GestorLog.advertencia("❌ Escudo no encontrado: " + rutaOrigen);
                 return "";
             }
             
@@ -299,7 +285,6 @@ public class ExportadorXMLLiga {
             
             Files.copy(archivoOrigen.toPath(), archivoDestino.toPath(), StandardCopyOption.REPLACE_EXISTING);
             
-            GestorLog.info("✅ Escudo copiado: " + equipo.getNombre() + " → " + nombreNormalizado);
             return "./imagenes/imagenes_Logos/" + nombreNormalizado;
             
         } catch (IOException e) {
@@ -314,22 +299,18 @@ public class ExportadorXMLLiga {
     private String copiarFotoJugador(Jugador jugador, String nombreEquipo) {
         String rutaOrigen = jugador.getFotoURL();
         
-        // 🔍 VALIDACIÓN DETALLADA
         if (rutaOrigen == null || rutaOrigen.isEmpty()) {
-            GestorLog.advertencia("⚠️ Jugador sin foto: " + jugador.getNombre());
-            return ""; // Retorna vacío si no hay foto
+            return "";
         }
         
         try {
             File archivoOrigen = new File(rutaOrigen);
             
             if (!archivoOrigen.exists()) {
-                GestorLog.advertencia("❌ Archivo de foto no encontrado: " + rutaOrigen + " | Jugador: " + jugador.getNombre());
                 return "";
             }
             
             String extension = obtenerExtension(archivoOrigen.getName());
-            // ⭐ CORRECCIÓN: Sin espacios escapados en el nombre del archivo
             String nombreArchivo = normalizarNombre(jugador.getNombre()) + extension;
             
             File carpetaJugadores = new File(carpetaImagenes, "imagenes_Jugadores");
@@ -337,15 +318,10 @@ public class ExportadorXMLLiga {
             
             Files.copy(archivoOrigen.toPath(), archivoDestino.toPath(), StandardCopyOption.REPLACE_EXISTING);
             
-            String urlFinal = "./imagenes/imagenes_Jugadores/" + nombreArchivo;
-            
-            GestorLog.info("✅ Foto copiada: " + jugador.getNombre() + " → " + urlFinal);
-            
-            return urlFinal;
+            return "./imagenes/imagenes_Jugadores/" + nombreArchivo;
             
         } catch (IOException e) {
-            GestorLog.error("❌ Error al copiar foto de " + jugador.getNombre() + ": " + e.getMessage());
-            e.printStackTrace();
+            GestorLog.error("❌ Error al copiar foto: " + e.getMessage());
             return "";
         }
     }

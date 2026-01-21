@@ -5,7 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
-import java.util.ArrayList;
+
 import java.util.List;
 import gestion.*;
 import logica.GestorLog;

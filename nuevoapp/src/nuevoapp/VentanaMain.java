@@ -9,10 +9,9 @@ import gestion.Partido;
 import logica.GeneradorCalendario;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
+
 import gestion.*;
 import logica.*;
-import logica.CalculadoraClasificacion;
 import gestion.Equipo;
 import gestion.Jornada;
 import java.awt.event.WindowEvent;
@@ -245,8 +244,6 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
 
     // OTROS COMPONENTES 
     
-    /** Modelo de datos para tablas (si se utiliza) */
-    private DefaultTableModel modeloTabla;
     
     /** Timer para autoguardado periódico de datos */
     private javax.swing.Timer autoSaveTimer;
@@ -515,13 +512,22 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
             boolean exportacionExitosa = false;
             String ultimaTemporada = null;
             
-            // ⭐ USAR EL NUEVO EXPORTADOR
+            // ⭐ CREAR EL EXPORTADOR
             ExportadorXMLLiga exportador = new ExportadorXMLLiga(datosFederacion);
 
             if (eleccion == 0 && temporadaActual != null) {
                 // Exportar temporada actual visible
                 exportacionExitosa = exportador.exportarTemporada(temporadaActual);
                 ultimaTemporada = temporadaActual.getNombre();
+                
+                if (exportacionExitosa) {
+                    JOptionPane.showMessageDialog(this,
+                        "✅ Temporada exportada exitosamente\n\n" +
+                        "📄 Archivo: ligaBalonmano.xml\n" +
+                        "📅 Temporada: " + temporadaActual.getNombre(),
+                        "Exportación exitosa",
+                        JOptionPane.INFORMATION_MESSAGE);
+                }
                 
             } else if (eleccion == (temporadaActual != null ? 1 : 0)) {
                 // Seleccionar temporada específica
@@ -530,10 +536,22 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 if (temporadaSeleccionada != null) {
                     exportacionExitosa = exportador.exportarTemporada(temporadaSeleccionada);
                     ultimaTemporada = temporadaSeleccionada.getNombre();
+                    
+                    if (exportacionExitosa) {
+                        JOptionPane.showMessageDialog(this,
+                            "✅ Temporada exportada exitosamente\n\n" +
+                            "📄 Archivo: ligaBalonmano.xml\n" +
+                            "📅 Temporada: " + temporadaSeleccionada.getNombre(),
+                            "Exportación exitosa",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    }
                 }
                 
             } else {
-                // Exportar todas las temporadas
+                // ⭐ EXPORTAR TODAS LAS TEMPORADAS
+                // Reiniciar el estado de confirmación antes de exportar múltiples
+                exportador.reiniciarConfirmacion();
+                
                 int temporadasExportadas = 0;
                 int temporadasFallidas = 0;
                 
@@ -550,9 +568,9 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 exportacionExitosa = (temporadasExportadas > 0);
                 
                 String mensaje = " Exportación masiva completada\n\n" +
-                                "Temporadas exportadas: " + temporadasExportadas + "\n" +
-                                "Fallidas: " + temporadasFallidas + "\n" +
-                                "Archivo: ligaBalonmano.xml";
+                                " Temporadas exportadas: " + temporadasExportadas + "\n" +
+                                " Fallidas: " + temporadasFallidas + "\n" +
+                                " Archivo: ligaBalonmano.xml";
                 
                 JOptionPane.showMessageDialog(this, 
                     mensaje,
@@ -572,7 +590,6 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 }
             }
         });
-        
         
         
         btnExportar.setMaximumSize(new Dimension(2147483647, 40));
@@ -2474,73 +2491,6 @@ private JPanel crearTarjetaPartido(Partido p) {
     }
 
     
-    
-    
-
-    /**
-     * Crea un diálogo para añadir un nuevo partido manualmente.
-     * 
-     * <p>El diálogo permite:</p>
-     * <ul>
-     *   <li>Seleccionar equipo local</li>
-     *   <li>Seleccionar equipo visitante</li>
-     *   <li>Validar que no sea el mismo equipo</li>
-     *   <li>Agregar el partido a la jornada seleccionada</li>
-     * </ul>
-     * 
-     * @see Partido
-     * @see Jornada#agregarPartido(Partido)
-     * @see #actualizarVistaPartidos()
-     */
-    private void crearDialogoNuevoPartido() {
-        Temporada tSel = obtenerTemporadaSeleccionada();
-
-        if (tSel == null || tSel.getEquiposParticipantes().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Esta temporada no tiene equipos inscritos.");
-            return;
-        }
-
-        String jorNom = (String) comboJornadasPartidos.getSelectedItem();
-        JComboBox<String> comboLocal = new JComboBox<>();
-        JComboBox<String> comboVisitante = new JComboBox<>();
-
-        for (Equipo eq : tSel.getEquiposParticipantes()) {
-            comboLocal.addItem(eq.getNombre());
-            comboVisitante.addItem(eq.getNombre());
-        }
-
-        JPanel panelDialogo = new JPanel(new GridLayout(0, 1, 5, 5));
-        panelDialogo.add(new JLabel("Selecciona Equipo Local:"));
-        panelDialogo.add(comboLocal);
-        panelDialogo.add(new JLabel("Selecciona Equipo Visitante:"));
-        panelDialogo.add(comboVisitante);
-
-        int result = JOptionPane.showConfirmDialog(this, panelDialogo, 
-                "Nuevo Partido - " + jorNom, JOptionPane.OK_CANCEL_OPTION);
-
-        if (result == JOptionPane.OK_OPTION) {
-            String localNom = (String) comboLocal.getSelectedItem();
-            String visitNom = (String) comboVisitante.getSelectedItem();
-
-            if (localNom.equals(visitNom)) {
-                JOptionPane.showMessageDialog(this, "Un equipo no puede jugar contra sí mismo.");
-                return;
-            }
-
-            Equipo local = tSel.buscarEquipoPorNombre(localNom);
-            Equipo visitante = tSel.buscarEquipoPorNombre(visitNom);
-
-            for (Jornada j : tSel.getListaJornadas()) {
-                if (j.getNombre().equals(jorNom)) {
-                    j.agregarPartido(new Partido(local, visitante));
-                    GestorLog.exito("Partido creado manualmente: " + localNom + " vs " + visitNom + 
-                                  " | Jornada: " + jorNom + " | Temporada: " + tSel.getNombre());
-                    actualizarVistaPartidos();
-                    break;
-                }
-            }
-        }
-    }
 
     /**
      * Ejecuta el proceso de inscripción de un equipo existente en una temporada.
@@ -2660,54 +2610,6 @@ private JPanel crearTarjetaPartido(Partido p) {
         return datosFederacion.buscarTemporadaPorNombre(nombreSeleccionado);
     }
 
-    /**
-     * Actualiza la tabla gráfica de clasificación con los datos actuales.
-     * 
-     * <p>Este método:</p>
-     * <ul>
-     *   <li>Calcula la clasificación usando CalculadoraClasificacion</li>
-     *   <li>Limpia la tabla actual</li>
-     *   <li>Rellena con las filas de clasificación ordenadas</li>
-     *   <li>Maneja errores si la temporada es nula</li>
-     * </ul>
-     * 
-     * @see CalculadoraClasificacion#calcular(Temporada)
-     * @see Clasificacion#getFilas()
-     * @see FilaClasificacion
-     */
-    private void actualizarTablaClasificacionGrafica() {
-        Temporada temp = obtenerTemporadaSeleccionada();
-        
-        if (temp == null || modeloTabla == null) return;
-
-        modeloTabla.setRowCount(0);
-
-        try {
-            Clasificacion clasificacion = CalculadoraClasificacion.calcular(temp);
-            java.util.List<FilaClasificacion> ranking = clasificacion.getFilas();
-
-            for (FilaClasificacion fila : ranking) {
-                Object[] datosFila = {
-                    fila.getPosicion(),     
-                    fila.getEquipo(),        
-                    fila.getPuntos(),        
-                    fila.getPj(),
-                    fila.getPg(),
-                    fila.getPe(),
-                    fila.getPp(),
-                    fila.getGf(),
-                    fila.getGc(),
-                    fila.getDifFormateada()
-                };
-                modeloTabla.addRow(datosFila);
-            }
-        } catch (IllegalArgumentException ex) {
-            System.err.println("Aviso: " + ex.getMessage());
-        } catch (Exception e) {
-            System.err.println("Error al actualizar la tabla: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
 
     /**
      * Actualiza la vista de equipos mostrando los equipos de la temporada seleccionada.
@@ -3334,42 +3236,6 @@ private JPanel crearTarjetaPartido(Partido p) {
     
     }
 
-    /**
-     * Activa o desactiva todos los componentes de administración de la interfaz.
-     * 
-     * <p><b>Uso exclusivo para ADMINISTRADOR.</b></p>
-     * 
-     * <p>Componentes controlados:</p>
-     * <ul>
-     *   <li>Navegación básica</li>
-     *   <li>Paneles y botones de administración de partidos</li>
-     *   <li>Botones de gestión de equipos</li>
-     *   <li>Botones de gestión de jugadores</li>
-     * </ul>
-     * 
-     * @param estado true para mostrar todos los componentes, false para ocultarlos
-     * 
-     * @see #despuesDelLogin(Rol, String)
-     * @see Rol#ADMINISTRADOR
-     */
-    private void mostrarTodo(boolean estado) {
-        habilitarNavegacionBasica();
-        
-        // Paneles y botones de administración
-        panelAdminPartidos_1.setVisible(estado);
-    
-        btnNuevaJor.setVisible(estado);
-
-        
-        // Botones de equipos
-        btnAgregarEquipo.setVisible(estado);
-        btnInscribirEquipo.setVisible(estado);
-        
-        // Botones de jugadores
-        btnAgregarJugador.setVisible(estado);
-        btnCambiarEquipo.setVisible(estado);
-        btnVerFoto.setVisible(estado);
-    }
     
     /**
      * Obtiene la temporada actualmente visible en la interfaz según el panel activo.
