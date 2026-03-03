@@ -20,7 +20,7 @@ public class SincronizadorWeb {
     private static final String RUTA_WEB_XML = RUTA_WEB_BASE + "xml/data/";
     private static final String RUTA_WEB_IMAGENES = RUTA_WEB_BASE + "imagenes/";
     
-    private static final String ARCHIVO_XML_ORIGEN = "ligaBalonmano.xml";
+    private static final String ARCHIVO_XML_ORIGEN = "ligaWaterpolo.xml";
     private static final String CARPETA_IMAGENES_ORIGEN = "imagenes/";
     
     /**

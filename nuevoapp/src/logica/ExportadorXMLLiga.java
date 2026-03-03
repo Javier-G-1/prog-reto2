@@ -8,14 +8,14 @@ import java.nio.file.StandardCopyOption;
 import javax.swing.JOptionPane;
 
 /**
- * EXPORTADOR XML adaptado al formato ligaBalonmano.xml
+ * EXPORTADOR XML adaptado al formato ligaWaterpolo.xml
  * 
  * Estructura exacta del XML de referencia con IDs únicos persistentes.
  */
 public class ExportadorXMLLiga {
     
     private DatosFederacion datosFederacion;
-    private static final String ARCHIVO_XML = "ligaBalonmano.xml";
+    private static final String ARCHIVO_XML = "ligaWaterpolo.xml";
     private File carpetaImagenes;
     
     // ⭐ NUEVA VARIABLE: Controla si ya se preguntó por reemplazar
@@ -33,7 +33,7 @@ public class ExportadorXMLLiga {
     }
     
     /**
-     * Exporta una temporada al archivo ligaBalonmano.xml
+     * Exporta una temporada al archivo ligaWaterpolo.xml
      * @param temporada La temporada a exportar
      * @return true si la exportación fue exitosa
      */
@@ -63,7 +63,7 @@ public class ExportadorXMLLiga {
                     // ⭐ NUEVA LÓGICA: Solo preguntar si no se ha decidido antes
                     if (reemplazarTodas == null) {
                         int respuesta = JOptionPane.showConfirmDialog(null,
-                            "⚠️ Una o más temporadas ya existen en ligaBalonmano.xml\n\n" +
+                            "⚠️ Una o más temporadas ya existen en ligaWaterpolo.xml\n\n" +
                             "¿Desea reemplazar todas las temporadas existentes?",
                             "Temporadas existentes",
                             JOptionPane.YES_NO_OPTION,
@@ -91,7 +91,7 @@ public class ExportadorXMLLiga {
                 
             } else {
                 xmlExistente = crearEstructuraBase();
-                GestorLog.info("📄 Creando nuevo archivo ligaBalonmano.xml");
+                GestorLog.info("📄 Creando nuevo archivo ligaWaterpolo.xml");
             }
             
             // Agregar nueva temporada
@@ -99,7 +99,7 @@ public class ExportadorXMLLiga {
             
             // Cerrar tags
             xmlExistente.append("    </temporadas>\n");
-            xmlExistente.append("</federacionBalonmano>");
+            xmlExistente.append("</federacionWaterpolo>");
             
             // Escribir archivo
             try (FileWriter writer = new FileWriter(archivoXML)) {
@@ -126,7 +126,7 @@ public class ExportadorXMLLiga {
     private StringBuilder crearEstructuraBase() {
         StringBuilder xml = new StringBuilder();
         xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        xml.append("<federacionBalonmano xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n");
+        xml.append("<federacionWaterpolo xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n");
         xml.append("    xsi:noNamespaceSchemaLocation=\"general.xsd\">\n\n");
         xml.append("    <temporadas>\n");
         return xml;

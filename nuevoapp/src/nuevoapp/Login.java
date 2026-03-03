@@ -52,7 +52,7 @@ public class Login extends JFrame implements ActionListener, FocusListener {
         setResizable(false);
         ImageIcon icono = new ImageIcon(getClass().getResource("/assets/icono.png"));
         setIconImage(icono.getImage());
-        setTitle("Real Federación Española de Balonmano");
+        setTitle("Real Federación Española de Waterpolo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(800, 150, 616, 480); 
         
@@ -62,7 +62,7 @@ public class Login extends JFrame implements ActionListener, FocusListener {
         setContentPane(contentPane);
 
         logoPanel = new JPanel();
-        logoPanel.setBackground(new Color(0, 0, 64)); 
+        logoPanel.setBackground(vista.Paleta.PRIMARIO);
         contentPane.add(logoPanel, BorderLayout.NORTH);
         
         lblLogo = new JLabel();
@@ -70,13 +70,13 @@ public class Login extends JFrame implements ActionListener, FocusListener {
             lblLogo.setIcon(new ImageIcon(new ImageIcon(Login.class.getResource("/assets/icono.png"))
                     .getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
         } catch (Exception e) {
-            lblLogo.setText("LOGO BALONMANO");
+            lblLogo.setText("LOGO WATERPOLO");
             lblLogo.setForeground(Color.WHITE);
         }
         logoPanel.add(lblLogo);
 
         panelSesion = new JPanel();
-        panelSesion.setBackground(new Color(0, 0, 51)); 
+        panelSesion.setBackground(vista.Paleta.NEUTRO3);
         panelSesion.setLayout(new BoxLayout(panelSesion, BoxLayout.Y_AXIS));
         contentPane.add(panelSesion, BorderLayout.CENTER);
 

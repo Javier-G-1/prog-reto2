@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import gestion.Jugador;
+import vista.Paleta;
 
 /**
  * DIÁLOGO MODAL para editar los datos de un jugador existente.
@@ -63,7 +64,7 @@ public class DialogoEditarJugador extends JDialog {
 
         JPanel panelCampos = new JPanel(new GridLayout(7, 2, 10, 15));
         panelCampos.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
-        panelCampos.setBackground(new Color(30, 34, 41));
+        panelCampos.setBackground(Paleta.NEUTRO3);
 
         // Campos de texto y spinners
         txtNombre = crearCampoTexto("Nombre:", jugador.getNombre(), panelCampos);
@@ -78,7 +79,7 @@ public class DialogoEditarJugador extends JDialog {
 
         // Botones
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
-        panelBotones.setBackground(new Color(30, 34, 41));
+        panelBotones.setBackground(Paleta.NEUTRO3);
 
         JButton btnCancelar = crearBotonCancelar();
         JButton btnGuardar = crearBotonGuardar();
@@ -96,7 +97,7 @@ public class DialogoEditarJugador extends JDialog {
         );
         getRootPane().setDefaultButton(btnGuardar);
 
-        getContentPane().setBackground(new Color(30, 34, 41));
+        getContentPane().setBackground(Paleta.NEUTRO3);
     }
 
     private JLabel crearLabel(String texto) {
@@ -148,7 +149,7 @@ public class DialogoEditarJugador extends JDialog {
     private JButton crearBotonCancelar() {
         JButton btn = new JButton("Cancelar");
         btn.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        btn.setBackground(new Color(140, 45, 45));
+        btn.setBackground(Paleta.ACENTO);
         btn.setForeground(Color.WHITE);
         btn.setFocusPainted(false);
         btn.setBorderPainted(false);
@@ -160,7 +161,7 @@ public class DialogoEditarJugador extends JDialog {
     private JButton crearBotonGuardar() {
         JButton btn = new JButton("Guardar Cambios");
         btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btn.setBackground(new Color(45, 55, 140));
+        btn.setBackground(Paleta.SECUNDARIO);
         btn.setForeground(Color.WHITE);
         btn.setFocusPainted(false);
         btn.setBorderPainted(false);

@@ -21,7 +21,7 @@ import gestion.Temporada;
 import logica.ExportadorXMLLiga;
 
 /**
- * Ventana principal de la aplicación de gestión de la Federación de Balonmano.
+ * Ventana principal de la aplicación de gestión de la Federación de Waterpolo.
  * <p>
  * Esta clase representa la interfaz gráfica principal del sistema, permitiendo
  * la gestión completa de temporadas, equipos, jugadores, partidos y clasificaciones.
@@ -88,7 +88,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
     /** Etiqueta del título principal "FEDERACIÓN" */
     private JLabel lblTitulo;
     
-    /** Etiqueta del subtítulo "BALONMANO" */
+    /** Etiqueta del subtítulo "WATERPOLO" */
     private JLabel lblSubtitulo;
     
     /** Etiqueta "Bienvenid@" en el menú */
@@ -326,7 +326,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         
         ImageIcon icono = new ImageIcon(getClass().getResource("/assets/icono.png"));
         setIconImage(icono.getImage());
-        setTitle("Federación de Balonmano");
+        setTitle("Federación de Waterpolo");
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
         setBounds(100, 100, 1685, 846);
@@ -338,13 +338,13 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
 
         // ===== PANEL MENU =====
         panelMenu = new JPanel();
-        panelMenu.setBackground(new Color(30, 30, 30));
+        panelMenu.setBackground(vista.Paleta.NEUTRO3);
         panelMenu.setPreferredSize(new Dimension(250, 0));
         panelMenu.setLayout(new BorderLayout());
         contentPane.add(panelMenu, BorderLayout.WEST);
 
         JPanel panelArriba = new JPanel();
-        panelArriba.setBackground(new Color(30, 30, 30));
+        panelArriba.setBackground(vista.Paleta.NEUTRO3);
         panelArriba.setLayout(new BoxLayout(panelArriba, BoxLayout.Y_AXIS));
         panelMenu.add(panelArriba, BorderLayout.NORTH);
 
@@ -354,9 +354,9 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelArriba.add(lblTitulo);
 
-        lblSubtitulo = new JLabel("BALONMANO");
+        lblSubtitulo = new JLabel("WATERPOLO");
         lblSubtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblSubtitulo.setForeground(new Color(45, 55, 140));
+        lblSubtitulo.setForeground(vista.Paleta.PRIMARIO);
         lblSubtitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelArriba.add(lblSubtitulo);
 
@@ -495,7 +495,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
             
             int eleccion = JOptionPane.showOptionDialog(
                 this,
-                "¿Qué deseas exportar a ligaBalonmano.xml?",
+                "¿Qué deseas exportar a ligaWaterpolo.xml?",
                 "Exportar datos",
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
@@ -523,7 +523,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 if (exportacionExitosa) {
                     JOptionPane.showMessageDialog(this,
                         "✅ Temporada exportada exitosamente\n\n" +
-                        "📄 Archivo: ligaBalonmano.xml\n" +
+                        "📄 Archivo: ligaWaterpolo.xml\n" +
                         "📅 Temporada: " + temporadaActual.getNombre(),
                         "Exportación exitosa",
                         JOptionPane.INFORMATION_MESSAGE);
@@ -540,7 +540,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                     if (exportacionExitosa) {
                         JOptionPane.showMessageDialog(this,
                             "✅ Temporada exportada exitosamente\n\n" +
-                            "📄 Archivo: ligaBalonmano.xml\n" +
+                            "📄 Archivo: ligaWaterpolo.xml\n" +
                             "📅 Temporada: " + temporadaSeleccionada.getNombre(),
                             "Exportación exitosa",
                             JOptionPane.INFORMATION_MESSAGE);
@@ -570,7 +570,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 String mensaje = " Exportación masiva completada\n\n" +
                                 " Temporadas exportadas: " + temporadasExportadas + "\n" +
                                 " Fallidas: " + temporadasFallidas + "\n" +
-                                " Archivo: ligaBalonmano.xml";
+                                " Archivo: ligaWaterpolo.xml";
                 
                 JOptionPane.showMessageDialog(this, 
                     mensaje,
