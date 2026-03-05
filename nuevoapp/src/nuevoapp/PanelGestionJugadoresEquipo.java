@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.List;
 import gestion.*;
 import logica.*;
+import vista.Paleta;
 
 /**
  * Panel para gestionar jugadores del equipo y fichar nuevos jugadores.
@@ -52,7 +53,7 @@ public class PanelGestionJugadoresEquipo extends JDialog {
     private void mostrarMensajeRestringido() {
         // Crear panel informativo
         JPanel panelInfo = new JPanel(new BorderLayout(10, 10));
-        panelInfo.setBackground(new Color(20, 24, 31));
+        panelInfo.setBackground(Paleta.PRIMARIO);
         panelInfo.setBorder(new EmptyBorder(30, 30, 30, 30));
         
         // Icono y mensaje principal
@@ -69,7 +70,7 @@ public class PanelGestionJugadoresEquipo extends JDialog {
         
         JLabel lblTitulo = new JLabel("Gestión de Plantilla Restringida");
         lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        lblTitulo.setForeground(new Color(231, 76, 60));
+        lblTitulo.setForeground(Paleta.ACENTO);
         lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelMensaje.add(lblTitulo);
         

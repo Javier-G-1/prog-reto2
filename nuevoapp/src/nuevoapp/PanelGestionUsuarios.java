@@ -10,6 +10,7 @@ import java.util.List;
 import gestion.*;
 import logica.GestorLog;
 import logica.GestorArchivos;
+import vista.Paleta;
 
 /**
  * PanelGestionUsuarios - Panel completo de administración de usuarios.
@@ -48,7 +49,7 @@ public class PanelGestionUsuarios extends JPanel {
         this.datosFederacion = datos;
         
         setLayout(new BorderLayout(10, 10));
-        setBackground(new Color(20, 24, 31));
+        setBackground(Paleta.PRIMARIO);
         setBorder(new EmptyBorder(20, 20, 20, 20));
         
         inicializarUsuariosPredeterminados();
@@ -88,11 +89,11 @@ public class PanelGestionUsuarios extends JPanel {
         
         lblTotalUsuarios = new JLabel();
         lblTotalUsuarios.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblTotalUsuarios.setForeground(new Color(180, 180, 180));
-        
+        lblTotalUsuarios.setForeground(Paleta.ACENTO);
+
         btnRefrescar = new JButton("🔄 Refrescar");
         btnRefrescar.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        btnRefrescar.setBackground(new Color(52, 152, 219));
+        btnRefrescar.setBackground(Paleta.NEUTRO1);
         btnRefrescar.setForeground(Color.WHITE);
         btnRefrescar.setFocusPainted(false);
         btnRefrescar.setBorderPainted(false);
@@ -115,15 +116,15 @@ public class PanelGestionUsuarios extends JPanel {
         };
         
         tablaUsuarios = new JTable(modeloTabla);
-        tablaUsuarios.setBackground(new Color(30, 34, 41));
+        tablaUsuarios.setBackground(Paleta.NEUTRO2);
         tablaUsuarios.setForeground(Color.WHITE);
         tablaUsuarios.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         tablaUsuarios.setRowHeight(35);
         tablaUsuarios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tablaUsuarios.setGridColor(new Color(60, 60, 80));
-        
+        tablaUsuarios.setGridColor(Paleta.NEUTRO1);
+
         JTableHeader header = tablaUsuarios.getTableHeader();
-        header.setBackground(new Color(45, 55, 140));
+        header.setBackground(Paleta.NEUTRO3);
         header.setForeground(Color.WHITE);
         header.setFont(new Font("Segoe UI", Font.BOLD, 14));
         
@@ -136,20 +137,19 @@ public class PanelGestionUsuarios extends JPanel {
                 
                 if (!isSelected) {
                     String rol = (String) table.getValueAt(row, 2);
-                    
                     if (rol.equals("Administrador")) {
-                        c.setBackground(new Color(52, 73, 94));
+                        c.setBackground(Paleta.NEUTRO3);
                     } else if (rol.equals("Manager")) {
-                        c.setBackground(new Color(41, 128, 185));
+                        c.setBackground(Paleta.PRIMARIO.darker());
                     } else if (rol.equals("Árbitro")) {
-                        c.setBackground(new Color(243, 156, 18));
+                        c.setBackground(Paleta.SECUNDARIO.darker());
                     } else if (rol.equals("Invitado")) {
-                        c.setBackground(new Color(149, 165, 166));
+                        c.setBackground(Paleta.NEUTRO1);
                     } else {
-                        c.setBackground(new Color(30, 34, 41));
+                        c.setBackground(Paleta.NEUTRO2);
                     }
                 } else {
-                    c.setBackground(new Color(45, 55, 140));
+                    c.setBackground(Paleta.PRIMARIO.darker());
                 }
                 
                 c.setForeground(Color.WHITE);
@@ -160,18 +160,18 @@ public class PanelGestionUsuarios extends JPanel {
         });
         
         JScrollPane scrollTabla = new JScrollPane(tablaUsuarios);
-        scrollTabla.setBackground(new Color(30, 34, 41));
-        scrollTabla.getViewport().setBackground(new Color(30, 34, 41));
+        scrollTabla.setBackground(Paleta.NEUTRO2);
+        scrollTabla.getViewport().setBackground(Paleta.NEUTRO2);
         add(scrollTabla, BorderLayout.CENTER);
         
         // Panel de botones
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         panelBotones.setOpaque(false);
         
-        btnCrearUsuario = crearBoton("➕ Crear Usuario", new Color(39, 174, 96));
-        btnEditarRol = crearBoton("🔄 Cambiar Rol", new Color(52, 152, 219));
-        btnCambiarPassword = crearBoton("🔐 Cambiar Contraseña", new Color(241, 196, 15));
-        btnEliminarUsuario = crearBoton("🗑 Eliminar", new Color(231, 76, 60));
+        btnCrearUsuario = crearBoton("➕ Crear Usuario", Paleta.SECUNDARIO);
+        btnEditarRol = crearBoton("🔄 Cambiar Rol", Paleta.ACENTO);
+        btnCambiarPassword = crearBoton("🔐 Cambiar Contraseña", Paleta.NEUTRO1);
+        btnEliminarUsuario = crearBoton("🗑 Eliminar", new Color(0xE6, 0x39, 0x46));
         
         btnCrearUsuario.addActionListener(e -> crearNuevoUsuario());
         btnEditarRol.addActionListener(e -> cambiarRolUsuario());
@@ -195,19 +195,19 @@ public class PanelGestionUsuarios extends JPanel {
         btn.setBorderPainted(false);
         btn.setPreferredSize(new Dimension(180, 40));
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
+
         btn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 btn.setBackground(color.brighter());
             }
-            
+
             @Override
             public void mouseExited(MouseEvent e) {
                 btn.setBackground(color);
             }
         });
-        
+
         return btn;
     }
     
@@ -518,12 +518,13 @@ class DialogoCrearUsuario extends JDialog {
     
     public DialogoCrearUsuario(JFrame parent) {
         super(parent, "Crear Nuevo Usuario", true);
-        
-        setSize(400, 350);
+
+        setSize(420, 360);
         setLocationRelativeTo(parent);
         setResizable(false);
-        
+
         JPanel panel = new JPanel(new GridLayout(6, 2, 10, 10));
+        panel.setBackground(Paleta.NEUTRO3);
         panel.setBorder(new EmptyBorder(20, 20, 20, 20));
         
         panel.add(new JLabel("Nombre de usuario (login):"));
@@ -550,14 +551,22 @@ class DialogoCrearUsuario extends JDialog {
         panel.add(comboRol);
         
         JButton btnAceptar = new JButton("Crear");
+        btnAceptar.setBackground(Paleta.SECUNDARIO);
+        btnAceptar.setForeground(Paleta.NEUTRO3);
+        btnAceptar.setFocusPainted(false);
+        btnAceptar.setBorderPainted(false);
         btnAceptar.addActionListener(e -> {
             if (validar()) {
                 aceptado = true;
                 dispose();
             }
         });
-        
+
         JButton btnCancelar = new JButton("Cancelar");
+        btnCancelar.setBackground(Paleta.NEUTRO2);
+        btnCancelar.setForeground(Color.WHITE);
+        btnCancelar.setFocusPainted(false);
+        btnCancelar.setBorderPainted(false);
         btnCancelar.addActionListener(e -> dispose());
         
         panel.add(btnAceptar);
