@@ -336,120 +336,162 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         contentPane.setLayout(new BorderLayout(0, 0));
         setContentPane(contentPane);
 
+        // Colores del sidebar marino
+        Color sidebarBg  = new Color(0x01, 0x1C, 0x36);
+        Color sidebarBtn = new Color(0x02, 0x2E, 0x56);
+        Color sidebarHdr = new Color(0x01, 0x26, 0x46);
+
         // ===== PANEL MENU =====
         panelMenu = new JPanel();
-        panelMenu.setBackground(vista.Paleta.NEUTRO3);
-        panelMenu.setPreferredSize(new Dimension(250, 0));
+        panelMenu.setBackground(sidebarBg);
+        panelMenu.setPreferredSize(new Dimension(220, 0));
         panelMenu.setLayout(new BorderLayout());
         contentPane.add(panelMenu, BorderLayout.WEST);
 
         JPanel panelArriba = new JPanel();
-        panelArriba.setBackground(vista.Paleta.NEUTRO3);
+        panelArriba.setBackground(sidebarHdr);
         panelArriba.setLayout(new BoxLayout(panelArriba, BoxLayout.Y_AXIS));
+        panelArriba.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(0x02, 0x5A, 0x90)));
         panelMenu.add(panelArriba, BorderLayout.NORTH);
 
-        lblTitulo = new JLabel("FEDERACIÓN");
-        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        lblTitulo.setForeground(Color.WHITE);
+        // Logo en sidebar
+        try {
+            JLabel lblIcono = new JLabel(new ImageIcon(new ImageIcon(
+                    getClass().getResource("/assets/icono.png"))
+                    .getImage().getScaledInstance(56, 56, Image.SCALE_SMOOTH)));
+            lblIcono.setAlignmentX(Component.CENTER_ALIGNMENT);
+            lblIcono.setBorder(BorderFactory.createEmptyBorder(14, 0, 6, 0));
+            panelArriba.add(lblIcono);
+        } catch (Exception ignored) {}
+
+        lblTitulo = new JLabel("ORIGO");
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        lblTitulo.setForeground(vista.Paleta.PRIMARIO);
         lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelArriba.add(lblTitulo);
 
-        lblSubtitulo = new JLabel("WATERPOLO");
-        lblSubtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblSubtitulo.setForeground(vista.Paleta.PRIMARIO);
+        lblSubtitulo = new JLabel("Waterpolo");
+        lblSubtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblSubtitulo.setForeground(new Color(0x8C, 0xC8, 0xF0));
         lblSubtitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelArriba.add(lblSubtitulo);
 
+        panelArriba.add(Box.createVerticalStrut(10));
+
+        JSeparator sepUsuario = new JSeparator();
+        sepUsuario.setForeground(new Color(0x02, 0x5A, 0x90));
+        sepUsuario.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
+        panelArriba.add(sepUsuario);
+
+        panelArriba.add(Box.createVerticalStrut(6));
+
         lblBienvenido = new JLabel("Bienvenid@:");
-        lblBienvenido.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblBienvenido.setForeground(TemaColores.TEXTO_TERCIARIO);
+        lblBienvenido.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        lblBienvenido.setForeground(new Color(0x70, 0xA8, 0xD0));
         lblBienvenido.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelArriba.add(lblBienvenido);
 
         lblUsuario = new JLabel("Admin");
-        lblUsuario.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        lblUsuario.setFont(new Font("Segoe UI", Font.BOLD, 13));
         lblUsuario.setForeground(Color.WHITE);
         lblUsuario.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelArriba.add(lblUsuario);
-        
-        verticalStrut = Box.createVerticalStrut(20);
+
+        verticalStrut = Box.createVerticalStrut(12);
         panelArriba.add(verticalStrut);
 
         JPanel panelBotones = new JPanel();
-        panelBotones.setBackground(vista.Paleta.NEUTRO3);
+        panelBotones.setBackground(sidebarBg);
         panelBotones.setLayout(new BoxLayout(panelBotones, BoxLayout.Y_AXIS));
         panelMenu.add(panelBotones, BorderLayout.CENTER);
 
       
 
-        btnEquipos = new JButton("Equipos");
-        btnEquipos.setBorder(null);
-        btnEquipos.setBackground(vista.Paleta.NEUTRO2);
+        btnEquipos = new JButton("  Equipos");
+        btnEquipos.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
+        btnEquipos.setBackground(sidebarBtn);
         btnEquipos.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnEquipos.setForeground(Color.WHITE);
+        btnEquipos.setHorizontalAlignment(SwingConstants.LEFT);
         btnEquipos.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnEquipos.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        btnEquipos.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
+        btnEquipos.setFocusPainted(false);
         btnEquipos.addActionListener(this);
-        
-        verticalStrut_1 = Box.createVerticalStrut(20);
+
+        verticalStrut_1 = Box.createVerticalStrut(6);
         panelBotones.add(verticalStrut_1);
-        
-                btnPartidos = new JButton("Partidos");
-                btnPartidos.setBorder(null);
-                btnPartidos.setBackground(vista.Paleta.NEUTRO2);
-                btnPartidos.setFont(new Font("Segoe UI", Font.BOLD, 14));
-                btnPartidos.setForeground(Color.WHITE);
-                btnPartidos.setAlignmentX(Component.CENTER_ALIGNMENT);
-                btnPartidos.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-                btnPartidos.addActionListener(this);
-                btnTemporadas = new JButton("Temporadas");
-                btnTemporadas.setBorder(null);
-                btnTemporadas.setBackground(TemaColores.BOTON_PRIMARIO);
-                btnTemporadas.setFont(new Font("Segoe UI", Font.BOLD, 14));
-                btnTemporadas.setForeground(TemaColores.TEXTO_PRIMARIO);
-                btnTemporadas.setAlignmentX(Component.CENTER_ALIGNMENT);
-                btnTemporadas.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-                btnTemporadas.addActionListener(this);
-                panelBotones.add(btnTemporadas);
-                
-                verticalStrut_4 = Box.createVerticalStrut(20);
-                panelBotones.add(verticalStrut_4);
-                panelBotones.add(btnPartidos);
-        
-        verticalStrut_3 = Box.createVerticalStrut(20);
+
+        btnPartidos = new JButton("  Partidos");
+        btnPartidos.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
+        btnPartidos.setBackground(sidebarBtn);
+        btnPartidos.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnPartidos.setForeground(Color.WHITE);
+        btnPartidos.setHorizontalAlignment(SwingConstants.LEFT);
+        btnPartidos.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnPartidos.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
+        btnPartidos.setFocusPainted(false);
+        btnPartidos.addActionListener(this);
+
+        btnTemporadas = new JButton("  Temporadas");
+        btnTemporadas.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
+        btnTemporadas.setBackground(vista.Paleta.OCEANO);
+        btnTemporadas.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnTemporadas.setForeground(Color.WHITE);
+        btnTemporadas.setHorizontalAlignment(SwingConstants.LEFT);
+        btnTemporadas.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnTemporadas.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
+        btnTemporadas.setFocusPainted(false);
+        btnTemporadas.addActionListener(this);
+        panelBotones.add(Box.createVerticalStrut(16));
+        panelBotones.add(btnTemporadas);
+
+        verticalStrut_4 = Box.createVerticalStrut(6);
+        panelBotones.add(verticalStrut_4);
+        panelBotones.add(btnPartidos);
+
+        verticalStrut_3 = Box.createVerticalStrut(6);
         panelBotones.add(verticalStrut_3);
         panelBotones.add(btnEquipos);
 
-        btnJugadores = new JButton("Jugadores");
-        btnJugadores.setBorder(null);
-        btnJugadores.setBackground(vista.Paleta.NEUTRO2);
+        btnJugadores = new JButton("  Jugadores");
+        btnJugadores.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
+        btnJugadores.setBackground(sidebarBtn);
         btnJugadores.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnJugadores.setForeground(Color.WHITE);
+        btnJugadores.setHorizontalAlignment(SwingConstants.LEFT);
         btnJugadores.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnJugadores.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        btnJugadores.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
+        btnJugadores.setFocusPainted(false);
         btnJugadores.addActionListener(this);
-        
-        verticalStrut_2 = Box.createVerticalStrut(20);
+
+        verticalStrut_2 = Box.createVerticalStrut(6);
         panelBotones.add(verticalStrut_2);
         panelBotones.add(btnJugadores);
-        
-        verticalStrut_8 = Box.createVerticalStrut(20);
+
+        verticalStrut_8 = Box.createVerticalStrut(6);
         panelBotones.add(verticalStrut_8);
 
-        btnCerrarSesion = new JButton("Cerrar sesión");
-        btnCerrarSesion.setBorder(null);
-        btnCerrarSesion.setBackground(vista.Paleta.ACENTO);
-        btnCerrarSesion.setFont(new Font("Segoe UI Black", Font.ITALIC, 14));
+        btnCerrarSesion = new JButton("  Cerrar sesión");
+        btnCerrarSesion.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
+        btnCerrarSesion.setBackground(new Color(0x6E, 0x10, 0x30));
+        btnCerrarSesion.setFont(new Font("Segoe UI", Font.BOLD, 13));
         btnCerrarSesion.setForeground(Color.WHITE);
+        btnCerrarSesion.setHorizontalAlignment(SwingConstants.LEFT);
         btnCerrarSesion.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnCerrarSesion.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        btnCerrarSesion.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
+        btnCerrarSesion.setFocusPainted(false);
         btnCerrarSesion.addActionListener(this);
         
-        verticalStrut_5 = Box.createVerticalStrut(100);
+        verticalStrut_5 = Box.createVerticalStrut(30);
         panelBotones.add(verticalStrut_5);
-        
-        
-        btnExportar = new JButton("Exportar");
+
+        JSeparator sepMenu = new JSeparator();
+        sepMenu.setForeground(new Color(0x02, 0x5A, 0x90));
+        sepMenu.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
+        panelBotones.add(sepMenu);
+        panelBotones.add(Box.createVerticalStrut(8));
+
+        btnExportar = new JButton("  Exportar XML");
         btnExportar.addActionListener(e -> {
             // Obtener todas las temporadas disponibles
             java.util.List<Temporada> temporadas = datosFederacion.getListaTemporadas();
@@ -592,37 +634,41 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         });
         
         
-        btnExportar.setMaximumSize(new Dimension(2147483647, 40));
+        btnExportar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
         btnExportar.setForeground(Color.WHITE);
-        btnExportar.setFont(new Font("Segoe UI Black", Font.ITALIC, 14));
-        btnExportar.setBorder(null);
-        btnExportar.setBackground(vista.Paleta.NEUTRO2);
-        btnExportar.setAlignmentX(0.5f);
+        btnExportar.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnExportar.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
+        btnExportar.setBackground(sidebarBtn);
+        btnExportar.setHorizontalAlignment(SwingConstants.LEFT);
+        btnExportar.setFocusPainted(false);
+        btnExportar.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelBotones.add(btnExportar);
- 
-        verticalStrut_7 = Box.createVerticalStrut(20);
+
+        verticalStrut_7 = Box.createVerticalStrut(6);
         panelBotones.add(verticalStrut_7);
-        
-        btnGestionUsuario = new JButton("Gestión de Usuarios");
+
+        btnGestionUsuario = new JButton("  Usuarios");
         btnGestionUsuario.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(panelCards, "usuarios");
                 GestorLog.info("Navegación: Gestión de Usuarios");
-                
+
                 // Refrescar la vista
                 panelUsuarios.cargarUsuarios();
             }
-        });  
-       
-        btnGestionUsuario.setMaximumSize(new Dimension(2147483647, 40));
+        });
+
+        btnGestionUsuario.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
         btnGestionUsuario.setForeground(Color.WHITE);
-        btnGestionUsuario.setFont(new Font("Segoe UI Black", Font.ITALIC, 14));
-        btnGestionUsuario.setBorder(null);
-        btnGestionUsuario.setBackground(vista.Paleta.NEUTRO1);
-        btnGestionUsuario.setAlignmentX(0.5f);
+        btnGestionUsuario.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnGestionUsuario.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
+        btnGestionUsuario.setBackground(sidebarBtn);
+        btnGestionUsuario.setHorizontalAlignment(SwingConstants.LEFT);
+        btnGestionUsuario.setFocusPainted(false);
+        btnGestionUsuario.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelBotones.add(btnGestionUsuario);
-        
-        verticalStrut_6 = Box.createVerticalStrut(20);
+
+        verticalStrut_6 = Box.createVerticalStrut(16);
         panelBotones.add(verticalStrut_6);
         panelBotones.add(btnCerrarSesion);
 
@@ -734,13 +780,13 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         panelJugadores.add(panelSuperiorJugadores, BorderLayout.NORTH);
         
         lblTemporadaJugador = new JLabel("Temporada:");
-        lblTemporadaJugador.setForeground(vista.Paleta.PRIMARIO);
+        lblTemporadaJugador.setForeground(Color.WHITE);
         panelSuperiorJugadores.add(lblTemporadaJugador);
         comboTemporadasJugadores = new JComboBox<>();
         panelSuperiorJugadores.add(comboTemporadasJugadores);
-        
+
         lblEquipoJugadores = new JLabel("Equipo:");
-        lblEquipoJugadores.setForeground(vista.Paleta.PRIMARIO);
+        lblEquipoJugadores.setForeground(Color.WHITE);
         panelSuperiorJugadores.add(lblEquipoJugadores);
         comboEquiposJugadores = new JComboBox<>();
         comboEquiposJugadores.setPreferredSize(new Dimension(160, 25));
@@ -840,12 +886,12 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         comboJornadasPartidos = new JComboBox<>();
 
         lblTemporadaPartido = new JLabel("Temporada:");
-        lblTemporadaPartido.setForeground(vista.Paleta.PRIMARIO);
+        lblTemporadaPartido.setForeground(Color.WHITE);
         panelAdminPartidos_1.add(lblTemporadaPartido);
         panelAdminPartidos_1.add(comboTemporadasPartidos);
 
         lblJornadaPartido = new JLabel("Jornada:");
-        lblJornadaPartido.setForeground(vista.Paleta.PRIMARIO);
+        lblJornadaPartido.setForeground(Color.WHITE);
         panelAdminPartidos_1.add(lblJornadaPartido);
         panelAdminPartidos_1.add(comboJornadasPartidos);
         panelAdminPartidos_1.revalidate();
@@ -910,7 +956,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
 
         JLabel lblLeyendaLocal = new JLabel("🏠 LOCAL");
         lblLeyendaLocal.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        lblLeyendaLocal.setForeground(vista.Paleta.PRIMARIO); // Azul claro
+        lblLeyendaLocal.setForeground(vista.Paleta.ACENTO); // Cian
         panelLeyenda.add(lblLeyendaLocal);
 
         JLabel lblSeparador = new JLabel("vs");
@@ -1569,7 +1615,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
 
         // Posición
         JLabel lblPos = new JLabel("⚽ " + jugador.getPosicion());
-        lblPos.setForeground(vista.Paleta.PRIMARIO);
+        lblPos.setForeground(vista.Paleta.ACENTO);
         lblPos.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         panelInfo.add(lblPos);
 
@@ -1666,7 +1712,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 // Destacar tarjeta seleccionada
                 tarjeta.setBackground(vista.Paleta.NEUTRO1);
                 tarjeta.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(vista.Paleta.PRIMARIO, 2),
+                    BorderFactory.createLineBorder(vista.Paleta.ACENTO, 2),
                     BorderFactory.createEmptyBorder(10, 10, 10, 10)
                 ));
             }
@@ -1860,7 +1906,8 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         // Botón Ver Escudo
         JButton btnVerEscudo = new JButton("Ver Escudo");
         btnVerEscudo.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        btnVerEscudo.setBackground(vista.Paleta.PRIMARIO);
+        btnVerEscudo.setBackground(vista.Paleta.SECUNDARIO);
+        btnVerEscudo.setForeground(Color.WHITE);
         btnVerEscudo.setFocusPainted(false);
         btnVerEscudo.setBorderPainted(false);
         btnVerEscudo.setPreferredSize(new Dimension(110, 30));

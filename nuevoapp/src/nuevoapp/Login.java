@@ -54,81 +54,160 @@ public class Login extends JFrame implements ActionListener, FocusListener {
         setIconImage(icono.getImage());
         setTitle("Real Federación Española de Waterpolo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(800, 150, 616, 480); 
-        
+        setBounds(600, 100, 820, 520);
+
+        // Colores del tema oscuro marino
+        Color navyOscuro  = new Color(0x01, 0x1E, 0x38);
+        Color navyMedio   = new Color(0x02, 0x2F, 0x58);
+        Color azulCampo   = new Color(0x01, 0x48, 0x7A);
+        Color textoSub    = new Color(0x8C, 0xC8, 0xF0);
+
         contentPane = new JPanel();
-        contentPane.setBackground(Color.WHITE);
+        contentPane.setBackground(navyOscuro);
         contentPane.setLayout(new BorderLayout(0, 0));
         setContentPane(contentPane);
 
-        logoPanel = new JPanel();
-        logoPanel.setBackground(vista.Paleta.PRIMARIO);
-        contentPane.add(logoPanel, BorderLayout.NORTH);
-        
+        // ===== PANEL IZQUIERDO — MARCA =====
+        logoPanel = new JPanel(new GridBagLayout());
+        logoPanel.setBackground(navyOscuro);
+        logoPanel.setPreferredSize(new Dimension(280, 0));
+        logoPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, new Color(0x02, 0x5A, 0x90)));
+        contentPane.add(logoPanel, BorderLayout.WEST);
+
+        JPanel panelMarca = new JPanel();
+        panelMarca.setOpaque(false);
+        panelMarca.setLayout(new BoxLayout(panelMarca, BoxLayout.Y_AXIS));
+
         lblLogo = new JLabel();
+        lblLogo.setAlignmentX(Component.CENTER_ALIGNMENT);
         try {
             lblLogo.setIcon(new ImageIcon(new ImageIcon(Login.class.getResource("/assets/icono.png"))
-                    .getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
+                    .getImage().getScaledInstance(110, 110, Image.SCALE_SMOOTH)));
         } catch (Exception e) {
-            lblLogo.setText("LOGO WATERPOLO");
-            lblLogo.setForeground(Color.WHITE);
+            lblLogo.setText("WATERPOLO");
+            lblLogo.setFont(new Font("Segoe UI", Font.BOLD, 18));
+            lblLogo.setForeground(vista.Paleta.PRIMARIO);
         }
-        logoPanel.add(lblLogo);
+        panelMarca.add(lblLogo);
+        panelMarca.add(Box.createVerticalStrut(18));
 
+        JLabel lblNombreApp = new JLabel("Aquora");
+        lblNombreApp.setFont(new Font("Segoe UI", Font.BOLD, 34));
+        lblNombreApp.setForeground(vista.Paleta.PRIMARIO);
+        lblNombreApp.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelMarca.add(lblNombreApp);
+
+        JLabel lblDeporte = new JLabel("Waterpolo");
+        lblDeporte.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        lblDeporte.setForeground(textoSub);
+        lblDeporte.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelMarca.add(lblDeporte);
+
+        panelMarca.add(Box.createVerticalStrut(12));
+
+        JLabel lblFed = new JLabel("Real Federación Española");
+        lblFed.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        lblFed.setForeground(new Color(0x50, 0x90, 0xB8));
+        lblFed.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelMarca.add(lblFed);
+
+        logoPanel.add(panelMarca);
+
+        // ===== PANEL DERECHO — FORMULARIO =====
         panelSesion = new JPanel();
-        panelSesion.setBackground(vista.Paleta.NEUTRO3);
+        panelSesion.setBackground(navyMedio);
         panelSesion.setLayout(new BoxLayout(panelSesion, BoxLayout.Y_AXIS));
         contentPane.add(panelSesion, BorderLayout.CENTER);
 
-        panelSesion.add(Box.createVerticalStrut(20));
+        panelSesion.add(Box.createVerticalStrut(60));
 
         JLabel lblIniciarSesion = new JLabel("Iniciar Sesión");
-        lblIniciarSesion.setFont(new Font("Agency FB", Font.BOLD, 40));
+        lblIniciarSesion.setFont(new Font("Segoe UI", Font.BOLD, 26));
         lblIniciarSesion.setForeground(Color.WHITE);
         lblIniciarSesion.setAlignmentX(Component.CENTER_ALIGNMENT);
-        lblIniciarSesion.setBorder(new MatteBorder(0, 0, 2, 0, Color.WHITE)); 
         panelSesion.add(lblIniciarSesion);
 
-        panelSesion.add(Box.createVerticalStrut(30));
+        panelSesion.add(Box.createVerticalStrut(6));
 
-        panelUsuario = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JLabel lblSubtexto = new JLabel("Introduce tus credenciales de acceso");
+        lblSubtexto.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblSubtexto.setForeground(textoSub);
+        lblSubtexto.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelSesion.add(lblSubtexto);
+
+        panelSesion.add(Box.createVerticalStrut(36));
+
+        panelUsuario = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 0));
         panelUsuario.setOpaque(false);
-        lblUsuario = new JLabel("Usuario: ");
-        lblUsuario.setForeground(Color.WHITE);
-        txtUsuario = new JTextField(15);
+        lblUsuario = new JLabel("Usuario");
+        lblUsuario.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        lblUsuario.setForeground(textoSub);
+        lblUsuario.setPreferredSize(new Dimension(78, 22));
+        txtUsuario = new JTextField(16);
+        txtUsuario.setBackground(azulCampo);
+        txtUsuario.setForeground(Color.WHITE);
+        txtUsuario.setCaretColor(Color.WHITE);
+        txtUsuario.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(0x02, 0x6A, 0xA0), 1),
+            BorderFactory.createEmptyBorder(5, 8, 5, 8)));
         txtUsuario.addFocusListener(this);
         panelUsuario.add(lblUsuario);
         panelUsuario.add(txtUsuario);
         panelSesion.add(panelUsuario);
 
-        panelContra = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panelSesion.add(Box.createVerticalStrut(12));
+
+        panelContra = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 0));
         panelContra.setOpaque(false);
-        lblContra = new JLabel("Contraseña: ");
-        lblContra.setForeground(Color.WHITE);
-        pwdContra = new JPasswordField(15);
+        lblContra = new JLabel("Contraseña");
+        lblContra.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        lblContra.setForeground(textoSub);
+        lblContra.setPreferredSize(new Dimension(78, 22));
+        pwdContra = new JPasswordField(16);
+        pwdContra.setBackground(azulCampo);
+        pwdContra.setForeground(Color.WHITE);
+        pwdContra.setCaretColor(Color.WHITE);
+        pwdContra.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(0x02, 0x6A, 0xA0), 1),
+            BorderFactory.createEmptyBorder(5, 8, 5, 8)));
         pwdContra.addFocusListener(this);
-        pwdContra.addActionListener(this); 
+        pwdContra.addActionListener(this);
         panelContra.add(lblContra);
         panelContra.add(pwdContra);
         panelSesion.add(panelContra);
 
-        panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        panelSesion.add(Box.createVerticalStrut(28));
+
+        panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
         panelBotones.setOpaque(false);
-        
+
         btnIniciarSesion = new JButton("Entrar");
         btnIniciarSesion.addActionListener(this);
         btnIniciarSesion.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
+        btnIniciarSesion.setBackground(vista.Paleta.PRIMARIO);
+        btnIniciarSesion.setForeground(new Color(0x01, 0x1A, 0x2E));
+        btnIniciarSesion.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnIniciarSesion.setFocusPainted(false);
+        btnIniciarSesion.setBorder(BorderFactory.createEmptyBorder(8, 22, 8, 22));
+
         btnRegistrarse = new JButton("Registrarse");
         btnRegistrarse.addActionListener(this);
         btnRegistrarse.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnRegistrarse.setBackground(new Color(52, 152, 219));
+        btnRegistrarse.setBackground(vista.Paleta.NEUTRO1);
         btnRegistrarse.setForeground(Color.WHITE);
-        
+        btnRegistrarse.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnRegistrarse.setFocusPainted(false);
+        btnRegistrarse.setBorder(BorderFactory.createEmptyBorder(8, 22, 8, 22));
+
         btnInvitado = new JButton("Invitado");
         btnInvitado.addActionListener(this);
         btnInvitado.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
+        btnInvitado.setBackground(vista.Paleta.ACENTO);
+        btnInvitado.setForeground(Color.WHITE);
+        btnInvitado.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnInvitado.setFocusPainted(false);
+        btnInvitado.setBorder(BorderFactory.createEmptyBorder(8, 22, 8, 22));
+
         panelBotones.add(btnIniciarSesion);
         panelBotones.add(btnRegistrarse);
         panelBotones.add(btnInvitado);

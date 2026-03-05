@@ -186,7 +186,7 @@ public class DialogoAgregarJugador extends JDialog {
 
     private void configurarBotonCancelar(JButton btn) {
         btn.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        btn.setBackground(Paleta.ACENTO);
+        btn.setBackground(new Color(0xE6, 0x39, 0x46));
         btn.setForeground(Color.WHITE);
         btn.setFocusPainted(false);
         btn.setBorderPainted(false);

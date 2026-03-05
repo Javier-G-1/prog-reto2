@@ -44,24 +44,24 @@ public class PanelGestionTemporadas extends JPanel {
      */
     private void inicializarComponentes() {
         // Panel superior con título y botón
-        JPanel panelSuperior = new JPanel(new BorderLayout(10, 10));
+        JPanel panelSuperior = new JPanel(new BorderLayout(10, 0));
         panelSuperior.setBackground(TemaColores.FONDO_PRINCIPAL);
-        
-        JLabel lblTitulo = new JLabel("🏆 GESTIÓN DE TEMPORADAS");
-        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        panelSuperior.setBorder(new EmptyBorder(0, 0, 10, 0));
+
+        JLabel lblTitulo = new JLabel("GESTIÓN DE TEMPORADAS");
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
         lblTitulo.setForeground(TemaColores.TEXTO_PRIMARIO);
         panelSuperior.add(lblTitulo, BorderLayout.WEST);
-        
-        btnNuevaTemporada = new JButton("➕ Nueva Temporada");
+
+        btnNuevaTemporada = new JButton("+ Nueva Temporada");
         btnNuevaTemporada.setBackground(TemaColores.ACENTO_VERDE);
-        btnNuevaTemporada.setForeground(TemaColores.TEXTO_PRIMARIO);
-        btnNuevaTemporada.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnNuevaTemporada.setForeground(Color.WHITE);
+        btnNuevaTemporada.setFont(new Font("Segoe UI", Font.BOLD, 13));
         btnNuevaTemporada.setFocusPainted(false);
-        btnNuevaTemporada.setBorderPainted(false);
-        btnNuevaTemporada.setPreferredSize(new Dimension(200, 40));
+        btnNuevaTemporada.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 18, 8, 18));
         btnNuevaTemporada.addActionListener(e -> crearNuevaTemporada());
         panelSuperior.add(btnNuevaTemporada, BorderLayout.EAST);
-        
+
         add(panelSuperior, BorderLayout.NORTH);
         
         // Panel central con tarjetas de temporadas
@@ -176,7 +176,7 @@ public class PanelGestionTemporadas extends JPanel {
         
         JButton btnVerClasificacion = new JButton("📊 Ver Clasificación");
         btnVerClasificacion.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnVerClasificacion.setBackground(TemaColores.ACENTO_AZUL);
+        btnVerClasificacion.setBackground(TemaColores.ACENTO_CYAN);
         btnVerClasificacion.setForeground(TemaColores.TEXTO_PRIMARIO);
         btnVerClasificacion.setFocusPainted(false);
         btnVerClasificacion.setBorderPainted(false);
@@ -186,7 +186,7 @@ public class PanelGestionTemporadas extends JPanel {
         
         JButton btnDetalles = new JButton("🔍 Ver Detalles");
         btnDetalles.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnDetalles.setBackground(new Color(155, 89, 182)); // Morado (no está en TemaColores)
+        btnDetalles.setBackground(TemaColores.BOTON_NEUTRAL);
         btnDetalles.setForeground(TemaColores.TEXTO_PRIMARIO);
         btnDetalles.setFocusPainted(false);
         btnDetalles.setBorderPainted(false);

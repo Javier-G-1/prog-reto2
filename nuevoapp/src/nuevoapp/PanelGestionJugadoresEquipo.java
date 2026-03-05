@@ -1,3 +1,4 @@
+
 package nuevoapp;
 
 import javax.swing.*;
@@ -70,7 +71,7 @@ public class PanelGestionJugadoresEquipo extends JDialog {
         
         JLabel lblTitulo = new JLabel("Gestión de Plantilla Restringida");
         lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        lblTitulo.setForeground(Paleta.ACENTO);
+        lblTitulo.setForeground(new Color(231, 76, 60));
         lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelMensaje.add(lblTitulo);
         
