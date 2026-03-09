@@ -2713,7 +2713,6 @@ private JPanel crearTarjetaPartido(Partido p) {
      * @see PanelClasificacion#getComboTemporadas()
      */
     void sincronizarCombos() {
-        // ⭐ GUARDAR selecciones ANTES de limpiar
         Object tempSelEquipos = comboTemporadas.getSelectedItem();
         Object tempSelJugadores = comboTemporadasJugadores.getSelectedItem();
         Object tempSelPartidos = comboTemporadasPartidos.getSelectedItem();
@@ -2724,7 +2723,6 @@ private JPanel crearTarjetaPartido(Partido p) {
             comboTemporadasPartidos
         };
         
-        // Limpiar y recargar items
         for (JComboBox c : combosTemp) {
             if (c == null) continue;
             c.removeAllItems();
@@ -2733,42 +2731,18 @@ private JPanel crearTarjetaPartido(Partido p) {
             }
         }
         
-        // ⭐ RESTAURAR selecciones previas O seleccionar última temporada
+        // ⭐ SELECCIONAR LA ÚLTIMA TEMPORADA POR DEFECTO
         if (!datosFederacion.getListaTemporadas().isEmpty()) {
-            // Para comboTemporadas (Equipos)
-            if (tempSelEquipos != null && existeTemporada(tempSelEquipos.toString())) {
-                comboTemporadas.setSelectedItem(tempSelEquipos);
-            } else {
-                seleccionarUltimaTemporada(comboTemporadas);
-            }
+            int ultimoIndice = datosFederacion.getListaTemporadas().size() - 1;
+            String ultimaTemporada = datosFederacion.getListaTemporadas().get(ultimoIndice).getNombre();
             
-            // Para comboTemporadasJugadores
-            if (tempSelJugadores != null && existeTemporada(tempSelJugadores.toString())) {
-                comboTemporadasJugadores.setSelectedItem(tempSelJugadores);
-            } else {
-                seleccionarUltimaTemporada(comboTemporadasJugadores);
-            }
-            
-            // Para comboTemporadasPartidos
-            if (tempSelPartidos != null && existeTemporada(tempSelPartidos.toString())) {
-                comboTemporadasPartidos.setSelectedItem(tempSelPartidos);
-            } else {
-                seleccionarUltimaTemporada(comboTemporadasPartidos);
-            }
+            // Seleccionar última temporada en todos los combos
+            comboTemporadas.setSelectedItem(ultimaTemporada);
+            comboTemporadasJugadores.setSelectedItem(ultimaTemporada);
+            comboTemporadasPartidos.setSelectedItem(ultimaTemporada);
         }
 
         actualizarComboEquipos();
-    }
-
-    // ⭐ MÉTODOS AUXILIARES
-    private boolean existeTemporada(String nombreTemporada) {
-        return datosFederacion.buscarTemporadaPorNombre(nombreTemporada) != null;
-    }
-
-    private void seleccionarUltimaTemporada(JComboBox<String> combo) {
-        if (combo.getItemCount() > 0) {
-            combo.setSelectedIndex(combo.getItemCount() - 1);
-        }
     }
 
 
