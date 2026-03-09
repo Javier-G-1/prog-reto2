@@ -1,67 +1,53 @@
 package nuevoapp;
 
 import java.awt.Color;
-import vista.Paleta;
 
 /**
- * Clase que centraliza todos los colores semánticos de la aplicación.
- * Basada en la paleta oficial ORIGO Waterpolo ({@link Paleta}).
+ * Clase que centraliza todos los colores de la aplicación para mejorar la legibilidad.
  */
 public class TemaColores {
-
+    
     // === FONDOS ===
-    public static final Color FONDO_PRINCIPAL  = Paleta.OCEANO;     // azul océano — fondos principales, headers
-    public static final Color FONDO_SECUNDARIO = Paleta.NEUTRO2;    // gris azulado — paneles secundarios
-    public static final Color FONDO_TARJETA    = Paleta.NEUTRO2;    // gris azulado — tarjetas
-    public static final Color FONDO_MENU       = Paleta.OCEANO;     // azul océano — menú lateral
-
-    // === TEXTOS ===
-    public static final Color TEXTO_PRIMARIO      = new Color(245, 245, 245);        // blanco casi puro
-    public static final Color TEXTO_SECUNDARIO    = new Color(0xD0, 0xF4, 0xF8);    // cyan muy pálido — texto secundario
-    public static final Color TEXTO_TERCIARIO     = new Color(0xA8, 0xE8, 0xF0);    // cyan suave — texto terciario
-    public static final Color TEXTO_DESHABILITADO = new Color(0x98, 0x71, 0x89);    // malva — deshabilitado
-
+    public static final Color FONDO_PRINCIPAL = new Color(20, 24, 31);
+    public static final Color FONDO_SECUNDARIO = new Color(30, 34, 41);
+    public static final Color FONDO_TARJETA = new Color(40, 44, 52);
+    public static final Color FONDO_MENU = new Color(25, 28, 35);
+    
+    // === TEXTOS (MEJORADOS PARA MEJOR CONTRASTE) ===
+    public static final Color TEXTO_PRIMARIO = new Color(245, 245, 245);      // Blanco casi puro
+    public static final Color TEXTO_SECUNDARIO = new Color(220, 220, 220);    // Gris muy claro
+    public static final Color TEXTO_TERCIARIO = new Color(180, 185, 195);     // Gris medio claro
+    public static final Color TEXTO_DESHABILITADO = new Color(120, 125, 135); // Gris medio
+    
     // === ACENTOS ===
-    public static final Color ACENTO_CYAN       = Paleta.PRIMARIO;                  // cyan brillante — acento principal
-    public static final Color ACENTO_CYAN_HOVER = Paleta.SECUNDARIO;                // cyan medio — hover
-    public static final Color ACENTO_VERDE      = new Color(0x00, 0xC8, 0x53);      // verde éxito (#00C853)
-    public static final Color ACENTO_ROJO       = new Color(0xE6, 0x39, 0x46);      // rojo alerta (#E63946)
-    public static final Color ACENTO_AMARILLO   = Paleta.DORADO;                    // dorado ámbar — stats
-    public static final Color ACENTO_NARANJA    = Paleta.DORADO;                    // dorado ámbar — alias
-
+    public static final Color ACENTO_AZUL = new Color(52, 152, 219);
+    public static final Color ACENTO_AZUL_HOVER = new Color(72, 172, 239);
+    public static final Color ACENTO_VERDE = new Color(46, 204, 113);
+    public static final Color ACENTO_ROJO = new Color(231, 76, 60);
+    public static final Color ACENTO_AMARILLO = new Color(241, 196, 15);
+    public static final Color ACENTO_NARANJA = new Color(255, 183, 77);
+    
     // === BOTONES ===
-    // · Primario: cyan brillante con texto oscuro
-    public static final Color BOTON_PRIMARIO        = Paleta.PRIMARIO;              // #2DE5EF — fondo botón primario
-    public static final Color BOTON_PRIMARIO_TEXTO  = new Color(0x0A, 0x0F, 0x1A); // #0a0f1a — texto sobre botón primario
-
-    // · Outline: fondo transparente, borde y texto cyan brillante
-    public static final Color BOTON_OUTLINE_BORDE   = Paleta.PRIMARIO;              // #2DE5EF — borde y texto outline
-    public static final Color BOTON_OUTLINE_TEXTO   = Paleta.PRIMARIO;              // #2DE5EF — igual que borde
-
-    // · Acento: fucsia con texto blanco
-    public static final Color BOTON_ACENTO          = Paleta.ACENTO;               // #F06ECC — fondo botón acento
-    public static final Color BOTON_ACENTO_TEXTO    = Color.WHITE;                  // blanco — texto sobre botón acento
-
-    // · Otros
-    public static final Color BOTON_EXITO           = new Color(0x00, 0xC8, 0x53); // verde — éxito/confirmar
-    public static final Color BOTON_PELIGRO         = new Color(0xE6, 0x39, 0x46); // rojo — alerta/cancelar
-    public static final Color BOTON_NEUTRAL         = Paleta.NEUTRO1;              // malva — neutral
-
+    public static final Color BOTON_PRIMARIO = new Color(45, 55, 140);
+    public static final Color BOTON_EXITO = new Color(0, 128, 0);
+    public static final Color BOTON_PELIGRO = new Color(231, 76, 60);
+    public static final Color BOTON_NEUTRAL = new Color(100, 100, 110);
+    
     // === ESTADOS ===
-    public static final Color ESTADO_FUTURA     = Paleta.PRIMARIO;                  // cyan — futura
-    public static final Color ESTADO_EN_CURSO   = Paleta.DORADO;                    // dorado — en juego
-    public static final Color ESTADO_FINALIZADA = new Color(0xE6, 0x39, 0x46);      // rojo — terminada
-
+    public static final Color ESTADO_FUTURA = new Color(52, 152, 219);      // Azul
+    public static final Color ESTADO_EN_CURSO = new Color(241, 196, 15);    // Amarillo
+    public static final Color ESTADO_FINALIZADA = new Color(231, 76, 60);   // Rojo
+    
     // === BORDES ===
-    public static final Color BORDE_NORMAL       = Paleta.NEUTRO1;                  // malva
-    public static final Color BORDE_SELECCIONADO = Paleta.PRIMARIO;                 // cyan — selección activa
-    public static final Color BORDE_ERROR        = new Color(0xE6, 0x39, 0x46);     // rojo — error
-
+    public static final Color BORDE_NORMAL = new Color(70, 74, 82);
+    public static final Color BORDE_SELECCIONADO = new Color(100, 150, 255);
+    public static final Color BORDE_ERROR = new Color(231, 76, 60);
+    
     // === EQUIPOS (LOCAL/VISITANTE) ===
-    public static final Color EQUIPO_LOCAL     = Paleta.PRIMARIO;                   // cyan — local
-    public static final Color EQUIPO_VISITANTE = Paleta.DORADO;                     // dorado — visitante
-
+    public static final Color EQUIPO_LOCAL = new Color(100, 181, 246);
+    public static final Color EQUIPO_VISITANTE = new Color(255, 183, 77);
+    
     // === PARTIDOS ===
-    public static final Color PARTIDO_PENDIENTE  = Paleta.SECUNDARIO;               // cyan medio
-    public static final Color PARTIDO_FINALIZADO = new Color(0x00, 0xC8, 0x53);     // verde
+    public static final Color PARTIDO_PENDIENTE = new Color(52, 152, 219);
+    public static final Color PARTIDO_FINALIZADO = new Color(231, 76, 60);
 }

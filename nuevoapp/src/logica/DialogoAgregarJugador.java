@@ -5,7 +5,6 @@ import java.awt.*;
 import java.awt.event.*;
 import gestion.Jugador;
 import gestion.Equipo;
-import vista.Paleta;
 
 /**
  * DIÁLOGO MODAL para agregar un nuevo jugador a un equipo.
@@ -104,7 +103,7 @@ public class DialogoAgregarJugador extends JDialog {
 
         JPanel panelCampos = new JPanel(new GridLayout(7, 2, 10, 15));
         panelCampos.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
-        panelCampos.setBackground(Paleta.NEUTRO3);
+        panelCampos.setBackground(new Color(30, 34, 41));
 
         // Campos
         panelCampos.add(crearLabel("Nombre:"));
@@ -145,7 +144,7 @@ public class DialogoAgregarJugador extends JDialog {
 
         // Botones
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
-        panelBotones.setBackground(Paleta.NEUTRO3);
+        panelBotones.setBackground(new Color(30, 34, 41));
 
         JButton btnCancelar = new JButton("Cancelar");
         configurarBotonCancelar(btnCancelar);
@@ -164,7 +163,7 @@ public class DialogoAgregarJugador extends JDialog {
                 JComponent.WHEN_IN_FOCUSED_WINDOW);
         getRootPane().setDefaultButton(btnAceptar);
 
-        getContentPane().setBackground(Paleta.NEUTRO3);
+        getContentPane().setBackground(new Color(30, 34, 41));
     }
 
     private JLabel crearLabel(String texto) {
@@ -186,7 +185,7 @@ public class DialogoAgregarJugador extends JDialog {
 
     private void configurarBotonCancelar(JButton btn) {
         btn.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        btn.setBackground(new Color(0xE6, 0x39, 0x46));
+        btn.setBackground(new Color(140, 45, 45));
         btn.setForeground(Color.WHITE);
         btn.setFocusPainted(false);
         btn.setBorderPainted(false);
@@ -196,7 +195,7 @@ public class DialogoAgregarJugador extends JDialog {
 
     private void configurarBotonAceptar(JButton btn) {
         btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btn.setBackground(Paleta.SECUNDARIO);
+        btn.setBackground(new Color(45, 55, 140));
         btn.setForeground(Color.WHITE);
         btn.setFocusPainted(false);
         btn.setBorderPainted(false);

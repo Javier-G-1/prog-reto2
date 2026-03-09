@@ -1,4 +1,3 @@
-
 package nuevoapp;
 
 import javax.swing.*;
@@ -9,7 +8,6 @@ import java.util.*;
 import java.util.List;
 import gestion.*;
 import logica.*;
-import vista.Paleta;
 
 /**
  * Panel para gestionar jugadores del equipo y fichar nuevos jugadores.
@@ -54,7 +52,7 @@ public class PanelGestionJugadoresEquipo extends JDialog {
     private void mostrarMensajeRestringido() {
         // Crear panel informativo
         JPanel panelInfo = new JPanel(new BorderLayout(10, 10));
-        panelInfo.setBackground(Paleta.PRIMARIO);
+        panelInfo.setBackground(new Color(20, 24, 31));
         panelInfo.setBorder(new EmptyBorder(30, 30, 30, 30));
         
         // Icono y mensaje principal

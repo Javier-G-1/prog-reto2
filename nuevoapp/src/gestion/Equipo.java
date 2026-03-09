@@ -262,11 +262,11 @@ public class Equipo implements Serializable {
         plantilla.remove(j);
     }
 
-    /** Número mínimo de jugadores requeridos (waterpolo: 6 de campo + 1 portero) */
-    public static final int JUGADORES_MINIMOS = 7;
+    /** Número mínimo de jugadores requeridos */
+    public static final int JUGADORES_MINIMOS = 9;
 
     /** Número recomendado de jugadores */
-    public static final int JUGADORES_RECOMENDADOS = 13;
+    public static final int JUGADORES_RECOMENDADOS = 18;
 
     /**
      * Comprueba si el equipo tiene el número mínimo de jugadores.

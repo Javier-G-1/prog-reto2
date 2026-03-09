@@ -27,7 +27,7 @@ public class GestorArchivos {
     // ⭐ RUTAS RELATIVAS UNIFICADAS (con ./ al inicio)
     private static final String CARPETA_LOGOS = "./imagenes/imagenes_Logos";
     private static final String CARPETA_JUGADORES = "./imagenes/imagenes_Jugadores";
-    private static final String ARCHIVO_XML_GENERAL = "exportaciones/ligaWaterpolo.xml";
+    private static final String ARCHIVO_XML_GENERAL = "exportaciones/ligaBalonmano.xml";
     
     static {
         crearEstructuraCarpetas();

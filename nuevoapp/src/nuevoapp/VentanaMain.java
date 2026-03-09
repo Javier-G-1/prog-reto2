@@ -21,7 +21,7 @@ import gestion.Temporada;
 import logica.ExportadorXMLLiga;
 
 /**
- * Ventana principal de la aplicación de gestión de la Federación de Waterpolo.
+ * Ventana principal de la aplicación de gestión de la Federación de Balonmano.
  * <p>
  * Esta clase representa la interfaz gráfica principal del sistema, permitiendo
  * la gestión completa de temporadas, equipos, jugadores, partidos y clasificaciones.
@@ -88,7 +88,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
     /** Etiqueta del título principal "FEDERACIÓN" */
     private JLabel lblTitulo;
     
-    /** Etiqueta del subtítulo "WATERPOLO" */
+    /** Etiqueta del subtítulo "BALONMANO" */
     private JLabel lblSubtitulo;
     
     /** Etiqueta "Bienvenid@" en el menú */
@@ -326,7 +326,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         
         ImageIcon icono = new ImageIcon(getClass().getResource("/assets/icono.png"));
         setIconImage(icono.getImage());
-        setTitle("Federación de Waterpolo");
+        setTitle("Federación de Balonmano");
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
         setBounds(100, 100, 1685, 846);
@@ -336,162 +336,120 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         contentPane.setLayout(new BorderLayout(0, 0));
         setContentPane(contentPane);
 
-        // Colores del sidebar marino
-        Color sidebarBg  = new Color(0x01, 0x1C, 0x36);
-        Color sidebarBtn = new Color(0x02, 0x2E, 0x56);
-        Color sidebarHdr = new Color(0x01, 0x26, 0x46);
-
         // ===== PANEL MENU =====
         panelMenu = new JPanel();
-        panelMenu.setBackground(sidebarBg);
-        panelMenu.setPreferredSize(new Dimension(220, 0));
+        panelMenu.setBackground(new Color(30, 30, 30));
+        panelMenu.setPreferredSize(new Dimension(250, 0));
         panelMenu.setLayout(new BorderLayout());
         contentPane.add(panelMenu, BorderLayout.WEST);
 
         JPanel panelArriba = new JPanel();
-        panelArriba.setBackground(sidebarHdr);
+        panelArriba.setBackground(new Color(30, 30, 30));
         panelArriba.setLayout(new BoxLayout(panelArriba, BoxLayout.Y_AXIS));
-        panelArriba.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(0x02, 0x5A, 0x90)));
         panelMenu.add(panelArriba, BorderLayout.NORTH);
 
-        // Logo en sidebar
-        try {
-            JLabel lblIcono = new JLabel(new ImageIcon(new ImageIcon(
-                    getClass().getResource("/assets/icono.png"))
-                    .getImage().getScaledInstance(56, 56, Image.SCALE_SMOOTH)));
-            lblIcono.setAlignmentX(Component.CENTER_ALIGNMENT);
-            lblIcono.setBorder(BorderFactory.createEmptyBorder(14, 0, 6, 0));
-            panelArriba.add(lblIcono);
-        } catch (Exception ignored) {}
-
-        lblTitulo = new JLabel("ORIGO");
-        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        lblTitulo.setForeground(vista.Paleta.PRIMARIO);
+        lblTitulo = new JLabel("FEDERACIÓN");
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lblTitulo.setForeground(Color.WHITE);
         lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelArriba.add(lblTitulo);
 
-        lblSubtitulo = new JLabel("Waterpolo");
-        lblSubtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblSubtitulo.setForeground(new Color(0x8C, 0xC8, 0xF0));
+        lblSubtitulo = new JLabel("BALONMANO");
+        lblSubtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lblSubtitulo.setForeground(new Color(45, 55, 140));
         lblSubtitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelArriba.add(lblSubtitulo);
 
-        panelArriba.add(Box.createVerticalStrut(10));
-
-        JSeparator sepUsuario = new JSeparator();
-        sepUsuario.setForeground(new Color(0x02, 0x5A, 0x90));
-        sepUsuario.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
-        panelArriba.add(sepUsuario);
-
-        panelArriba.add(Box.createVerticalStrut(6));
-
         lblBienvenido = new JLabel("Bienvenid@:");
-        lblBienvenido.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        lblBienvenido.setForeground(new Color(0x70, 0xA8, 0xD0));
+        lblBienvenido.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblBienvenido.setForeground(new Color(180, 180, 180));
         lblBienvenido.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelArriba.add(lblBienvenido);
 
         lblUsuario = new JLabel("Admin");
-        lblUsuario.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblUsuario.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblUsuario.setForeground(Color.WHITE);
         lblUsuario.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelArriba.add(lblUsuario);
-
-        verticalStrut = Box.createVerticalStrut(12);
+        
+        verticalStrut = Box.createVerticalStrut(20);
         panelArriba.add(verticalStrut);
 
         JPanel panelBotones = new JPanel();
-        panelBotones.setBackground(sidebarBg);
+        panelBotones.setBackground(new Color(30, 30, 30));
         panelBotones.setLayout(new BoxLayout(panelBotones, BoxLayout.Y_AXIS));
         panelMenu.add(panelBotones, BorderLayout.CENTER);
 
       
 
-        btnEquipos = new JButton("  Equipos");
-        btnEquipos.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
-        btnEquipos.setBackground(sidebarBtn);
+        btnEquipos = new JButton("Equipos");
+        btnEquipos.setBorder(null);
+        btnEquipos.setBackground(new Color(45, 55, 140));
         btnEquipos.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnEquipos.setForeground(Color.WHITE);
-        btnEquipos.setHorizontalAlignment(SwingConstants.LEFT);
         btnEquipos.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnEquipos.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
-        btnEquipos.setFocusPainted(false);
+        btnEquipos.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
         btnEquipos.addActionListener(this);
-
-        verticalStrut_1 = Box.createVerticalStrut(6);
+        
+        verticalStrut_1 = Box.createVerticalStrut(20);
         panelBotones.add(verticalStrut_1);
-
-        btnPartidos = new JButton("  Partidos");
-        btnPartidos.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
-        btnPartidos.setBackground(sidebarBtn);
-        btnPartidos.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnPartidos.setForeground(Color.WHITE);
-        btnPartidos.setHorizontalAlignment(SwingConstants.LEFT);
-        btnPartidos.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnPartidos.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
-        btnPartidos.setFocusPainted(false);
-        btnPartidos.addActionListener(this);
-
-        btnTemporadas = new JButton("  Temporadas");
-        btnTemporadas.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
-        btnTemporadas.setBackground(vista.Paleta.OCEANO);
-        btnTemporadas.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnTemporadas.setForeground(Color.WHITE);
-        btnTemporadas.setHorizontalAlignment(SwingConstants.LEFT);
-        btnTemporadas.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnTemporadas.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
-        btnTemporadas.setFocusPainted(false);
-        btnTemporadas.addActionListener(this);
-        panelBotones.add(Box.createVerticalStrut(16));
-        panelBotones.add(btnTemporadas);
-
-        verticalStrut_4 = Box.createVerticalStrut(6);
-        panelBotones.add(verticalStrut_4);
-        panelBotones.add(btnPartidos);
-
-        verticalStrut_3 = Box.createVerticalStrut(6);
+        
+                btnPartidos = new JButton("Partidos");
+                btnPartidos.setBorder(null);
+                btnPartidos.setBackground(new Color(45, 55, 140));
+                btnPartidos.setFont(new Font("Segoe UI", Font.BOLD, 14));
+                btnPartidos.setForeground(Color.WHITE);
+                btnPartidos.setAlignmentX(Component.CENTER_ALIGNMENT);
+                btnPartidos.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+                btnPartidos.addActionListener(this);
+                btnTemporadas = new JButton("Temporadas");
+                btnTemporadas.setBorder(null);
+                btnTemporadas.setBackground(TemaColores.BOTON_PRIMARIO);
+                btnTemporadas.setFont(new Font("Segoe UI", Font.BOLD, 14));
+                btnTemporadas.setForeground(TemaColores.TEXTO_PRIMARIO);
+                btnTemporadas.setAlignmentX(Component.CENTER_ALIGNMENT);
+                btnTemporadas.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+                btnTemporadas.addActionListener(this);
+                panelBotones.add(btnTemporadas);
+                
+                verticalStrut_4 = Box.createVerticalStrut(20);
+                panelBotones.add(verticalStrut_4);
+                panelBotones.add(btnPartidos);
+        
+        verticalStrut_3 = Box.createVerticalStrut(20);
         panelBotones.add(verticalStrut_3);
         panelBotones.add(btnEquipos);
 
-        btnJugadores = new JButton("  Jugadores");
-        btnJugadores.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
-        btnJugadores.setBackground(sidebarBtn);
+        btnJugadores = new JButton("Jugadores");
+        btnJugadores.setBorder(null);
+        btnJugadores.setBackground(new Color(45, 55, 140));
         btnJugadores.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnJugadores.setForeground(Color.WHITE);
-        btnJugadores.setHorizontalAlignment(SwingConstants.LEFT);
         btnJugadores.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnJugadores.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
-        btnJugadores.setFocusPainted(false);
+        btnJugadores.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
         btnJugadores.addActionListener(this);
-
-        verticalStrut_2 = Box.createVerticalStrut(6);
+        
+        verticalStrut_2 = Box.createVerticalStrut(20);
         panelBotones.add(verticalStrut_2);
         panelBotones.add(btnJugadores);
-
-        verticalStrut_8 = Box.createVerticalStrut(6);
+        
+        verticalStrut_8 = Box.createVerticalStrut(20);
         panelBotones.add(verticalStrut_8);
 
-        btnCerrarSesion = new JButton("  Cerrar sesión");
-        btnCerrarSesion.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
-        btnCerrarSesion.setBackground(new Color(0x6E, 0x10, 0x30));
-        btnCerrarSesion.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnCerrarSesion = new JButton("Cerrar sesión");
+        btnCerrarSesion.setBorder(null);
+        btnCerrarSesion.setBackground(new Color(140, 45, 45));
+        btnCerrarSesion.setFont(new Font("Segoe UI Black", Font.ITALIC, 14));
         btnCerrarSesion.setForeground(Color.WHITE);
-        btnCerrarSesion.setHorizontalAlignment(SwingConstants.LEFT);
         btnCerrarSesion.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnCerrarSesion.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
-        btnCerrarSesion.setFocusPainted(false);
+        btnCerrarSesion.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
         btnCerrarSesion.addActionListener(this);
         
-        verticalStrut_5 = Box.createVerticalStrut(30);
+        verticalStrut_5 = Box.createVerticalStrut(100);
         panelBotones.add(verticalStrut_5);
-
-        JSeparator sepMenu = new JSeparator();
-        sepMenu.setForeground(new Color(0x02, 0x5A, 0x90));
-        sepMenu.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
-        panelBotones.add(sepMenu);
-        panelBotones.add(Box.createVerticalStrut(8));
-
-        btnExportar = new JButton("  Exportar XML");
+        
+        
+        btnExportar = new JButton("Exportar");
         btnExportar.addActionListener(e -> {
             // Obtener todas las temporadas disponibles
             java.util.List<Temporada> temporadas = datosFederacion.getListaTemporadas();
@@ -537,7 +495,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
             
             int eleccion = JOptionPane.showOptionDialog(
                 this,
-                "¿Qué deseas exportar a ligaWaterpolo.xml?",
+                "¿Qué deseas exportar a ligaBalonmano.xml?",
                 "Exportar datos",
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
@@ -565,7 +523,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 if (exportacionExitosa) {
                     JOptionPane.showMessageDialog(this,
                         "✅ Temporada exportada exitosamente\n\n" +
-                        "📄 Archivo: ligaWaterpolo.xml\n" +
+                        "📄 Archivo: ligaBalonmano.xml\n" +
                         "📅 Temporada: " + temporadaActual.getNombre(),
                         "Exportación exitosa",
                         JOptionPane.INFORMATION_MESSAGE);
@@ -582,7 +540,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                     if (exportacionExitosa) {
                         JOptionPane.showMessageDialog(this,
                             "✅ Temporada exportada exitosamente\n\n" +
-                            "📄 Archivo: ligaWaterpolo.xml\n" +
+                            "📄 Archivo: ligaBalonmano.xml\n" +
                             "📅 Temporada: " + temporadaSeleccionada.getNombre(),
                             "Exportación exitosa",
                             JOptionPane.INFORMATION_MESSAGE);
@@ -612,7 +570,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 String mensaje = " Exportación masiva completada\n\n" +
                                 " Temporadas exportadas: " + temporadasExportadas + "\n" +
                                 " Fallidas: " + temporadasFallidas + "\n" +
-                                " Archivo: ligaWaterpolo.xml";
+                                " Archivo: ligaBalonmano.xml";
                 
                 JOptionPane.showMessageDialog(this, 
                     mensaje,
@@ -634,41 +592,37 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         });
         
         
-        btnExportar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
+        btnExportar.setMaximumSize(new Dimension(2147483647, 40));
         btnExportar.setForeground(Color.WHITE);
-        btnExportar.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnExportar.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
-        btnExportar.setBackground(sidebarBtn);
-        btnExportar.setHorizontalAlignment(SwingConstants.LEFT);
-        btnExportar.setFocusPainted(false);
-        btnExportar.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnExportar.setFont(new Font("Segoe UI Black", Font.ITALIC, 14));
+        btnExportar.setBorder(null);
+        btnExportar.setBackground(Color.GRAY);
+        btnExportar.setAlignmentX(0.5f);
         panelBotones.add(btnExportar);
-
-        verticalStrut_7 = Box.createVerticalStrut(6);
+ 
+        verticalStrut_7 = Box.createVerticalStrut(20);
         panelBotones.add(verticalStrut_7);
-
-        btnGestionUsuario = new JButton("  Usuarios");
+        
+        btnGestionUsuario = new JButton("Gestión de Usuarios");
         btnGestionUsuario.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(panelCards, "usuarios");
                 GestorLog.info("Navegación: Gestión de Usuarios");
-
+                
                 // Refrescar la vista
                 panelUsuarios.cargarUsuarios();
             }
-        });
-
-        btnGestionUsuario.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
+        });  
+       
+        btnGestionUsuario.setMaximumSize(new Dimension(2147483647, 40));
         btnGestionUsuario.setForeground(Color.WHITE);
-        btnGestionUsuario.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnGestionUsuario.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
-        btnGestionUsuario.setBackground(sidebarBtn);
-        btnGestionUsuario.setHorizontalAlignment(SwingConstants.LEFT);
-        btnGestionUsuario.setFocusPainted(false);
-        btnGestionUsuario.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnGestionUsuario.setFont(new Font("Segoe UI Black", Font.ITALIC, 14));
+        btnGestionUsuario.setBorder(null);
+        btnGestionUsuario.setBackground(new Color(128, 128, 128));
+        btnGestionUsuario.setAlignmentX(0.5f);
         panelBotones.add(btnGestionUsuario);
-
-        verticalStrut_6 = Box.createVerticalStrut(16);
+        
+        verticalStrut_6 = Box.createVerticalStrut(20);
         panelBotones.add(verticalStrut_6);
         panelBotones.add(btnCerrarSesion);
 
@@ -680,7 +634,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
        
 
         panelEquipos = new JPanel();
-        panelEquipos.setBackground(TemaColores.FONDO_PRINCIPAL);
+        panelEquipos.setBackground(new Color(20, 24, 31));
         panelCards.add(panelEquipos, "equipos");
         panelEquipos.setLayout(new BorderLayout(10, 10));
         panelEquipos.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -689,7 +643,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         panelEquipos.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         panelSuperior = new JPanel();
-        panelSuperior.setBackground(TemaColores.FONDO_PRINCIPAL);
+        panelSuperior.setBackground(new Color(20, 24, 31));
         panelSuperior.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
         panelEquipos.add(panelSuperior, BorderLayout.NORTH);
 
@@ -704,14 +658,14 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
 
         btnAgregarEquipo = new JButton("Agregar Equipo");
         btnAgregarEquipo.setBorder(null);
-        btnAgregarEquipo.setBackground(vista.Paleta.SECUNDARIO);
+        btnAgregarEquipo.setBackground(new Color(45, 55, 140));
         btnAgregarEquipo.setForeground(Color.WHITE);
         btnAgregarEquipo.setFont(new Font("Segoe UI", Font.BOLD, 14));
         panelSuperior.add(btnAgregarEquipo);
 
         panelTarjetasEquipo = new JPanel();
         panelTarjetasEquipo.setLayout(new BoxLayout(panelTarjetasEquipo, BoxLayout.Y_AXIS));
-        panelTarjetasEquipo.setBackground(TemaColores.FONDO_SECUNDARIO);
+        panelTarjetasEquipo.setBackground(new Color(30, 34, 41));
 
         scrollEquipos = new JScrollPane(panelTarjetasEquipo);
         scrollEquipos.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -771,22 +725,22 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         });
 
         panelJugadores = new JPanel(new BorderLayout(10, 10));
-        panelJugadores.setBackground(TemaColores.FONDO_PRINCIPAL);
+        panelJugadores.setBackground(new Color(20, 24, 31));
         panelJugadores.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         panelCards.add(panelJugadores, "jugadores");
 
         JPanel panelSuperiorJugadores = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        panelSuperiorJugadores.setBackground(TemaColores.FONDO_PRINCIPAL);
+        panelSuperiorJugadores.setBackground(new Color(20, 24, 31));
         panelJugadores.add(panelSuperiorJugadores, BorderLayout.NORTH);
         
         lblTemporadaJugador = new JLabel("Temporada:");
-        lblTemporadaJugador.setForeground(Color.WHITE);
+        lblTemporadaJugador.setForeground(new Color(0, 128, 192));
         panelSuperiorJugadores.add(lblTemporadaJugador);
         comboTemporadasJugadores = new JComboBox<>();
         panelSuperiorJugadores.add(comboTemporadasJugadores);
-
+        
         lblEquipoJugadores = new JLabel("Equipo:");
-        lblEquipoJugadores.setForeground(Color.WHITE);
+        lblEquipoJugadores.setForeground(new Color(0, 128, 192));
         panelSuperiorJugadores.add(lblEquipoJugadores);
         comboEquiposJugadores = new JComboBox<>();
         comboEquiposJugadores.setPreferredSize(new Dimension(160, 25));
@@ -794,13 +748,13 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
 
         panelTarjetasJugadores = new JPanel();
         panelTarjetasJugadores.setLayout(new BoxLayout(panelTarjetasJugadores, BoxLayout.Y_AXIS));
-        panelTarjetasJugadores.setBackground(TemaColores.FONDO_SECUNDARIO);
+        panelTarjetasJugadores.setBackground(new Color(30, 34, 41));
         scrollJugadores = new JScrollPane(panelTarjetasJugadores);
         scrollJugadores.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         panelJugadores.add(scrollJugadores, BorderLayout.CENTER);
 
         JPanel panelBotonesJugadores = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
-        panelBotonesJugadores.setBackground(TemaColores.FONDO_PRINCIPAL);
+        panelBotonesJugadores.setBackground(new Color(20, 24, 31));
         btnVerFoto = new JButton("Ver foto");
         btnCambiarFoto = new JButton("Cambiar foto");
         btnCambiarEquipo = new JButton("Cambiar equipo");
@@ -847,14 +801,14 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         });
 
         panelPartidos = new JPanel();
-        panelPartidos.setBackground(TemaColores.FONDO_PRINCIPAL);
+        panelPartidos.setBackground(new Color(20, 24, 31));
         panelPartidos.setLayout(new BorderLayout(10, 10));
         panelPartidos.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         panelCards.add(panelPartidos, "partidos");
 
         // ===== PANEL SUPERIOR (Controles) =====
         panelAdminPartidos_1 = new JPanel();
-        panelAdminPartidos_1.setBackground(TemaColores.FONDO_SECUNDARIO);
+        panelAdminPartidos_1.setBackground(new Color(30, 34, 45));
         panelAdminPartidos_1.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 10));
         panelPartidos.add(panelAdminPartidos_1, BorderLayout.NORTH);
 
@@ -871,12 +825,12 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         btnFinalizarTemporada = new JButton("Finalizar temporada");
         btnFinalizarTemporada.addActionListener(this);
         btnFinalizarTemporada.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        btnFinalizarTemporada.setBackground(vista.Paleta.ACENTO);
+        btnFinalizarTemporada.setBackground(Color.PINK);
         panelAdminPartidos_1.add(btnFinalizarTemporada);
 
         btnTxema = new JButton("Txema");
         btnTxema.addActionListener(this);
-        btnTxema.setBackground(vista.Paleta.ACENTO);
+        btnTxema.setBackground(new Color(255, 0, 0));
         btnTxema.setBorder(new EmptyBorder(10, 10, 10, 10));
         panelAdminPartidos_1.add(btnTxema);
 
@@ -886,12 +840,12 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         comboJornadasPartidos = new JComboBox<>();
 
         lblTemporadaPartido = new JLabel("Temporada:");
-        lblTemporadaPartido.setForeground(Color.WHITE);
+        lblTemporadaPartido.setForeground(new Color(0, 128, 192));
         panelAdminPartidos_1.add(lblTemporadaPartido);
         panelAdminPartidos_1.add(comboTemporadasPartidos);
 
         lblJornadaPartido = new JLabel("Jornada:");
-        lblJornadaPartido.setForeground(Color.WHITE);
+        lblJornadaPartido.setForeground(new Color(0, 128, 192));
         panelAdminPartidos_1.add(lblJornadaPartido);
         panelAdminPartidos_1.add(comboJornadasPartidos);
         panelAdminPartidos_1.revalidate();
@@ -932,31 +886,31 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         splitPane.setDividerLocation(500); // Altura fija para partidos
         splitPane.setResizeWeight(0.5); // 50% para cada panel
    
-        splitPane.setBackground(TemaColores.FONDO_PRINCIPAL);
+        splitPane.setBackground(new Color(20, 24, 31));
         splitPane.setBorder(null);
         panelPartidos.add(splitPane, BorderLayout.CENTER);
 
         // ===== PANEL IZQUIERDO: LISTA DE PARTIDOS =====
         JPanel panelPartidosContenedor = new JPanel(new BorderLayout(5, 5));
-        panelPartidosContenedor.setBackground(TemaColores.FONDO_PRINCIPAL);
+        panelPartidosContenedor.setBackground(new Color(20, 24, 31));
 
         JLabel lblTituloPartidos = new JLabel("📋 PARTIDOS DE LA JORNADA");
         lblTituloPartidos.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lblTituloPartidos.setForeground(Color.WHITE);
         lblTituloPartidos.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         lblTituloPartidos.setOpaque(true);
-        lblTituloPartidos.setBackground(TemaColores.FONDO_SECUNDARIO);
+        lblTituloPartidos.setBackground(new Color(30, 34, 45));
         panelPartidosContenedor.add(lblTituloPartidos, BorderLayout.NORTH);
         
         
      // Panel de leyenda (LOCAL vs VISITANTE)
         JPanel panelLeyenda = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 5));
-        panelLeyenda.setBackground(TemaColores.FONDO_SECUNDARIO);
+        panelLeyenda.setBackground(new Color(30, 34, 45));
         panelLeyenda.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
 
         JLabel lblLeyendaLocal = new JLabel("🏠 LOCAL");
         lblLeyendaLocal.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        lblLeyendaLocal.setForeground(vista.Paleta.ACENTO); // Cian
+        lblLeyendaLocal.setForeground(new Color(100, 181, 246)); // Azul claro
         panelLeyenda.add(lblLeyendaLocal);
 
         JLabel lblSeparador = new JLabel("vs");
@@ -966,14 +920,14 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
 
         JLabel lblLeyendaVisitante = new JLabel("✈️ VISITANTE");
         lblLeyendaVisitante.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        lblLeyendaVisitante.setForeground(vista.Paleta.SECUNDARIO); // Naranja
+        lblLeyendaVisitante.setForeground(new Color(255, 183, 77)); // Naranja
         panelLeyenda.add(lblLeyendaVisitante);
 
         panelPartidosContenedor.add(panelLeyenda, BorderLayout.SOUTH);
 
         panelListaPartidos = new JPanel();
         panelListaPartidos.setLayout(new BoxLayout(panelListaPartidos, BoxLayout.Y_AXIS));
-        panelListaPartidos.setBackground(TemaColores.FONDO_PRINCIPAL);
+        panelListaPartidos.setBackground(new Color(20, 24, 31));
 
         JScrollPane scrollPartidos = new JScrollPane(panelListaPartidos);
         scrollPartidos.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -997,14 +951,14 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         
      // ===== PANEL DERECHO: CLASIFICACIÓN =====
         JPanel panelClasificacionContenedor = new JPanel(new BorderLayout());
-        panelClasificacionContenedor.setBackground(TemaColores.FONDO_PRINCIPAL);
+        panelClasificacionContenedor.setBackground(new Color(20, 24, 31));
 
         JLabel lblTituloClasificacion = new JLabel("🏆 CLASIFICACIÓN");
         lblTituloClasificacion.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lblTituloClasificacion.setForeground(Color.WHITE);
         lblTituloClasificacion.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         lblTituloClasificacion.setOpaque(true);
-        lblTituloClasificacion.setBackground(TemaColores.FONDO_SECUNDARIO);
+        lblTituloClasificacion.setBackground(new Color(30, 34, 45));
         panelClasificacionContenedor.add(lblTituloClasificacion, BorderLayout.NORTH);
 
         // Panel de clasificación con scroll
@@ -1562,9 +1516,9 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
     private JPanel crearTarjetaJugador(Jugador jugador) {
         JPanel tarjeta = new JPanel(new BorderLayout(10, 5));
         tarjeta.setMaximumSize(new Dimension(Integer.MAX_VALUE, 140));
-        tarjeta.setBackground(TemaColores.FONDO_TARJETA);
+        tarjeta.setBackground(new Color(24, 25, 50));
         tarjeta.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(TemaColores.BORDE_NORMAL, 1),
+            BorderFactory.createLineBorder(new Color(60, 60, 80), 1),
             BorderFactory.createEmptyBorder(10, 10, 10, 10)
         ));
 
@@ -1572,7 +1526,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         JLabel lblFoto = new JLabel("Sin foto", SwingConstants.CENTER);
         lblFoto.setPreferredSize(new Dimension(100, 100));
         lblFoto.setForeground(Color.WHITE);
-        lblFoto.setBackground(TemaColores.FONDO_SECUNDARIO);
+        lblFoto.setBackground(new Color(30, 34, 41));
         lblFoto.setOpaque(true);
 
         if (jugador.getFotoURL() != null && !jugador.getFotoURL().isEmpty()) {
@@ -1607,7 +1561,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
 
         if (jugador.getDorsal() > 0) {
             JLabel lblDorsal = new JLabel("#" + jugador.getDorsal());
-            lblDorsal.setForeground(vista.Paleta.SECUNDARIO);
+            lblDorsal.setForeground(new Color(45, 55, 140));
             lblDorsal.setFont(new Font("Segoe UI", Font.BOLD, 16));
             panelNombreDorsal.add(lblDorsal);
         }
@@ -1615,7 +1569,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
 
         // Posición
         JLabel lblPos = new JLabel("⚽ " + jugador.getPosicion());
-        lblPos.setForeground(vista.Paleta.ACENTO);
+        lblPos.setForeground(new Color(100, 181, 246));
         lblPos.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         panelInfo.add(lblPos);
 
@@ -1624,12 +1578,12 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         panelNacEdad.setOpaque(false);
         
         JLabel lblNacionalidad = new JLabel("🌍 " + jugador.getNacionalidad());
-        lblNacionalidad.setForeground(TemaColores.TEXTO_TERCIARIO);
+        lblNacionalidad.setForeground(new Color(220, 220, 220));
         lblNacionalidad.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         panelNacEdad.add(lblNacionalidad);
         
         JLabel lblEdad = new JLabel("📅 " + jugador.getEdad() + " años");
-        lblEdad.setForeground(TemaColores.TEXTO_TERCIARIO);
+        lblEdad.setForeground(new Color(220, 220, 220));
         lblEdad.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         panelNacEdad.add(lblEdad);
         
@@ -1640,12 +1594,12 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         panelFisico.setOpaque(false);
         
         JLabel lblAltura = new JLabel("📏 " + jugador.getAltura());
-        lblAltura.setForeground(TemaColores.TEXTO_TERCIARIO);
+        lblAltura.setForeground(new Color(220, 220, 220));
         lblAltura.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         panelFisico.add(lblAltura);
         
         JLabel lblPeso = new JLabel("⚖️ " + jugador.getPeso());
-        lblPeso.setForeground(TemaColores.TEXTO_TERCIARIO);
+        lblPeso.setForeground(new Color(220, 220, 220));
         lblPeso.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         panelFisico.add(lblPeso);
         
@@ -1659,7 +1613,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
 
         JButton btnEliminarJugador = new JButton("Eliminar");
         btnEliminarJugador.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        btnEliminarJugador.setBackground(vista.Paleta.ACENTO);
+        btnEliminarJugador.setBackground(new Color(231, 76, 60));
         btnEliminarJugador.setForeground(Color.WHITE);
         btnEliminarJugador.setFocusPainted(false);
         btnEliminarJugador.setBorderPainted(false);
@@ -1702,17 +1656,17 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
                 // Resetear todas las tarjetas
                 for (Component c : panelTarjetasJugadores.getComponents()) {
                     if (c instanceof JPanel) {
-                        c.setBackground(TemaColores.FONDO_TARJETA);
+                        c.setBackground(new Color(24, 25, 50));
                         ((JPanel) c).setBorder(BorderFactory.createCompoundBorder(
-                            BorderFactory.createLineBorder(TemaColores.BORDE_NORMAL, 1),
+                            BorderFactory.createLineBorder(new Color(60, 60, 80), 1),
                             BorderFactory.createEmptyBorder(10, 10, 10, 10)
                         ));
                     }
                 }
                 // Destacar tarjeta seleccionada
-                tarjeta.setBackground(vista.Paleta.NEUTRO1);
+                tarjeta.setBackground(new Color(45, 55, 140));
                 tarjeta.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(vista.Paleta.ACENTO, 2),
+                    BorderFactory.createLineBorder(new Color(100, 150, 255), 2),
                     BorderFactory.createEmptyBorder(10, 10, 10, 10)
                 ));
             }
@@ -1753,9 +1707,9 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         
         JPanel panelTarjeta = new JPanel();
         panelTarjeta.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
-        panelTarjeta.setBackground(TemaColores.FONDO_TARJETA);
+        panelTarjeta.setBackground(new Color(24, 25, 50));
         panelTarjeta.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(TemaColores.BORDE_NORMAL, 1),
+            BorderFactory.createLineBorder(new Color(60, 60, 80), 1),
             BorderFactory.createEmptyBorder(10, 10, 10, 10)
         ));
         panelTarjeta.setLayout(new BorderLayout(15, 10));
@@ -1763,7 +1717,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         // ⭐ CREAR BOTÓN GESTIONAR
         JButton btnGestionar = new JButton("Gestionar");
         btnGestionar.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        btnGestionar.setBackground(vista.Paleta.SECUNDARIO);
+        btnGestionar.setBackground(TemaColores.ACENTO_VERDE);
         btnGestionar.setForeground(Color.WHITE);
         btnGestionar.setFocusPainted(false);
         btnGestionar.setBorderPainted(false);
@@ -1797,7 +1751,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         lblEscudo.setPreferredSize(new Dimension(90, 90));
         lblEscudo.setHorizontalAlignment(SwingConstants.CENTER);
         lblEscudo.setVerticalAlignment(SwingConstants.CENTER);
-        lblEscudo.setBackground(TemaColores.FONDO_SECUNDARIO);
+        lblEscudo.setBackground(new Color(30, 34, 41));
         lblEscudo.setOpaque(true);
         lblEscudo.setText("🏆");
         lblEscudo.setFont(new Font("Segoe UI", Font.PLAIN, 40));
@@ -1828,7 +1782,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         if (equipo != null) {
             JLabel lblJugadores = new JLabel("👥 " + equipo.getPlantilla().size() + " jugadores");
             lblJugadores.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-            lblJugadores.setForeground(TemaColores.TEXTO_TERCIARIO);
+            lblJugadores.setForeground(new Color(180, 180, 180));
             panelInfo.add(lblJugadores);
         }
         panelTarjeta.add(panelInfo, BorderLayout.CENTER);
@@ -1906,8 +1860,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         // Botón Ver Escudo
         JButton btnVerEscudo = new JButton("Ver Escudo");
         btnVerEscudo.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        btnVerEscudo.setBackground(vista.Paleta.SECUNDARIO);
-        btnVerEscudo.setForeground(Color.WHITE);
+        btnVerEscudo.setBackground(new Color(52, 152, 219));
         btnVerEscudo.setFocusPainted(false);
         btnVerEscudo.setBorderPainted(false);
         btnVerEscudo.setPreferredSize(new Dimension(110, 30));
@@ -1958,7 +1911,7 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
         // Botón Eliminar Equipo
         JButton btnEliminarEquipo = new JButton("Eliminar");
         btnEliminarEquipo.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        btnEliminarEquipo.setBackground(vista.Paleta.ACENTO);
+        btnEliminarEquipo.setBackground(new Color(231, 76, 60));
         btnEliminarEquipo.setForeground(Color.WHITE);
         btnEliminarEquipo.setFocusPainted(false);
         btnEliminarEquipo.setBorderPainted(false);
@@ -2082,10 +2035,10 @@ public class VentanaMain extends JFrame implements ActionListener, WindowListene
 private JPanel crearTarjetaPartido(Partido p) {
     
     JPanel card = new JPanel(new BorderLayout(20, 0));
-    card.setBackground(TemaColores.FONDO_TARJETA);
+    card.setBackground(new Color(24, 25, 50));
     card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80)); // Altura reducida
     card.setBorder(BorderFactory.createCompoundBorder(
-        BorderFactory.createLineBorder(TemaColores.BORDE_NORMAL, 1),
+        BorderFactory.createLineBorder(new Color(60, 60, 80), 1),
         BorderFactory.createEmptyBorder(10, 15, 10, 15)
     ));
    
@@ -2093,10 +2046,10 @@ private JPanel crearTarjetaPartido(Partido p) {
     JLabel lblEstadoPartido = new JLabel("●");
     lblEstadoPartido.setFont(new Font("Segoe UI", Font.BOLD, 24));
     if (p.isFinalizado()) {
-        lblEstadoPartido.setForeground(vista.Paleta.ACENTO);
+        lblEstadoPartido.setForeground(new Color(231, 76, 60));
         lblEstadoPartido.setToolTipText("Partido Finalizado");
     } else {
-        lblEstadoPartido.setForeground(vista.Paleta.PRIMARIO);
+        lblEstadoPartido.setForeground(new Color(52, 152, 219));
         lblEstadoPartido.setToolTipText("Partido Pendiente");
     }
     card.add(lblEstadoPartido, BorderLayout.WEST);
@@ -2111,7 +2064,7 @@ private JPanel crearTarjetaPartido(Partido p) {
     
     JLabel lblNombreLocal = new JLabel(p.getEquipoLocal().getNombre());
     lblNombreLocal.setFont(new Font("Segoe UI", Font.BOLD, 15));
-    lblNombreLocal.setForeground(vista.Paleta.PRIMARIO); // Azul claro
+    lblNombreLocal.setForeground(new Color(100, 181, 246)); // Azul claro
     panelLocal.add(lblNombreLocal);
     
     JLabel lblIconoLocal = new JLabel("🏠");
@@ -2140,7 +2093,7 @@ private JPanel crearTarjetaPartido(Partido p) {
     
     JLabel lblNombreVisitante = new JLabel(p.getEquipoVisitante().getNombre());
     lblNombreVisitante.setFont(new Font("Segoe UI", Font.BOLD, 15));
-    lblNombreVisitante.setForeground(vista.Paleta.SECUNDARIO); // Naranja
+    lblNombreVisitante.setForeground(new Color(255, 183, 77)); // Naranja
     panelVisitante.add(lblNombreVisitante);
     
     panelCentral.add(panelVisitante);
@@ -2155,7 +2108,7 @@ private JPanel crearTarjetaPartido(Partido p) {
     }
     
     btnGoles.setFocusPainted(false);
-    btnGoles.setBackground(p.isFinalizado() ? TemaColores.BOTON_NEUTRAL : vista.Paleta.SECUNDARIO);
+    btnGoles.setBackground(p.isFinalizado() ? new Color(70, 70, 70) : new Color(45, 55, 140));
     btnGoles.setForeground(Color.WHITE);
     btnGoles.setPreferredSize(new Dimension(140, 35));
 
@@ -2245,7 +2198,7 @@ private JPanel crearTarjetaPartido(Partido p) {
             switch (t.getEstado()) {
                 case Temporada.FUTURA:
                     lblEstadoTemp.setText("● FUTURA");
-                    lblEstadoTemp.setForeground(vista.Paleta.PRIMARIO);
+                    lblEstadoTemp.setForeground(new Color(52, 152, 219));
                     btnAgregarEquipo.setEnabled(true);
                     btnAgregarEquipo.setToolTipText("Agregar nuevo equipo");
                     btnFinalizarTemporada.setEnabled(false);
@@ -2254,7 +2207,7 @@ private JPanel crearTarjetaPartido(Partido p) {
                     
                 case Temporada.EN_JUEGO:
                     lblEstadoTemp.setText("● EN CURSO");
-                    lblEstadoTemp.setForeground(vista.Paleta.SECUNDARIO);
+                    lblEstadoTemp.setForeground(new Color(241, 196, 15));
                     btnAgregarEquipo.setEnabled(false);
                     btnAgregarEquipo.setToolTipText("No se pueden agregar equipos a temporadas en curso");
                     btnFinalizarTemporada.setEnabled(true);
@@ -2263,7 +2216,7 @@ private JPanel crearTarjetaPartido(Partido p) {
                     
                 case Temporada.TERMINADA:
                     lblEstadoTemp.setText("● FINALIZADA");
-                    lblEstadoTemp.setForeground(vista.Paleta.ACENTO);
+                    lblEstadoTemp.setForeground(new Color(231, 76, 60));
                     btnAgregarEquipo.setEnabled(false);
                     btnAgregarEquipo.setToolTipText("No se pueden agregar equipos a temporadas finalizadas");
                     btnFinalizarTemporada.setEnabled(false);
@@ -2324,7 +2277,7 @@ private JPanel crearTarjetaPartido(Partido p) {
             switch (t.getEstado()) {
                 case Temporada.FUTURA:
                     lblEstadoTempPartidos.setText("  |  ● TEMPORADA FUTURA");
-                    lblEstadoTempPartidos.setForeground(vista.Paleta.PRIMARIO);
+                    lblEstadoTempPartidos.setForeground(new Color(52, 152, 219));
                     
                     if (esAdministrador || esArbitro) {
                         btnNuevaJor.setEnabled(true);
@@ -2341,7 +2294,7 @@ private JPanel crearTarjetaPartido(Partido p) {
                     
                 case Temporada.EN_JUEGO:
                     lblEstadoTempPartidos.setText("  |  ● EN CURSO");
-                    lblEstadoTempPartidos.setForeground(vista.Paleta.SECUNDARIO);
+                    lblEstadoTempPartidos.setForeground(new Color(241, 196, 15));
                     
                     if (esAdministrador || esArbitro) {
                         btnNuevaJor.setEnabled(true);
@@ -2358,7 +2311,7 @@ private JPanel crearTarjetaPartido(Partido p) {
                     
                 case Temporada.TERMINADA:
                     lblEstadoTempPartidos.setText("  |  ● FINALIZADA");
-                    lblEstadoTempPartidos.setForeground(vista.Paleta.ACENTO);
+                    lblEstadoTempPartidos.setForeground(new Color(231, 76, 60));
                     
                     if (esAdministrador || esArbitro) {
                         btnNuevaJor.setEnabled(false);
@@ -2713,6 +2666,7 @@ private JPanel crearTarjetaPartido(Partido p) {
      * @see PanelClasificacion#getComboTemporadas()
      */
     void sincronizarCombos() {
+        // ⭐ GUARDAR selecciones ANTES de limpiar
         Object tempSelEquipos = comboTemporadas.getSelectedItem();
         Object tempSelJugadores = comboTemporadasJugadores.getSelectedItem();
         Object tempSelPartidos = comboTemporadasPartidos.getSelectedItem();
@@ -2723,6 +2677,7 @@ private JPanel crearTarjetaPartido(Partido p) {
             comboTemporadasPartidos
         };
         
+        // Limpiar y recargar items
         for (JComboBox c : combosTemp) {
             if (c == null) continue;
             c.removeAllItems();
@@ -2731,18 +2686,42 @@ private JPanel crearTarjetaPartido(Partido p) {
             }
         }
         
-        // ⭐ SELECCIONAR LA ÚLTIMA TEMPORADA POR DEFECTO
+        // ⭐ RESTAURAR selecciones previas O seleccionar última temporada
         if (!datosFederacion.getListaTemporadas().isEmpty()) {
-            int ultimoIndice = datosFederacion.getListaTemporadas().size() - 1;
-            String ultimaTemporada = datosFederacion.getListaTemporadas().get(ultimoIndice).getNombre();
+            // Para comboTemporadas (Equipos)
+            if (tempSelEquipos != null && existeTemporada(tempSelEquipos.toString())) {
+                comboTemporadas.setSelectedItem(tempSelEquipos);
+            } else {
+                seleccionarUltimaTemporada(comboTemporadas);
+            }
             
-            // Seleccionar última temporada en todos los combos
-            comboTemporadas.setSelectedItem(ultimaTemporada);
-            comboTemporadasJugadores.setSelectedItem(ultimaTemporada);
-            comboTemporadasPartidos.setSelectedItem(ultimaTemporada);
+            // Para comboTemporadasJugadores
+            if (tempSelJugadores != null && existeTemporada(tempSelJugadores.toString())) {
+                comboTemporadasJugadores.setSelectedItem(tempSelJugadores);
+            } else {
+                seleccionarUltimaTemporada(comboTemporadasJugadores);
+            }
+            
+            // Para comboTemporadasPartidos
+            if (tempSelPartidos != null && existeTemporada(tempSelPartidos.toString())) {
+                comboTemporadasPartidos.setSelectedItem(tempSelPartidos);
+            } else {
+                seleccionarUltimaTemporada(comboTemporadasPartidos);
+            }
         }
 
         actualizarComboEquipos();
+    }
+
+    // ⭐ MÉTODOS AUXILIARES
+    private boolean existeTemporada(String nombreTemporada) {
+        return datosFederacion.buscarTemporadaPorNombre(nombreTemporada) != null;
+    }
+
+    private void seleccionarUltimaTemporada(JComboBox<String> combo) {
+        if (combo.getItemCount() > 0) {
+            combo.setSelectedIndex(combo.getItemCount() - 1);
+        }
     }
 
 

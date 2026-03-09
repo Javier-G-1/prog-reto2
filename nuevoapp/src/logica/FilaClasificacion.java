@@ -1,7 +1,7 @@
 package logica;
 
 /**
- * Representa una fila de la clasificación de una temporada de waterpolo.
+ * Representa una fila de la clasificación de una temporada de balonmano.
  * Cada fila contiene los datos estadísticos de un equipo: partidos jugados,
  * ganados, empatados, perdidos, goles a favor, goles en contra, diferencia
  * de goles, puntos y posición.

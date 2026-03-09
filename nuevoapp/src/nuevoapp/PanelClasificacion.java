@@ -3,7 +3,6 @@ package nuevoapp;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-import vista.Paleta;
 
 import logica.CalculadoraClasificacion;
 import logica.Clasificacion;
@@ -61,16 +60,16 @@ public class PanelClasificacion extends JPanel {
     public PanelClasificacion(DatosFederacion datos) {
         this.datosFederacion = datos;
         setLayout(new BorderLayout(5, 5));
-        setBackground(Paleta.PRIMARIO);
+        setBackground(new Color(20, 24, 31));
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
+        
         // ===== PANEL SUPERIOR CON BOTÓN EXPORTAR =====
         JPanel panelSuperior = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 5));
-        panelSuperior.setBackground(Paleta.PRIMARIO);
-
+        panelSuperior.setBackground(new Color(20, 24, 31));
+        
         btnExportarPDF = new JButton("📄 Exportar PDF");
         btnExportarPDF.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnExportarPDF.setBackground(Paleta.ACENTO);
+        btnExportarPDF.setBackground(new Color(231, 76, 60));
         btnExportarPDF.setForeground(Color.WHITE);
         btnExportarPDF.setFocusPainted(false);
         btnExportarPDF.setBorderPainted(false);
@@ -81,8 +80,8 @@ public class PanelClasificacion extends JPanel {
         add(panelSuperior, BorderLayout.NORTH);
         
         // ===== PANEL CENTRAL CON COLUMNAS =====
-        JPanel panelBody = new JPanel(new GridLayout(1, 10, 0, 0));
-        panelBody.setBackground(Paleta.PRIMARIO);
+        JPanel panelBody = new JPanel(new GridLayout(1, 10, 0, 0)); 
+        panelBody.setBackground(new Color(20, 24, 31));
         add(panelBody, BorderLayout.CENTER);
 
         panelBody.add(crearColumna("Pos", listPosicion = new JList<>(dlmPosicion)));
@@ -102,11 +101,11 @@ public class PanelClasificacion extends JPanel {
      */
     private JPanel crearColumna(String titulo, JList<?> lista) {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(Paleta.PRIMARIO);
-        panel.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Paleta.NEUTRO1));
+        panel.setBackground(new Color(20, 24, 31));
+        panel.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, new Color(60, 60, 80)));
 
         JPanel panelTitulo = new JPanel();
-        panelTitulo.setBackground(Paleta.SECUNDARIO);
+        panelTitulo.setBackground(new Color(45, 55, 140));
 
         JLabel lbl = new JLabel(titulo);
         lbl.setFont(new Font("Segoe UI", Font.BOLD, 13));
@@ -115,12 +114,12 @@ public class PanelClasificacion extends JPanel {
 
         lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         lista.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        lista.setBackground(Paleta.NEUTRO2);
+        lista.setBackground(new Color(30, 34, 41));
         lista.setForeground(Color.WHITE);
 
         JScrollPane scroll = new JScrollPane(lista);
         scroll.setBorder(null);
-        scroll.setBackground(Paleta.PRIMARIO);
+        scroll.setBackground(new Color(20, 24, 31));
 
         panel.add(panelTitulo, BorderLayout.NORTH);
         panel.add(scroll, BorderLayout.CENTER);
